@@ -1,4 +1,3 @@
-import { GOOGLE_SERVICES_API } from '@env';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { format } from 'date-fns';
 import { useAtomValue } from 'jotai';
@@ -27,8 +26,6 @@ import { useIsUserPartOfTheTrip } from '$hooks/use-is-user-in-trip';
 import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useToggleState } from '$hooks/use-toggle-state';
 import { TripsStackScreenProps } from '$navigation/main/trips/model';
-
-
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
@@ -94,7 +91,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
         <MapViewDirections
           origin={pickupToLatlng(trip)}
           destination={dropoffToLatlng(trip)}
-          apikey={GOOGLE_SERVICES_API}
+          apikey={process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API}
           strokeWidth={3}
           strokeColor='#000'
         />

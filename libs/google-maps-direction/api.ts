@@ -1,4 +1,3 @@
-import { GOOGLE_SERVICES_API } from '@env';
 import axios, { AxiosRequestConfig } from 'axios';
 import { BoundingBox, LatLng } from 'react-native-maps';
 
@@ -209,7 +208,7 @@ export const getGoogleMapsDirections = (
     {
       ...config,
       params: {
-        key: GOOGLE_SERVICES_API,
+        key: process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API,
 
         origin: origin ? getLatLngString(origin) : '',
         destination: destination ? getLatLngString(destination) : '',

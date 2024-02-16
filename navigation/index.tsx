@@ -4,9 +4,9 @@ import React from 'react';
 import { MainTabsNavigation } from './main';
 import { RootStackNavigator } from './navigator';
 
+import { WelcomeStepperScreen } from '$app/welcome-stepper';
 import { isWelcomeStepperSkippedAtom } from '$atoms/is-welcome-stepper-skipped';
 import { CreateNewTripScreen } from '$screens/create-new-trip';
-import { WelcomeStepperScreen } from '$screens/welcome-stepper';
 
 export const RootStack: React.FC = () => {
   const isWelcomeStepperSkipped = useAtomValue(isWelcomeStepperSkippedAtom);

@@ -24,5 +24,7 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+
+    'react/prop-types': 0,
   },
 };

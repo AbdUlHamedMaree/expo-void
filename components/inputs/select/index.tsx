@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
-import { mergeRefs } from 'react-merge-refs';
 import { StyleSheet, ScrollView, Dimensions, ScrollViewProps } from 'react-native';
 import {
   TextInput,
@@ -22,6 +21,7 @@ import {
 
 import type { ListItem } from './types';
 
+import { mergeRefs } from '$helpers/merge-refs';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
 import { mergeFunctions } from '$tools/merge-functions';
@@ -208,6 +208,7 @@ export const SelectInput = memo(
 
       return filteredItems.map(item => (
         <List.Item
+          key={item.value}
           title={item.label ?? item.value}
           onPress={() => handleSingleCheck(item)}
         />
@@ -228,7 +229,7 @@ export const SelectInput = memo(
           right={<TextInput.Icon icon='chevron-down' />}
           cursorColor='transparent'
           {...props}
-          ref={mergeRefs([forwardedRef, innerRef])}
+          ref={mergeRefs(forwardedRef, innerRef)}
           showSoftInputOnFocus={false}
           onFocus={mergeFunctions(handleTextInputFocus, props.onFocus)}
         />

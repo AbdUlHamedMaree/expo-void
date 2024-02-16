@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
-import { mergeRefs } from 'react-merge-refs';
 import {
   StyleSheet,
   ScrollViewProps,
@@ -23,6 +22,7 @@ import {
 
 import type { ListItem } from './types';
 
+import { mergeRefs } from '$helpers/merge-refs';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
 import { mergeFunctions } from '$tools/merge-functions';
@@ -216,7 +216,7 @@ export const ControlledDropdownInput = memo(
                 value={textInputValue}
                 cursorColor='transparent'
                 {...props}
-                ref={mergeRefs([forwardedRef, innerRef])}
+                ref={mergeRefs(forwardedRef, innerRef)}
                 onFocus={mergeFunctions(handleTextInputFocus, props.onFocus)}
               />
             }

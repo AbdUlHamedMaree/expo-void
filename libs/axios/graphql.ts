@@ -8,10 +8,6 @@ import { RemoveIndex } from 'graphql-request/build/esm/helpers';
 import { request } from './instance';
 import { AxiosGraphQlSuccessResponse } from './response';
 
-// import { API_GRAPHQL_PATHNAME } from '@env';
-
-const API_GRAPHQL_PATHNAME = '';
-
 export type GraphQlRequestAxiosConfig = Omit<
   AxiosRequestConfig,
   'data' | 'url' | 'method'
@@ -27,7 +23,7 @@ export const graphqlRequest = <TResult, TVariables = Variables>(
 ): Promise<TResult> =>
   request
     .post<any, AxiosGraphQlSuccessResponse<TResult>>(
-      API_GRAPHQL_PATHNAME,
+      process.env.EXPO_PUBLIC_API_GRAPHQL_PATHNAME,
       {
         ...resolveRequestDocument(document),
         variables,

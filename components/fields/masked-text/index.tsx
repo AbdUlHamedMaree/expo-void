@@ -1,5 +1,4 @@
 import React, { forwardRef, memo } from 'react';
-import { mergeRefs } from 'react-merge-refs';
 import { View, ViewProps } from 'react-native';
 import { HelperText } from 'react-native-paper';
 
@@ -7,6 +6,7 @@ import {
   MaskedTextInput,
   MaskedTextInputProps,
 } from '$components/dumb/masked-text-input';
+import { mergeRefs } from '$helpers/merge-refs';
 import { useAppTheme } from '$theme/hook';
 import { FieldComponentProps, createField } from '$tools/create-field';
 import { mergeFunctions } from '$tools/merge-functions';
@@ -48,7 +48,7 @@ export const MaskedTextField = createField<MaskedTextFieldProps>(
             activeUnderlineColor={color}
             placeholderTextColor={color}
             {...props}
-            ref={mergeRefs([ref, forwardedRef])}
+            ref={mergeRefs(ref, forwardedRef)}
             onBlur={mergeFunctions(onBlur, props.onBlur)}
             onChangeText={mergeFunctions(onChange, props.onChangeText)}
             value={value + ''}

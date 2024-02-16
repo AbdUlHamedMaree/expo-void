@@ -132,7 +132,7 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
           marginTop: spacing.lg,
         }}
       >
-        <Text>Don't have an account?</Text>
+        <Text>Don&apos;t have an account?</Text>
         <Button
           onPress={() =>
             navigate('Main', {

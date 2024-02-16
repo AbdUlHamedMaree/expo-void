@@ -57,7 +57,7 @@ export type CreateNewTripScreenProps = {
   children?: React.ReactNode;
 };
 
-export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
+export default function Screen(): React.ReactNode {
   const { navigate, goBack } = useNavigation();
 
   const createTripMutation = useCreateTripMutation();
@@ -275,7 +275,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       </PaperBottomSheet>
     </ScreenWrapper>
   );
-};
+}
 
 const styles = StyleSheet.create({
   segmentedButtonsContainer: {

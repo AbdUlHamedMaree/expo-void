@@ -1,10 +1,10 @@
 import React, { forwardRef, memo, useCallback } from 'react';
-import { mergeRefs } from 'react-merge-refs';
 import { MaskedTextInput as LMaskedTextInput } from 'react-native-mask-text';
 import { TextInput, TextInputProps } from 'react-native-paper';
 
 import { FormatType, MaskOptions, TextDecorationOptions } from './types';
 
+import { mergeRefs } from '$helpers/merge-refs';
 import { mergeFunctions } from '$tools/merge-functions';
 
 export type MaskedTextInputProps = {
@@ -42,7 +42,7 @@ export const MaskedTextInput = memo(
       return (
         <TextInput
           {...props}
-          ref={mergeRefs([ref])}
+          ref={mergeRefs(ref)}
           render={props => (
             <LMaskedTextInput
               {...props}

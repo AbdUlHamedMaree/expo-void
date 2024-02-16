@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { mergeRefs } from 'react-merge-refs';
 import { View, ViewProps } from 'react-native';
 import { HelperText, TextInput, TextInputProps } from 'react-native-paper';
 
+import { mergeRefs } from '$helpers/merge-refs';
 import { isNil } from '$modules/checks';
 import { useAppTheme } from '$theme/hook';
 import { FieldComponentProps, createField } from '$tools/create-field';
@@ -48,7 +48,7 @@ export const TextField = createField<TextFieldProps>(
               activeUnderlineColor={color}
               placeholderTextColor={color}
               {...props}
-              ref={mergeRefs([forwardedRef, ref])}
+              ref={mergeRefs(forwardedRef, ref)}
               onBlur={mergeFunctions(onBlur, props.onBlur)}
               onChangeText={mergeFunctions(onChange, props.onChangeText)}
               value={textValue}

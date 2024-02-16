@@ -7,7 +7,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { mergeRefs } from 'react-merge-refs';
 import { View, ViewProps } from 'react-native';
 import { HelperText, TextInput } from 'react-native-paper';
 import {
@@ -22,6 +21,7 @@ import {
   MaskedTextInput,
   MaskedTextInputProps,
 } from '$components/dumb/masked-text-input';
+import { mergeRefs } from '$helpers/merge-refs';
 import { useAppTheme } from '$theme/hook';
 import { FieldComponentProps, createField } from '$tools/create-field';
 import { mergeFunctions } from '$tools/merge-functions';
@@ -194,7 +194,7 @@ export const DateTimeField = createField<DateTimeFieldProps>(
                 setFieldValue(fullText);
                 onChange(date);
               }, props.onBlur)}
-              ref={mergeRefs([ref, forwardedRef])}
+              ref={mergeRefs(ref, forwardedRef)}
               right={
                 <TextInput.Icon
                   icon='calendar'

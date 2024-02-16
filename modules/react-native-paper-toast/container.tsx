@@ -45,7 +45,7 @@ export type PaperToastContainerProps = {
 } & ToastOptionsWithoutMessageModel;
 
 export const PaperToastContainer: React.FC<PaperToastContainerProps> = memo(
-  ({ children, ...baseOptions }) => {
+  function PaperToastContainer({ children, ...baseOptions }) {
     const theme = useAppTheme();
 
     const [snackbars, setSnackbars] = useState<Record<string, SnackbarModel>>({});

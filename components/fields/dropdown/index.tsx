@@ -1,10 +1,10 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { mergeRefs } from 'react-merge-refs';
 import { View, ViewProps } from 'react-native';
 import { HelperText } from 'react-native-paper';
 
 import { DropdownInput, DropdownInputProps } from '$components/inputs/dropdown';
 import { ListItem } from '$components/inputs/select/types';
+import { mergeRefs } from '$helpers/merge-refs';
 import { useAppTheme } from '$theme/hook';
 import { FieldComponentProps, createField } from '$tools/create-field';
 import { mergeFunctions } from '$tools/merge-functions';
@@ -47,7 +47,7 @@ export const DropdownField = createField<DropdownFieldProps>(
             activeUnderlineColor={color}
             placeholderTextColor={color}
             {...props}
-            ref={mergeRefs([forwardedRef, ref])}
+            ref={mergeRefs(forwardedRef, ref)}
             onBlur={mergeFunctions(onBlur, props.onBlur)}
             onSelectFinish={mergeFunctions((selected: ListItem[]) => {
               onChange(

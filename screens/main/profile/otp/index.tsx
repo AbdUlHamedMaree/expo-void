@@ -106,7 +106,7 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
           marginTop: spacing.lg,
         }}
       >
-        <Text>Didn't receive code?</Text>
+        <Text>Didn&apos;t receive code?</Text>
         <Button onPress={() => {}}>Resend Code</Button>
       </View>
 
@@ -128,7 +128,7 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
           marginTop: spacing.lg,
         }}
       >
-        <Text>{phone} isn't your number?</Text>
+        <Text>{phone} isn&apos;t your number?</Text>
         <Button
           onPress={() => {
             navigate('Main', {

@@ -1,13 +1,10 @@
 import axios from 'axios';
 
 import { storage } from '$libs/async-storage/storage';
-// import { API_HTTP_PROTOCOL, API_HOST } from '@env';
-
-const API_HTTP_PROTOCOL = '',
-  API_HOST = '';
 
 export const request = axios.create({
-  baseURL: API_HTTP_PROTOCOL + '//' + API_HOST,
+  baseURL:
+    process.env.EXPO_PUBLIC_API_HTTP_PROTOCOL + '//' + process.env.EXPO_PUBLIC_API_HOST,
   timeout: 4_000,
 });
 

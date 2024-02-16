@@ -1,4 +1,3 @@
-import { GOOGLE_SERVICES_API } from '@env';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import Geocoder from 'react-native-geocoding';
@@ -18,7 +17,7 @@ import { WeakSplashScreen } from '$screens/weak-splash-screen';
 import { commonStyles } from '$styles/common';
 import { AppPaperProvider } from '$theme/provider';
 
-Geocoder.init(GOOGLE_SERVICES_API);
+Geocoder.init(process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API);
 
 const Application: React.FC = () => {
   useRefetchOnAppFocus();

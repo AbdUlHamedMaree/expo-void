@@ -4,11 +4,14 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { useAtomValue } from 'jotai';
 import { useEffect, Suspense } from 'react';
+import Geocoder from 'react-native-geocoding';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
 
 // import { RootStack } from '$navigation';
+import { isWelcomeStepperSkippedAtom } from '$atoms/is-welcome-stepper-skipped';
 import { AppErrorBoundary } from '$components/dumb/app-error-boundary';
 import { AppStatusBar } from '$components/smart/app-status-bar';
 import { useAxiosService } from '$libs/axios/hooks';
@@ -18,17 +21,11 @@ import { PaperToastContainer } from '$modules/react-native-paper-toast';
 import { SplashScreen as AppSplashScreen } from '$screens/splash-screen';
 import { WeakSplashScreen } from '$screens/weak-splash-screen';
 import { commonStyles } from '$styles/common';
-// import Geocoder from 'react-native-geocoding';
-// import { GOOGLE_SERVICES_API } from '@env';
 import { usePaperTheme } from '$theme/hook';
 import { AppPaperProvider } from '$theme/provider';
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+Geocoder.init(process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API);
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -37,7 +34,6 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -59,6 +55,8 @@ const Application: React.FC = () => {
   useRefetchOnAppFocus();
   useAxiosService();
 
+  const isWelcomeStepperSkipped = useAtomValue(isWelcomeStepperSkippedAtom);
+
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <AppPaperProvider>
@@ -66,9 +64,15 @@ const Application: React.FC = () => {
           <AppStatusBar />
           <Suspense fallback={<AppSplashScreen />}>
             <PaperToastContainer variant='contained' />
-            <Stack>
-              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-              <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+              }}
+              initialRouteName={isWelcomeStepperSkipped ? 'main' : 'welcome-stepper'}
+            >
+              <Stack.Screen name='welcome-stepper' />
+              <Stack.Screen name='main' />
+              <Stack.Screen name='create-new-trip' />
             </Stack>
           </Suspense>
         </AppErrorBoundary>

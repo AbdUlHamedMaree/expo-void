@@ -1,4 +1,5 @@
 import { useAtom } from 'jotai/react';
+import { useCallback } from 'react';
 import { View } from 'react-native';
 import { Button, Checkbox } from 'react-native-paper';
 
@@ -34,7 +35,10 @@ export const WelcomeStepperBottomNavigationButtons: React.FC<
     isWelcomeStepperSkippedAtom
   );
 
-  const toggle = () => setIsWelcomeStepperSkipped(v => !v);
+  const toggle = useCallback(
+    () => setIsWelcomeStepperSkipped(v => !v),
+    [setIsWelcomeStepperSkipped]
+  );
 
   return (
     <>

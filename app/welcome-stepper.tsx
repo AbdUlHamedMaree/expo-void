@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,22 +8,14 @@ import { WelcomeStepperStepThree } from '$components/parts/welcome-stepper/step-
 import { WelcomeStepperStepTwo } from '$components/parts/welcome-stepper/step-two';
 import { commonStyles } from '$styles/common';
 
-export type WelcomeStepperScreenProps = {
-  //
-};
-
-export const WelcomeStepperScreen: React.FC<WelcomeStepperScreenProps> = () => {
-  const { navigate } = useNavigation();
+export default function Screen(): React.ReactNode {
   const [stepIndex, setStepIndex] = useState(0);
 
   const nextStep = () => setStepIndex(v => Math.min(v + 1, 2));
 
   const prevStep = () => setStepIndex(v => Math.max(v - 1, 0));
 
-  const handleFinishOrSkip = () =>
-    navigate('Main', {
-      screen: 'Home',
-    });
+  const handleFinishOrSkip = () => router.replace('/main/home');
 
   return (
     <SafeAreaView style={[commonStyles.flexFull, commonStyles.screenPadding]}>
@@ -40,10 +32,10 @@ export const WelcomeStepperScreen: React.FC<WelcomeStepperScreenProps> = () => {
       />
     </SafeAreaView>
   );
-};
+}
 
 const steps = [
-  <WelcomeStepperStepOne />,
-  <WelcomeStepperStepTwo />,
-  <WelcomeStepperStepThree />,
+  <WelcomeStepperStepOne key='1' />,
+  <WelcomeStepperStepTwo key='2' />,
+  <WelcomeStepperStepThree key='3' />,
 ];
