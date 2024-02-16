@@ -3,11 +3,6 @@ import React from 'react';
 
 import { getNavigationIcon } from '$libs/react-native-paper/get-navigation-icon';
 
-export const unstable_settings = {
-  // Ensure any route can link back to `/`
-  initialRouteName: 'home',
-};
-
 export default function Layout(): React.ReactNode {
   return (
     <Tabs initialRouteName='home'>

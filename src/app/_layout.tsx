@@ -51,6 +51,24 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+const RootLayoutNav: React.FC = () => {
+  const theme = usePaperTheme();
+
+  return (
+    <ThemeProvider value={theme}>
+      <Suspense fallback={<WeakSplashScreen />}>
+        <AppErrorBoundary>
+          <GestureHandlerRootView style={commonStyles.flexFull}>
+            <QueryClientProvider client={queryClient}>
+              <Application />
+            </QueryClientProvider>
+          </GestureHandlerRootView>
+        </AppErrorBoundary>
+      </Suspense>
+    </ThemeProvider>
+  );
+};
+
 const Application: React.FC = () => {
   useRefetchOnAppFocus();
   useAxiosService();
@@ -69,32 +87,10 @@ const Application: React.FC = () => {
                 headerShown: false,
               }}
               initialRouteName={isWelcomeStepperSkipped ? 'main' : 'welcome-stepper'}
-            >
-              <Stack.Screen name='welcome-stepper' />
-              <Stack.Screen name='main' />
-              <Stack.Screen name='create-new-trip' />
-            </Stack>
+            />
           </Suspense>
         </AppErrorBoundary>
       </AppPaperProvider>
     </SafeAreaProvider>
   );
 };
-
-function RootLayoutNav() {
-  const theme = usePaperTheme();
-
-  return (
-    <ThemeProvider value={theme}>
-      <Suspense fallback={<WeakSplashScreen />}>
-        <AppErrorBoundary>
-          <GestureHandlerRootView style={commonStyles.flexFull}>
-            <QueryClientProvider client={queryClient}>
-              <Application />
-            </QueryClientProvider>
-          </GestureHandlerRootView>
-        </AppErrorBoundary>
-      </Suspense>
-    </ThemeProvider>
-  );
-}
