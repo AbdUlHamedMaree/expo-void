@@ -1,9 +1,10 @@
-import { commonStyles } from '$styles/common';
-import { useAppTheme } from '$theme/hook';
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton, TextInput } from 'react-native-paper';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+
+import { commonStyles } from '$styles/common';
+import { useAppTheme } from '$theme/hook';
 
 export type MessageBarProps = {
   messageBoxText?: string;

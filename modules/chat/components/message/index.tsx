@@ -1,7 +1,9 @@
-import { MessageModel } from '$modules/chat/models/message';
 import { useMemo } from 'react';
-import { TextMessage } from './text';
 import { ViewProps } from 'react-native';
+
+import { TextMessage } from './text';
+
+import { MessageModel } from '$modules/chat/models/message';
 
 export type BaseMessageProps = {
   wrapperProps?: ViewProps;

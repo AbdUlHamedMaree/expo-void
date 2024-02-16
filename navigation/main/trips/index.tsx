@@ -1,12 +1,14 @@
-import React from 'react';
-import { TripsStackNavigator } from './navigator';
-import { AllTripsScreen } from '$screens/main/trips/all';
-import { Badge, IconButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { TripsFiltersScreen } from '$screens/main/trips/filters';
 import { useAtomValue } from 'jotai';
-import { tripsFiltersAtom } from '$atoms/trips-filters';
+import React from 'react';
 import { View } from 'react-native';
+import { Badge, IconButton } from 'react-native-paper';
+
+import { TripsStackNavigator } from './navigator';
+
+import { tripsFiltersAtom } from '$atoms/trips-filters';
+import { AllTripsScreen } from '$screens/main/trips/all';
+import { TripsFiltersScreen } from '$screens/main/trips/filters';
 import { ChatSingleTripsMainScreen } from '$screens/main/trips/single/chat';
 
 export const TripsStackNavigation: React.FC = () => {

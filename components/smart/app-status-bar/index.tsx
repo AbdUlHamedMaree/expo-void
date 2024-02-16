@@ -1,6 +1,7 @@
+import { StatusBar, StatusBarProps } from 'react-native';
+
 import { useAppColorSchema } from '$hooks/use-app-color-schema';
 import { usePaperTheme } from '$theme/hook';
-import { StatusBar, StatusBarProps } from 'react-native';
 
 export type AppStatusBarProps = StatusBarProps;
 

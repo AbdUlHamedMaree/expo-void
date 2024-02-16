@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { queryClient } from '$libs/react-query/client';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { Mutations, Queries } from './types';
-import { createGraphQlQuery } from './create-graphql-query';
+
 import { createGraphQlMutation } from './create-graphql-mutation';
+import { createGraphQlQuery } from './create-graphql-query';
+import { Mutations, Queries } from './types';
+
+import { queryClient } from '$libs/react-query/client';
 
 export type CreateCRUDEntityReturn<
   TQueries extends readonly TypedDocumentNode<any, any>[],

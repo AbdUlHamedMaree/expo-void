@@ -1,6 +1,7 @@
-import { commonStyles } from '$styles/common';
 import { Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { commonStyles } from '$styles/common';
 
 export type SplashScreenProps = {
   //

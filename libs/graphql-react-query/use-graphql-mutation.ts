@@ -6,9 +6,10 @@ import {
   UseMutationResult,
   useMutation,
 } from '@tanstack/react-query';
-import { GraphQlRequestAxiosConfig, graphqlRequest } from '$libs/axios/graphql';
 import { AxiosError } from 'axios';
 import { RemoveIndex } from 'graphql-request/build/esm/helpers';
+
+import { GraphQlRequestAxiosConfig, graphqlRequest } from '$libs/axios/graphql';
 
 export type UseGraphQLMutationReturn<TData, TVariables> = UseMutationResult<
   TData,

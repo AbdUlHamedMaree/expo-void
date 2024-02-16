@@ -1,8 +1,10 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { UseGraphQLQueryReturn, useGraphQLQuery } from './use-graphql-query';
 import { DefaultError, UseQueryOptions } from '@tanstack/react-query';
-import { GraphQlRequestAxiosConfig } from '$libs/axios/graphql';
 import { RemoveIndex } from 'graphql-request/build/esm/helpers';
+
+import { UseGraphQLQueryReturn, useGraphQLQuery } from './use-graphql-query';
+
+import { GraphQlRequestAxiosConfig } from '$libs/axios/graphql';
 
 export type CreateGraphQlQueryReturn<
   TData,

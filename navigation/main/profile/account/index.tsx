@@ -1,14 +1,16 @@
-import React from 'react';
-import { AccountStackNavigator } from './navigator';
-import { Badge, IconButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { useAtomValue } from 'jotai';
-import { tripsFiltersAtom } from '$atoms/trips-filters';
+import React from 'react';
 import { View } from 'react-native';
+import { Badge, IconButton } from 'react-native-paper';
+
+import { AccountStackNavigator } from './navigator';
+
+import { tripsFiltersAtom } from '$atoms/trips-filters';
 import { MainProfileAccountMainScreen } from '$screens/main/profile/account/main';
 import { MainProfileAccountMyTripsScreen } from '$screens/main/profile/account/my-trips';
-import { SingleTripsScreen } from '$screens/main/trips/single';
 import { TripsFiltersScreen } from '$screens/main/trips/filters';
+import { SingleTripsScreen } from '$screens/main/trips/single';
 
 export const MainProfileAccountStackNavigation: React.FC = () => {
   const { navigate } = useNavigation();

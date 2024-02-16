@@ -1,5 +1,6 @@
-import { commonStyles } from '$styles/common';
 import { Text, View } from 'react-native';
+
+import { commonStyles } from '$styles/common';
 
 export type WeakSplashScreenProps = {
   //

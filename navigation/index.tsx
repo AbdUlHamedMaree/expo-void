@@ -1,10 +1,12 @@
-import React from 'react';
-import { RootStackNavigator } from './navigator';
-import { WelcomeStepperScreen } from '$screens/welcome-stepper';
-import { MainTabsNavigation } from './main';
 import { useAtomValue } from 'jotai/react';
+import React from 'react';
+
+import { MainTabsNavigation } from './main';
+import { RootStackNavigator } from './navigator';
+
 import { isWelcomeStepperSkippedAtom } from '$atoms/is-welcome-stepper-skipped';
 import { CreateNewTripScreen } from '$screens/create-new-trip';
+import { WelcomeStepperScreen } from '$screens/welcome-stepper';
 
 export const RootStack: React.FC = () => {
   const isWelcomeStepperSkipped = useAtomValue(isWelcomeStepperSkippedAtom);

@@ -1,20 +1,21 @@
-import { LoadingSection } from '$components/dumb/loading-section';
-import { Trip } from '$components/dumb/trip';
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
-import { spacing } from '$theme/spacing';
 import { useNavigation } from '@react-navigation/native';
+
+import { IDUnion } from '$models/id';
+import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
 import { VirtualizedList } from 'react-native';
 import { FAB } from 'react-native-paper';
-import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useTripsQuery } from '$apis/trips';
-import { IDUnion } from '$models/id';
-import { useAtomValue } from 'jotai';
 import { tripsFiltersAtom } from '$atoms/trips-filters';
+import { LoadingSection } from '$components/dumb/loading-section';
+import { Trip } from '$components/dumb/trip';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { GetTripsFiltersIt, InputMaybe } from '$gql/graphql';
 import { useCheckIsUserInTrip } from '$hooks/use-check-is-user-in-trip';
+import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useShowRootTabs } from '$hooks/use-show-root-tabs';
+import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
+import { spacing } from '$theme/spacing';
 
 export type AllTripsScreenProps = {
   //
@@ -60,7 +61,7 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
   );
 
   const tripsQuery = useTripsQuery({
-    tripsQueryFilters: tripsQueryFilters,
+    tripsQueryFilters,
   });
   useRefreshOnFocus(tripsQuery.refetch);
 

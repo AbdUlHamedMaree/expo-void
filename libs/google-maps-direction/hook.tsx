@@ -4,19 +4,20 @@ import {
   useMutation,
   useQuery,
 } from '@tanstack/react-query';
+import { AxiosError, AxiosResponse } from 'axios';
+import { useMemo } from 'react';
+import { MapPolylineProps, Polyline } from 'react-native-maps';
+
 import {
   GetGoogleMapsDirectionsArg,
   GetGoogleMapsDirectionsResponseBody,
   getGoogleMapsDirections,
 } from './api';
-import { AxiosError, AxiosResponse } from 'axios';
-import { useMemo } from 'react';
 import {
   calculateDirectionDistanceInM,
   calculateDirectionDurationInMs,
   decodeStepsToPolylinePoints,
 } from './tools';
-import { MapPolylineProps, Polyline } from 'react-native-maps';
 
 export const useGoogleMapsDirectionsQuery = (
   arg?: GetGoogleMapsDirectionsArg,

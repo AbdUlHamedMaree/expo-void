@@ -1,9 +1,10 @@
-import { isWelcomeStepperSkippedAtom } from '$atoms/is-welcome-stepper-skipped';
-import { commonStyles } from '$styles/common';
-import { spacing } from '$theme/spacing';
 import { useAtom } from 'jotai/react';
 import { View } from 'react-native';
 import { Button, Checkbox } from 'react-native-paper';
+
+import { isWelcomeStepperSkippedAtom } from '$atoms/is-welcome-stepper-skipped';
+import { commonStyles } from '$styles/common';
+import { spacing } from '$theme/spacing';
 
 export type WelcomeStepperBottomNavigationButtonsProps = {
   hidePrevButton?: boolean;

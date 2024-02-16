@@ -1,10 +1,12 @@
+import { useAtomValue } from 'jotai';
 import React from 'react';
+
 import { MainTabsNavigator } from './navigator';
-import { MainHomeScreen } from '$screens/main/home';
 import { ProfileStackNavigation } from './profile';
 import { TripsStackNavigation } from './trips';
-import { useAtomValue } from 'jotai';
+
 import { hideRootTabsAtom } from '$atoms/hide-root-tabs';
+import { MainHomeScreen } from '$screens/main/home';
 
 export const MainTabsNavigation: React.FC = () => {
   const hideRootTabs = useAtomValue(hideRootTabsAtom);

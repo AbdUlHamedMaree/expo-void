@@ -1,6 +1,7 @@
-import { storage } from '$libs/mmkv';
-// import { API_HTTP_PROTOCOL, API_HOST } from '@env';
 import axios from 'axios';
+
+import { storage } from '$libs/async-storage/storage';
+// import { API_HTTP_PROTOCOL, API_HOST } from '@env';
 
 const API_HTTP_PROTOCOL = '',
   API_HOST = '';
@@ -11,8 +12,8 @@ export const request = axios.create({
 });
 
 request.interceptors.request.use(
-  config => {
-    const accessToken = storage.accessToken.get();
+  async config => {
+    const accessToken = await storage.accessToken.get();
     if (accessToken)
       config.headers.Authorization =
         config.headers.Authorization ?? `Bearer ${accessToken}`;

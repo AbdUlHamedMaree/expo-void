@@ -1,4 +1,5 @@
 import { LatLng } from 'react-native-maps';
+
 import { DirectionsPolyline, TextValueObject } from './api';
 
 export const decodeStepsToPolylinePoints = (

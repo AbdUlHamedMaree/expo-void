@@ -1,10 +1,11 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { GraphQLError } from 'graphql';
 import { resolveRequestDocument, RequestDocument, Variables } from 'graphql-request';
 import { RemoveIndex } from 'graphql-request/build/esm/helpers';
-import { graphqlWsClient } from './client';
-import { GraphQLError } from 'graphql';
-import { useState } from 'react';
 import { ExecutionResult } from 'graphql-ws';
+import { useState } from 'react';
+
+import { graphqlWsClient } from './client';
 
 export type UseGraphQlSubscriptionHandlers<TResult> = {
   onData?: (data: TResult) => void;

@@ -1,6 +1,8 @@
-import { TripMapMarkerCard } from '../trip-map-marker-card';
-import { MaterialCommunityIcon } from '$components/icons';
 import { Marker } from 'react-native-maps';
+
+import { TripMapMarkerCard } from '../trip-map-marker-card';
+
+import { MaterialCommunityIcon } from '$components/icons';
 import { TripRouteModel } from '$fragments/trip-route';
 import { pickupDropoffToLatlng } from '$helpers/pickup-dropoff-to-latlng';
 

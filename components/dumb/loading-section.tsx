@@ -1,8 +1,9 @@
-import { useViewWidth } from '$hooks/use-view-width';
-import { commonStyles } from '$styles/common';
 import LottieView from 'lottie-react-native';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
+
+import { useViewWidth } from '$hooks/use-view-width';
+import { commonStyles } from '$styles/common';
 
 export type LoadingSectionProps = {
   loading?: boolean;

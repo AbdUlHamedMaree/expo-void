@@ -1,3 +1,8 @@
+import React, { forwardRef, memo } from 'react';
+import { mergeRefs } from 'react-merge-refs';
+import { View, ViewProps } from 'react-native';
+import { HelperText } from 'react-native-paper';
+
 import {
   MaskedTextInput,
   MaskedTextInputProps,
@@ -5,10 +10,6 @@ import {
 import { useAppTheme } from '$theme/hook';
 import { FieldComponentProps, createField } from '$tools/create-field';
 import { mergeFunctions } from '$tools/merge-functions';
-import React, { forwardRef, memo } from 'react';
-import { mergeRefs } from 'react-merge-refs';
-import { View, ViewProps } from 'react-native';
-import { HelperText } from 'react-native-paper';
 
 export type MaskedTextFieldProps = {
   viewContainerProps?: ViewProps;

@@ -1,8 +1,9 @@
+import { View } from 'react-native';
+import { Card } from 'react-native-paper';
+
 import { MaterialCommunityIcon } from '$components/icons';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
-import { View } from 'react-native';
-import { Card } from 'react-native-paper';
 
 export type TripMapMarkerCardProps = {
   children?: React.ReactNode;

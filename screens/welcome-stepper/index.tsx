@@ -1,11 +1,12 @@
+import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { WelcomeStepperBottomNavigationButtons } from '$components/parts/welcome-stepper/bottom-navigation-buttons';
 import { WelcomeStepperStepOne } from '$components/parts/welcome-stepper/step-one';
 import { WelcomeStepperStepThree } from '$components/parts/welcome-stepper/step-three';
 import { WelcomeStepperStepTwo } from '$components/parts/welcome-stepper/step-two';
 import { commonStyles } from '$styles/common';
-import { useNavigation } from '@react-navigation/native';
-import { useState } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export type WelcomeStepperScreenProps = {
   //

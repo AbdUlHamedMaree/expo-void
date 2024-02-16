@@ -1,13 +1,3 @@
-import { commonStyles } from '$styles/common';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { FormProvider, useForm } from 'react-hook-form';
-import { Button, IconButton, SegmentedButtons } from 'react-native-paper';
-import { StyleSheet, View } from 'react-native';
-import { DateTimeField } from '$components/fields/date-time';
-import { TextField } from '$components/fields/text';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import MapView, { MapPressEvent, Marker } from 'react-native-maps';
-import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
 import { useAtomValue } from 'jotai';
 import { mapRegionAtom } from '$atoms/map-region';
 import { spacing } from '$theme/spacing';
@@ -19,11 +9,22 @@ import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
 import { getAddressComponent } from '$libs/geocoding/get-adress-component';
 import { MaskedTextField } from '$components/fields/masked-text';
 import { useNavigation } from '@react-navigation/native';
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useAppTheme } from '$theme/hook';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { StyleSheet, View } from 'react-native';
+import MapView, { MapPressEvent, Marker } from 'react-native-maps';
+import { Button, IconButton, SegmentedButtons } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { useCreateTripMutation } from '$apis/trips';
-import { toast } from '$modules/react-native-paper-toast';
+import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
+import { DateTimeField } from '$components/fields/date-time';
+import { TextField } from '$components/fields/text';
 import { MaterialCommunityIcon } from '$components/icons';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
+import { toast } from '$modules/react-native-paper-toast';
+import { commonStyles } from '$styles/common';
+import { useAppTheme } from '$theme/hook';
 
 const addressValidation = object({
   addressLineOne: string(),

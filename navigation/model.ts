@@ -1,6 +1,8 @@
-import type { StackScreenProps } from '@react-navigation/stack';
-import { MainTabsParamList } from './main/model';
 import { NavigatorScreenParams } from '@react-navigation/native';
+import type { StackScreenProps } from '@react-navigation/stack';
+
+import { MainTabsParamList } from './main/model';
+
 import { ParamListWithBase } from '$types/param-list-with-base';
 
 export type RootStackParamList = {

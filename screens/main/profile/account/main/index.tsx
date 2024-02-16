@@ -1,22 +1,23 @@
-import { useMeQuery } from '$apis/user';
-import { meDocument } from '$apis/user/queries/me';
-import { PaperButton } from '$components/dumb/paper-button';
-import { DropdownInput } from '$components/inputs/dropdown';
-import { ListItem } from '$components/inputs/select/types';
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useMMKVState } from '$hooks/use-mmkv-state';
-import { useShowRootTabs } from '$hooks/use-show-root-tabs';
-import { storage } from '$libs/mmkv';
-import { queryClient } from '$libs/react-query/client';
-import { AvailableLanguagesUnion } from '$models/available-languages';
-import { AccountStackParamList } from '$navigation/main/profile/account/model';
-import { spacing } from '$theme/spacing';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ObjectTypeDefinitionNode } from 'graphql';
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { Divider, IconButton, List, Text } from 'react-native-paper';
+
+import { useMeQuery } from '$apis/user';
+import { meDocument } from '$apis/user/queries/me';
+import { PaperButton } from '$components/dumb/paper-button';
+import { DropdownInput } from '$components/inputs/dropdown';
+import { ListItem } from '$components/inputs/select/types';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
+import { useShowRootTabs } from '$hooks/use-show-root-tabs';
+import { storage } from '$libs/async-storage/storage';
+import { useStorageState } from '$libs/async-storage/use-storage-state';
+import { queryClient } from '$libs/react-query/client';
+import { AvailableLanguagesUnion } from '$models/available-languages';
+import { AccountStackParamList } from '$navigation/main/profile/account/model';
+import { spacing } from '$theme/spacing';
 
 const languages: ListItem[] = [
   {
@@ -41,15 +42,18 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
   const user = data?.me;
   const { navigate } = useNavigation();
 
-  const [lang, setLang] = useMMKVState(storage.lang);
+  const langStorage = useStorageState(storage.lang);
 
   const selectedItem = useMemo(() => {
-    const selectedLanguage = languages.find(language => language.value === lang);
+    if (!langStorage.value) return [];
+    const selectedLanguage = languages.find(
+      language => language.value === langStorage.value
+    );
 
     if (!selectedLanguage) return [];
 
     return [selectedLanguage];
-  }, [lang]);
+  }, [langStorage.value]);
 
   const handleLogout = useCallback(() => {
     storage.accessToken.delete();
@@ -58,7 +62,6 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
     queryClient.invalidateQueries({
       queryKey: [(meDocument.definitions[0] as ObjectTypeDefinitionNode).name],
     });
-
     navigate('Main', { screen: 'Profile', params: { screen: 'Login', params: {} } });
   }, [navigate]);
 
@@ -94,7 +97,7 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
           items={languages}
           selected={selectedItem}
           onSelectFinish={selected =>
-            setLang(selected[0].value as AvailableLanguagesUnion)
+            langStorage.set(selected[0].value as AvailableLanguagesUnion)
           }
         />
         <View style={{ flex: 1 }} />

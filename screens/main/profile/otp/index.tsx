@@ -1,20 +1,21 @@
-import { PaperButton } from '$components/dumb/paper-button';
-import { MaskedTextField } from '$components/fields/masked-text';
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { storage } from '$libs/mmkv';
-import { ProfileStackScreenProps } from '$navigation/main/profile/model';
-import { commonStyles } from '$styles/common';
-import { useAppTheme } from '$theme/hook';
-import { spacing } from '$theme/spacing';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useQueryClient } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { Button, Divider, IconButton, Text } from 'react-native-paper';
 import { object, string } from 'zod';
+
 import { useVerifyOTPMutation } from '$apis/otp';
-import { useQueryClient } from '@tanstack/react-query';
+import { PaperButton } from '$components/dumb/paper-button';
+import { MaskedTextField } from '$components/fields/masked-text';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { useShowRootTabs } from '$hooks/use-show-root-tabs';
+import { storage } from '$libs/async-storage/storage';
+import { ProfileStackScreenProps } from '$navigation/main/profile/model';
+import { commonStyles } from '$styles/common';
+import { useAppTheme } from '$theme/hook';
+import { spacing } from '$theme/spacing';
 
 const validationSchema = object({
   otp: string({ required_error: 'Code is required field' }).length(
@@ -57,8 +58,8 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
         verifyOTPPayload: { otp, phoneNumber: phone },
       });
 
-      storage.accessToken.set(accessToken);
-      storage.refreshToken.set(refreshToken);
+      await storage.accessToken.set(accessToken);
+      await storage.refreshToken.set(refreshToken);
 
       queryClient.invalidateQueries({ queryKey: ['MeQuery'] });
 

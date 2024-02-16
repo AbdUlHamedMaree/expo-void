@@ -1,5 +1,6 @@
-import { spacing } from '$theme/spacing';
 import { StyleSheet } from 'react-native';
+
+import { spacing } from '$theme/spacing';
 
 export const screenHorizontalPadding = spacing.md + spacing.sm;
 export const screenVerticalPadding = spacing.lg;

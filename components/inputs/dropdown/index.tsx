@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { forwardRef, memo, useCallback, useEffect, useState } from 'react';
 import { TextInput, TextInputProps } from 'react-native-paper';
-import type { ListItem } from './types';
+
 import { ControlledDropdownInput, ControlledDropdownInputProps } from './controlled';
+import type { ListItem } from './types';
 
 const emptyArray: any[] = [];
 

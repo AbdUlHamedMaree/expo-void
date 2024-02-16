@@ -1,4 +1,4 @@
-import { atomWithMMKV } from '$libs/jotai/atom-with-mmkv';
+import { atomWithAsyncStorage } from '$libs/jotai/atom-with-async-storage';
 
 export enum ColorSchemaEnum {
   system = 'system',
@@ -8,4 +8,7 @@ export enum ColorSchemaEnum {
 
 export type ColorSchemaUnion = keyof typeof ColorSchemaEnum;
 
-export const colorSchemaAtom = atomWithMMKV<ColorSchemaUnion>('color-schema', 'system');
+export const colorSchemaAtom = atomWithAsyncStorage<ColorSchemaUnion>(
+  'color-schema',
+  'system'
+);

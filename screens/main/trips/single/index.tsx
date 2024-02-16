@@ -1,30 +1,38 @@
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
+import { GOOGLE_SERVICES_API } from '@env';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { format } from 'date-fns';
+import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { TripsStackScreenProps } from '$navigation/main/trips/model';
-import { useSingleTripQuery } from '$apis/trips';
-import { LoadingSection } from '$components/dumb/loading-section';
+import { View } from 'react-native';
 import MapView, { Details, Region } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSingleTripQuery } from '$apis/trips';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
+
+import { toTripRoute } from '$fragments/trip-route';
 import {
   dropoffToLatlng,
   pickupDropoffToLatlng,
   pickupToLatlng,
 } from '$helpers/pickup-dropoff-to-latlng';
-import { useAtomValue } from 'jotai';
+import { TripsStackScreenProps } from '$navigation/main/trips/model';
+import { LoadingSection } from '$components/dumb/loading-section';
+
+
 import { mapRegionAtom } from '$atoms/map-region';
 import { commonStyles } from '$styles/common';
 import { MapTrip } from '$components/dumb/map-trip';
-import { toTripRoute } from '$fragments/trip-route';
-import MapViewDirections from 'react-native-maps-directions';
-import { GOOGLE_SERVICES_API } from '@env';
+
+
 import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { Button, FAB, IconButton, Text } from 'react-native-paper';
-import { View } from 'react-native';
+
 import { MaterialCommunityIcon } from '$components/icons';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
-import { format } from 'date-fns';
 import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { useIsUserPartOfTheTrip } from '$hooks/use-is-user-in-trip';

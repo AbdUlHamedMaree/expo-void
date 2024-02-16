@@ -1,17 +1,19 @@
+import merge from 'deepmerge';
 import { produce } from 'immer';
 import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { StyleProp, ViewStyle } from 'react-native';
 import { Snackbar } from 'react-native-paper';
+import { ThemeProp } from 'react-native-paper/lib/typescript/types';
+
+import { EmitterApi } from './event-emitter';
 import {
   SnackbarModel,
   SnackbarTypeUnion,
   SnackbarVariantUnion,
   ToastOptionsWithoutMessageModel,
 } from './model';
-import { EmitterApi } from './event-emitter';
-import { ThemeProp } from 'react-native-paper/lib/typescript/types';
+
 import { useAppTheme } from '$theme/hook';
-import { StyleProp, ViewStyle } from 'react-native';
-import merge from 'deepmerge';
 import { RequiredKeys } from '$types/required-keys';
 
 type SnackbarVariantTypeValue<T> = Record<

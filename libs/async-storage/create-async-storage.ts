@@ -1,57 +1,33 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { appAsyncStorage } from './app-async-storage';
 
-import { isNil } from '$modules/checks';
+import { isUndefined } from '$modules/checks';
 
-export type CreateAsyncStorage<T, F = null> = (
+export type CreateAsyncStorage<T, F = undefined> = (
   key: string,
-  baseFallbackValue: F
-) => {
-  set: (value: T | F) => Promise<boolean>;
-  get: <L = F>(fallbackValue?: L) => Promise<T | L>;
+  baseFallbackValue?: F
+) => CreateAsyncStorageResult<T, F>;
+
+export type CreateAsyncStorageResult<T, F = undefined> = {
+  set: (value?: T | F | undefined) => Promise<boolean>;
+  get: <L = undefined>(fallbackValue?: L) => Promise<T | F | L>;
   delete: () => Promise<boolean>;
+  key: string;
+  fallbackValue: F;
 };
 
-export const createAsyncStorage = <T, F = null>(
+export const createAsyncStorage = <T, F = undefined>(
   key: string,
-  baseFallbackValue: F = null as F
-) => ({
-  set: async (value: T | F) => {
-    try {
-      if (isNil(value)) {
-        await AsyncStorage.removeItem(key);
-        return true;
-      }
+  baseFallbackValue: F = undefined as F
+): CreateAsyncStorageResult<T, F> => ({
+  key,
+  fallbackValue: baseFallbackValue,
+  set: async value => appAsyncStorage.set(key, value),
+  get: async (fallbackValue = undefined) => {
+    const value = await appAsyncStorage.get<T, typeof fallbackValue>(key, fallbackValue);
 
-      const stringifiedValue = JSON.stringify(value);
-      await AsyncStorage.setItem(key, stringifiedValue);
+    if (isUndefined(value)) return baseFallbackValue;
 
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
+    return value;
   },
-  get: async <L = F>(fallbackValue: L = null as L) => {
-    try {
-      const stringifiedValue = await AsyncStorage.getItem(key);
-      if (isNil(stringifiedValue)) return undefined;
-      const value = JSON.parse(stringifiedValue) as T;
-
-      return value ?? fallbackValue ?? baseFallbackValue;
-    } catch (err) {
-      console.error(err);
-
-      return undefined;
-    }
-  },
-  delete: async () => {
-    try {
-      await AsyncStorage.removeItem(key);
-
-      return true;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-  },
+  delete: async () => appAsyncStorage.delete(key),
 });

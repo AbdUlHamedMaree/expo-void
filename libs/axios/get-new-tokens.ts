@@ -1,6 +1,7 @@
-import { graphql } from '$gql';
-import { storage } from '$libs/mmkv';
 import { graphqlRequest } from './graphql';
+
+import { graphql } from '$gql';
+import { storage } from '$libs/async-storage/storage';
 
 const getNewTokensDocument = graphql(`
   mutation GetNewTokens {
@@ -11,8 +12,8 @@ const getNewTokensDocument = graphql(`
   }
 `);
 
-export const getNewTokensRequest = () => {
-  const refreshToken = storage.refreshToken.get();
+export const getNewTokensRequest = async () => {
+  const refreshToken = await storage.refreshToken.get();
 
   return graphqlRequest(getNewTokensDocument, undefined, {
     headers: { Authorization: `Bearer ${refreshToken}` },

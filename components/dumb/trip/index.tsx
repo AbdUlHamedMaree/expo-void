@@ -1,11 +1,12 @@
-import { MaterialCommunityIcon } from '$components/icons';
-import { spacing } from '$theme/spacing';
+import { format } from 'date-fns';
 import React, { memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, CardProps, Divider, IconButton, Text } from 'react-native-paper';
-import { format } from 'date-fns';
-import { useAppTheme } from '$theme/hook';
+
+import { MaterialCommunityIcon } from '$components/icons';
 import { TripCardModel } from '$fragments/trip-card';
+import { useAppTheme } from '$theme/hook';
+import { spacing } from '$theme/spacing';
 
 export type TripProps = TripCardModel & {
   joined?: boolean | null;

@@ -1,5 +1,5 @@
-import { MessageModel } from './models/message';
 import { MessagesScreen } from './components/screens/messages';
+import { MessageModel } from './models/message';
 
 export type ChatAppProps = {
   messageBoxText?: string;

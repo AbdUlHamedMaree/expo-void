@@ -1,4 +1,7 @@
 import React from 'react';
+
+import { PaperToastContainer } from './container';
+import { EmitterApi } from './event-emitter';
 import {
   BaseToastFn,
   ToastFn,
@@ -6,8 +9,6 @@ import {
   ToastOptionsWithoutMessageModel,
   SnackbarTypeUnion,
 } from './model';
-import { EmitterApi } from './event-emitter';
-import { PaperToastContainer } from './container';
 
 const pushToast = (toast: ToastOptionsModel) => {
   EmitterApi.addSnackbar({

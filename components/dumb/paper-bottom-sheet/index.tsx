@@ -1,7 +1,8 @@
-import { useAppTheme } from '$theme/hook';
-import { shadowsStyles } from '$theme/shadows';
 import BottomSheet, { BottomSheetProps } from '@gorhom/bottom-sheet';
 import { forwardRef, memo } from 'react';
+
+import { useAppTheme } from '$theme/hook';
+import { shadowsStyles } from '$theme/shadows';
 
 export type PaperBottomSheetProps = BottomSheetProps;
 

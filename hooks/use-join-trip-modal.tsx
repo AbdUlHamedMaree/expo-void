@@ -1,11 +1,12 @@
+import { useNavigation } from '@react-navigation/native';
+import { isAxiosError } from 'axios';
+import { useCallback, useMemo, useState } from 'react';
+
 import { useJoinTripMutation } from '$apis/trips';
 import { useMeQuery } from '$apis/user';
 import { JoinTripFormFields, JoinTripModal } from '$components/smart/join-trip-modal';
 import { TripOt } from '$gql/graphql';
 import { toast } from '$modules/react-native-paper-toast';
-import { useNavigation } from '@react-navigation/native';
-import { isAxiosError } from 'axios';
-import { useCallback, useMemo, useState } from 'react';
 
 export type UseJoinTripModalArg = {
   trip?: Pick<TripOt, 'id' | 'capacity' | 'occupiedSeats'>;

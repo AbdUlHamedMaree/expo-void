@@ -1,11 +1,12 @@
-import { mergeFunctions } from '$tools/merge-functions';
 import React, { forwardRef, memo, useMemo } from 'react';
+import { mergeRefs } from 'react-merge-refs';
 import { View, ViewProps } from 'react-native';
 import { HelperText, TextInput, TextInputProps } from 'react-native-paper';
-import { mergeRefs } from 'react-merge-refs';
+
+import { isNil } from '$modules/checks';
 import { useAppTheme } from '$theme/hook';
 import { FieldComponentProps, createField } from '$tools/create-field';
-import { isNil } from '$modules/checks';
+import { mergeFunctions } from '$tools/merge-functions';
 
 export type TextFieldProps = {
   viewContainerProps?: ViewProps;

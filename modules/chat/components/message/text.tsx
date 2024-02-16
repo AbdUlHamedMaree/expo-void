@@ -1,10 +1,12 @@
+import { useMemo } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import Animated, { FadeIn } from 'react-native-reanimated';
+
+import { BaseMessageProps } from '.';
+
 import { TextMessageModel } from '$modules/chat/models/message';
 import { useAppTheme } from '$theme/hook';
-import { Text } from 'react-native-paper';
-import { useMemo } from 'react';
-import { BaseMessageProps } from '.';
-import Animated, { FadeIn } from 'react-native-reanimated';
 
 export type TextMessageProps = TextMessageModel & BaseMessageProps;
 

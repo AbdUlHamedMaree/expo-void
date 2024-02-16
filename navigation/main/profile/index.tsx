@@ -1,11 +1,13 @@
 import React from 'react';
+
+import { MainProfileAccountStackNavigation } from './account';
 import { ProfileStackNavigator } from './navigator';
-import { MainProfileLoginScreen } from '$screens/main/profile/login';
-import { MainProfileSignUpScreen } from '$screens/main/profile/sign-up';
-import { MainProfileOTPScreen } from '$screens/main/profile/otp';
+
 import { useMeQuery } from '$apis/user';
 import { LoadingSection } from '$components/dumb/loading-section';
-import { MainProfileAccountStackNavigation } from './account';
+import { MainProfileLoginScreen } from '$screens/main/profile/login';
+import { MainProfileOTPScreen } from '$screens/main/profile/otp';
+import { MainProfileSignUpScreen } from '$screens/main/profile/sign-up';
 
 export const ProfileStackNavigation: React.FC = () => {
   const { data, isLoading } = useMeQuery();

@@ -1,5 +1,6 @@
-import { PaperProvider } from 'react-native-paper';
 import React from 'react';
+import { PaperProvider } from 'react-native-paper';
+
 import { usePaperTheme } from './hook';
 
 export const AppPaperProvider: React.FC<React.PropsWithChildren> = ({ children }) => {

@@ -1,8 +1,10 @@
-import { RootStackParamList, RootStackScreenProps } from '$navigation/model';
 import { CompositeScreenProps } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 import { MainTabsParamList, MainTabsScreenProps } from '../../model';
 import { ProfileStackScreenProps } from '../model';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
+import { RootStackParamList, RootStackScreenProps } from '$navigation/model';
 import { ParamListWithBase } from '$types/param-list-with-base';
 
 export type AccountStackParamList = {

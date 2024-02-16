@@ -1,9 +1,11 @@
-import { mergeFunctions } from '$tools/merge-functions';
 import React, { forwardRef, memo, useCallback } from 'react';
+import { mergeRefs } from 'react-merge-refs';
 import { MaskedTextInput as LMaskedTextInput } from 'react-native-mask-text';
 import { TextInput, TextInputProps } from 'react-native-paper';
+
 import { FormatType, MaskOptions, TextDecorationOptions } from './types';
-import { mergeRefs } from 'react-merge-refs';
+
+import { mergeFunctions } from '$tools/merge-functions';
 
 export type MaskedTextInputProps = {
   mask?: string;

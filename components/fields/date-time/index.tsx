@@ -1,10 +1,3 @@
-import {
-  MaskedTextInput,
-  MaskedTextInputProps,
-} from '$components/dumb/masked-text-input';
-import { useAppTheme } from '$theme/hook';
-import { FieldComponentProps, createField } from '$tools/create-field';
-import { mergeFunctions } from '$tools/merge-functions';
 import { format, parse } from 'date-fns';
 import React, {
   forwardRef,
@@ -24,6 +17,14 @@ import {
   en,
   registerTranslation,
 } from 'react-native-paper-dates';
+
+import {
+  MaskedTextInput,
+  MaskedTextInputProps,
+} from '$components/dumb/masked-text-input';
+import { useAppTheme } from '$theme/hook';
+import { FieldComponentProps, createField } from '$tools/create-field';
+import { mergeFunctions } from '$tools/merge-functions';
 
 registerTranslation('en', en);
 

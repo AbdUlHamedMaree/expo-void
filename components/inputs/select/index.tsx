@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import { mergeRefs } from 'react-merge-refs';
 import { StyleSheet, ScrollView, Dimensions, ScrollViewProps } from 'react-native';
 import {
   TextInput,
@@ -18,11 +19,12 @@ import {
   CheckboxItemProps,
   List,
 } from 'react-native-paper';
+
 import type { ListItem } from './types';
+
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
 import { mergeFunctions } from '$tools/merge-functions';
-import { mergeRefs } from 'react-merge-refs';
 
 const emptyArray: any[] = [];
 

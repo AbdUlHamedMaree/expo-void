@@ -1,7 +1,8 @@
-import { commonStyles } from '$styles/common';
+import LottieView from 'lottie-react-native';
 import { View, useWindowDimensions } from 'react-native';
 import { Text } from 'react-native-paper';
-import LottieView from 'lottie-react-native';
+
+import { commonStyles } from '$styles/common';
 
 export type WelcomeStepperStepTwoProps = {
   children?: React.ReactNode;

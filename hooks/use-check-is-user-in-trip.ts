@@ -1,7 +1,8 @@
+import { useCallback } from 'react';
+
 import { useMeQuery } from '$apis/user';
 import { graphql } from '$gql';
 import { FragmentModel } from '$types/fragment-model';
-import { useCallback } from 'react';
 
 const Trip = graphql(`
   fragment UseIsUserPartOfTheTrip on TripOt {

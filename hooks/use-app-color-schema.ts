@@ -1,7 +1,8 @@
-import { colorSchemaAtom } from '$atoms/color-schema';
 import { useAtomValue } from 'jotai/react';
 import { useMemo } from 'react';
 import { useColorScheme } from 'react-native';
+
+import { colorSchemaAtom } from '$atoms/color-schema';
 
 export const useAppColorSchema = () => {
   const colorSchema = useAtomValue(colorSchemaAtom);

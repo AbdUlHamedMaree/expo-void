@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { AxiosRequestConfig } from 'axios';
-import { request } from './instance';
-import { resolveRequestDocument, type RequestDocument, Variables } from 'graphql-request';
 import { type TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { AxiosGraphQlSuccessResponse } from './response';
+import { AxiosRequestConfig } from 'axios';
+import { resolveRequestDocument, type RequestDocument, Variables } from 'graphql-request';
 import { RemoveIndex } from 'graphql-request/build/esm/helpers';
+
+import { request } from './instance';
+import { AxiosGraphQlSuccessResponse } from './response';
+
 // import { API_GRAPHQL_PATHNAME } from '@env';
 
 const API_GRAPHQL_PATHNAME = '';

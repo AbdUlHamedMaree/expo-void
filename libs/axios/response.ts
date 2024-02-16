@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { AxiosResponse } from 'axios';
+
 import { AxiosGraphQlErrorResponseData, isGraphQlError } from './error';
 
 export type AxiosGraphQlSuccessResponseData<TData = any> = {

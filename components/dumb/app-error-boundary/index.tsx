@@ -1,4 +1,3 @@
-import { mergeFunctions } from '$tools/merge-functions';
 import React, { useCallback } from 'react';
 import {
   ErrorBoundary,
@@ -7,6 +6,8 @@ import {
 } from 'react-error-boundary';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
+
+import { mergeFunctions } from '$tools/merge-functions';
 
 export type ErrorSectionProps = {
   //

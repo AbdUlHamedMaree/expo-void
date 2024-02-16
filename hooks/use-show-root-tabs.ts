@@ -1,6 +1,7 @@
-import { hideRootTabsAtom } from '$atoms/hide-root-tabs';
 import { useSetAtom } from 'jotai';
 import { useLayoutEffect } from 'react';
+
+import { hideRootTabsAtom } from '$atoms/hide-root-tabs';
 
 export const useShowRootTabs = () => {
   const setHideRootTabs = useSetAtom(hideRootTabsAtom);

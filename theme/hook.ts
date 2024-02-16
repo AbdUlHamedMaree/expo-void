@@ -1,8 +1,10 @@
-import { useAppColorSchema } from '$hooks/use-app-color-schema';
 import { useMemo } from 'react';
-import { AppTheme, getPaperTheme } from './theme';
-import { useTheme } from 'react-native-paper';
 import { DeepPartial } from 'react-hook-form';
+import { useTheme } from 'react-native-paper';
+
+import { AppTheme, getPaperTheme } from './theme';
+
+import { useAppColorSchema } from '$hooks/use-app-color-schema';
 
 export const usePaperTheme = () => {
   const colorSchema = useAppColorSchema();

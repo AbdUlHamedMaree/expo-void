@@ -1,11 +1,13 @@
+import { AxiosError } from 'axios';
 import { useCallback, useLayoutEffect } from 'react';
+
+import { AxiosGraphQlErrorResponseData, isGraphQlStandardError } from './error';
+import { getNewTokensRequest } from './get-new-tokens';
 import { request } from './instance';
 import { AxiosGraphQlResponse, isGraphQlErrorResponse } from './response';
-import { AxiosGraphQlErrorResponseData, isGraphQlStandardError } from './error';
-import { AxiosError } from 'axios';
-import { getNewTokensRequest } from './get-new-tokens';
-import { storage } from '$libs/mmkv';
+
 import { useMeQuery } from '$apis/user';
+import { storage } from '$libs/async-storage/storage';
 
 export const useAxiosService = () => {
   useMeQuery();
@@ -17,16 +19,16 @@ export const useAxiosService = () => {
         if (!originalRequest.__refreshTokenRequest) {
           const newTokens = await getNewTokensRequest();
 
-          storage.accessToken.set(newTokens.getNewTokens.accessToken);
-          storage.refreshToken.set(newTokens.getNewTokens.refreshToken);
+          await storage.accessToken.set(newTokens.getNewTokens.accessToken);
+          await storage.refreshToken.set(newTokens.getNewTokens.refreshToken);
 
           originalRequest.headers.Authorization = newTokens.getNewTokens.accessToken;
 
           return request(originalRequest);
         }
 
-        storage.accessToken.delete();
-        storage.refreshToken.delete();
+        await storage.accessToken.delete();
+        await storage.refreshToken.delete();
       }
 
       return Promise.reject(error);

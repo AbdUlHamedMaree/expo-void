@@ -1,6 +1,7 @@
-import { RootStackParamList } from '$navigation/model';
 import { NavigatorScreenParams, useNavigation } from '@react-navigation/native';
 import { useCallback } from 'react';
+
+import { RootStackParamList } from '$navigation/model';
 
 export const useNavigate = () => {
   const { navigate } = useNavigation();

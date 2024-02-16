@@ -1,7 +1,8 @@
-import { useAppTheme } from '$theme/hook';
-import { spacing } from '$theme/spacing';
 import React, { forwardRef, memo, useMemo } from 'react';
 import { Button, ButtonProps, Text, TextProps } from 'react-native-paper';
+
+import { useAppTheme } from '$theme/hook';
+import { spacing } from '$theme/spacing';
 
 export type PaperButtonSizeUnion = 'small' | 'medium' | 'large';
 
@@ -92,8 +93,8 @@ export const PaperButton = memo(
         ref={ref}
         style={[
           {
-            borderRadius: borderRadius,
-            padding: padding,
+            borderRadius,
+            padding,
           },
           props.style,
         ]}

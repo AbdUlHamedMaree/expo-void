@@ -1,8 +1,9 @@
-import { FieldComponentProps, createField } from '$tools/create-field';
-import { mergeFunctions } from '$tools/merge-functions';
 import React, { memo } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Checkbox, CheckboxItemProps, HelperText } from 'react-native-paper';
+
+import { FieldComponentProps, createField } from '$tools/create-field';
+import { mergeFunctions } from '$tools/merge-functions';
 
 export type CheckboxItemFieldProps = {
   viewContainerProps?: ViewProps;

@@ -1,3 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigation } from '@react-navigation/native';
+import { FormProvider, useForm } from 'react-hook-form';
+import { View } from 'react-native';
+import { Button, Divider, IconButton, Text, TextInput } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { object, string } from 'zod';
+
 import { useSendOtpMutation } from '$apis/otp';
 import { useSignUpMutation } from '$apis/user';
 import { PaperButton } from '$components/dumb/paper-button';
@@ -7,13 +15,6 @@ import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
-import { FormProvider, useForm } from 'react-hook-form';
-import { View } from 'react-native';
-import { Button, Divider, IconButton, Text, TextInput } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { object, string } from 'zod';
 
 const validationSchema = object({
   phone: string({ required_error: 'Phone is required field' }).regex(

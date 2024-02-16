@@ -1,11 +1,3 @@
-import { TripsFiltersModel, tripsFiltersAtom } from '$atoms/trips-filters';
-import { DateTimeField } from '$components/fields/date-time';
-import { TextField } from '$components/fields/text';
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
-import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
-import { commonStyles } from '$styles/common';
-import { spacing } from '$theme/spacing';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
@@ -16,6 +8,15 @@ import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Divider, IconButton, Text } from 'react-native-paper';
 import { object, string, coerce, date } from 'zod';
+
+import { TripsFiltersModel, tripsFiltersAtom } from '$atoms/trips-filters';
+import { DateTimeField } from '$components/fields/date-time';
+import { TextField } from '$components/fields/text';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
+import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
+import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
+import { commonStyles } from '$styles/common';
+import { spacing } from '$theme/spacing';
 
 const addressObjectSchema = object({
   country: string().optional(),
@@ -65,7 +66,7 @@ export const TripsFiltersScreen: React.FC<TripsFiltersScreenProps> = () => {
 
   const methods = useForm<TripsFiltersModel>({
     resolver: zodResolver(validationSchema),
-    defaultValues: defaultValues,
+    defaultValues,
   });
 
   const handleApplyFilters = useMemo(

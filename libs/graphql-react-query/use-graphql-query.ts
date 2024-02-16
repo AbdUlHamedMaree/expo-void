@@ -7,9 +7,10 @@ import {
   UseQueryResult,
   useQuery,
 } from '@tanstack/react-query';
-import { GraphQlRequestAxiosConfig, graphqlRequest } from '$libs/axios/graphql';
-import { RemoveIndex } from 'graphql-request/build/esm/helpers';
 import { Variables } from 'graphql-request';
+import { RemoveIndex } from 'graphql-request/build/esm/helpers';
+
+import { GraphQlRequestAxiosConfig, graphqlRequest } from '$libs/axios/graphql';
 
 export type UseGraphQLQueryReturn<TData> = UseQueryResult<TData>;
 

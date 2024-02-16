@@ -5,5 +5,5 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "cSpell.words": ["dropoff", "latlng", "mmkv", "searchbar"]
+  "cSpell.words": ["dropoff", "latlng", "searchbar"]
 }

@@ -1,21 +1,22 @@
-import { TextField } from '$components/fields/text';
-import { PaperToastContainer, toast } from '$modules/react-native-paper-toast';
-import { commonStyles } from '$styles/common';
-import { spacing } from '$theme/spacing';
-import { useNavigation } from '@react-navigation/native';
-import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigation } from '@react-navigation/native';
+import { isAxiosError } from 'axios';
+import { FormProvider, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { Button, Divider, IconButton, Text, TextInput } from 'react-native-paper';
 import { object, string } from 'zod';
-import { MaskedTextField } from '$components/fields/masked-text';
-import { PaperButton } from '$components/dumb/paper-button';
-import { storage } from '$libs/mmkv';
-import { useAppTheme } from '$theme/hook';
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { isAxiosError } from 'axios';
+
 import { useLoginMutation } from '$apis/user';
+import { PaperButton } from '$components/dumb/paper-button';
+import { MaskedTextField } from '$components/fields/masked-text';
+import { TextField } from '$components/fields/text';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { useShowRootTabs } from '$hooks/use-show-root-tabs';
+import { storage } from '$libs/async-storage/storage';
+import { PaperToastContainer, toast } from '$modules/react-native-paper-toast';
+import { commonStyles } from '$styles/common';
+import { useAppTheme } from '$theme/hook';
+import { spacing } from '$theme/spacing';
 
 const validationSchema = object({
   phone: string({ required_error: 'Phone is required field' }).regex(
@@ -36,8 +37,6 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
   useShowRootTabs();
 
   const loginMutation = useLoginMutation();
-
-  storage.accessToken.get();
 
   const methods = useForm({
     defaultValues: {
@@ -61,8 +60,8 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
         loginPayload: { username: phoneWithCountryCode, password: values.password },
       });
 
-      storage.accessToken.set(accessToken);
-      storage.refreshToken.set(refreshToken);
+      await storage.accessToken.set(accessToken);
+      await storage.refreshToken.set(refreshToken);
 
       navigate('Main', {
         screen: 'Profile',

@@ -1,12 +1,14 @@
-import { MessageModel } from '$modules/chat/models/message';
 import { useMemo, useRef } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Message } from '../message';
-import { commonStyles } from '$styles/common';
-import { MessageBar } from '../message-bar';
-import { FlatList } from 'react-native-gesture-handler';
-import { spacing } from '$theme/spacing';
 import { StyleSheet } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { Message } from '../message';
+import { MessageBar } from '../message-bar';
+
+import { MessageModel } from '$modules/chat/models/message';
+import { commonStyles } from '$styles/common';
+import { spacing } from '$theme/spacing';
 
 export type MessagesScreenProps = {
   messageBoxText?: string;

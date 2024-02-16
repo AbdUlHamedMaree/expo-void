@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { CreateGraphQlQueryReturn } from './create-graphql-query';
+
 import { CreateGraphQlMutationReturn } from './create-graphql-mutation';
+import { CreateGraphQlQueryReturn } from './create-graphql-query';
 
 type QueriesInternal<
   TQueries extends readonly TypedDocumentNode<any, any>[],

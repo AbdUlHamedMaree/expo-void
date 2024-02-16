@@ -1,5 +1,6 @@
-import { usePaperTheme } from '$theme/hook';
 import { NavigationContainer, NavigationContainerProps } from '@react-navigation/native';
+
+import { usePaperTheme } from '$theme/hook';
 
 export type AppNavigationContainerProps = NavigationContainerProps;
 

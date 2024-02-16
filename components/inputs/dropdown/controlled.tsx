@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import { mergeRefs } from 'react-merge-refs';
 import {
   StyleSheet,
   ScrollViewProps,
@@ -19,11 +20,12 @@ import {
   MenuProps,
   List,
 } from 'react-native-paper';
+
 import type { ListItem } from './types';
+
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
 import { mergeFunctions } from '$tools/merge-functions';
-import { mergeRefs } from 'react-merge-refs';
 
 const emptyArray: any[] = [];
 
@@ -222,7 +224,7 @@ export const ControlledDropdownInput = memo(
             visible={visible}
             {...menuProps}
             onDismiss={mergeFunctions(() => handleMenuDismiss(), menuProps?.onDismiss)}
-            style={[{ width: width }, menuProps?.style]}
+            style={[{ width }, menuProps?.style]}
           >
             {showSearchbar && (
               <Searchbar

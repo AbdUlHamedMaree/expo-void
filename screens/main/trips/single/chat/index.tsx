@@ -1,10 +1,11 @@
+import { useMemo, useRef, useState } from 'react';
+
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { graphql } from '$gql';
 import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { useGraphQlSubscription } from '$libs/graphql-ws/hook';
 import { ChatApp } from '$modules/chat';
 import { MessageModel } from '$modules/chat/models/message';
-import { useMemo, useRef, useState } from 'react';
 
 const MessageDocument = graphql(`
   subscription Message {

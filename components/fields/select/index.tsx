@@ -1,15 +1,16 @@
-import { mergeFunctions } from '$tools/merge-functions';
 import React, { memo } from 'react';
 import { Controller, ControllerProps, useFormContext } from 'react-hook-form';
 import { View, ViewProps } from 'react-native';
 import { HelperText } from 'react-native-paper';
-import { useAppTheme } from '$theme/hook';
 import { PaperSelect } from 'react-native-paper-select';
 import type {
   ListItem,
   PaperSelectProps,
   SelectedItem,
 } from 'react-native-paper-select/lib/typescript/interface/paperSelect.interface';
+
+import { useAppTheme } from '$theme/hook';
+import { mergeFunctions } from '$tools/merge-functions';
 
 export type SelectFieldItemModel = ListItem & {
   label?: string;

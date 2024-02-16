@@ -1,12 +1,12 @@
 import 'intl-pluralrules';
 import i18next, { LanguageDetectorModule } from 'i18next';
-
 import { initReactI18next } from 'react-i18next';
 import { getLocales } from 'react-native-localize';
-import { storage } from '$libs/mmkv';
 
-import { enResource } from './en';
 import { arResource } from './ar';
+import { enResource } from './en';
+
+import { storage } from '$libs/async-storage/storage';
 
 const RESOURCES = {
   en: enResource,

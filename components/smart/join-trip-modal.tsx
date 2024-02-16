@@ -1,13 +1,14 @@
-import { CheckboxItemField } from '$components/fields/checkbox-item';
-import { TextField } from '$components/fields/text';
-import { useAppTheme } from '$theme/hook';
-import { spacing } from '$theme/spacing';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { Button, Dialog, Portal } from 'react-native-paper';
 import { coerce, object } from 'zod';
+
+import { CheckboxItemField } from '$components/fields/checkbox-item';
+import { TextField } from '$components/fields/text';
+import { useAppTheme } from '$theme/hook';
+import { spacing } from '$theme/spacing';
 
 export type JoinTripFormFields = {
   count: number;

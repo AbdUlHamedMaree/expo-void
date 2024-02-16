@@ -1,23 +1,23 @@
-import MapView, { Details, LatLng, Region } from 'react-native-maps';
-import { commonStyles } from '$styles/common';
 import { useAtom } from 'jotai/react';
-import { mapRegionAtom } from '$atoms/map-region';
-import { useAppColorSchema } from '$hooks/use-app-color-schema';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useMapTripsQuery } from '$apis/trips';
-import { IDUnion } from '$models/id';
+import MapView, { Details, LatLng, Region } from 'react-native-maps';
 
-import { dropoffToLatlng, pickupToLatlng } from '$helpers/pickup-dropoff-to-latlng';
-import { Trip } from '$components/dumb/trip';
+import { useMapTripsQuery } from '$apis/trips';
+import { mapRegionAtom } from '$atoms/map-region';
 import { MapTrip } from '$components/dumb/map-trip';
+import { Trip } from '$components/dumb/trip';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { toTripRoute } from '$fragments/trip-route';
+import { dropoffToLatlng, pickupToLatlng } from '$helpers/pickup-dropoff-to-latlng';
+import { useAppColorSchema } from '$hooks/use-app-color-schema';
+import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import {
   useGoogleMapsDirectionsQuery,
   useDirectionPolyline,
 } from '$libs/google-maps-direction/hook';
-import { useShowRootTabs } from '$hooks/use-show-root-tabs';
+import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
+import { IDUnion } from '$models/id';
+import { commonStyles } from '$styles/common';
 
 export type MainHomeScreenProps = {
   //

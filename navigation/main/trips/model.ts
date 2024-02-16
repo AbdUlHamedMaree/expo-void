@@ -1,7 +1,9 @@
-import { RootStackParamList, RootStackScreenProps } from '$navigation/model';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+
 import { MainTabsParamList, MainTabsScreenProps } from '../model';
+
+import { RootStackParamList, RootStackScreenProps } from '$navigation/model';
 import { ParamListWithBase } from '$types/param-list-with-base';
 
 export type TripsStackParamList = {
