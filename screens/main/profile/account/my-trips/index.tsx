@@ -1,8 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
 import { VirtualizedList } from 'react-native';
+
 import { useTripsQuery } from '$apis/trips';
 import { tripsFiltersAtom } from '$atoms/trips-filters';
 import { LoadingSection } from '$components/dumb/loading-section';

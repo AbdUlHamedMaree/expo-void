@@ -13,11 +13,10 @@ import { queryClient } from '$libs/react-query/client';
 import { useRefetchOnAppFocus } from '$libs/react-query/use-refetch-on-app-focus';
 import { PaperToastContainer } from '$modules/react-native-paper-toast';
 import { RootStack } from '$navigation';
-import { AppPaperProvider } from '$theme/provider';
-import { commonStyles } from '$styles/common';
-import { WeakSplashScreen } from '$screens/weak-splash-screen';
 import { SplashScreen } from '$screens/splash-screen';
-
+import { WeakSplashScreen } from '$screens/weak-splash-screen';
+import { commonStyles } from '$styles/common';
+import { AppPaperProvider } from '$theme/provider';
 
 Geocoder.init(GOOGLE_SERVICES_API);
 

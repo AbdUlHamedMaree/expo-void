@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Card, CardProps, Divider, IconButton, Text } from 'react-native-paper';
 

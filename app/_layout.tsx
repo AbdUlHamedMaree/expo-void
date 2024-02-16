@@ -1,5 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { ThemeProvider } from '@react-navigation/native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -10,23 +10,18 @@ import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-c
 
 // import { RootStack } from '$navigation';
 import { AppErrorBoundary } from '$components/dumb/app-error-boundary';
-import { AppNavigationContainer } from '$components/smart/app-navigation-container';
 import { AppStatusBar } from '$components/smart/app-status-bar';
+import { useAxiosService } from '$libs/axios/hooks';
 import { queryClient } from '$libs/react-query/client';
+import { useRefetchOnAppFocus } from '$libs/react-query/use-refetch-on-app-focus';
 import { PaperToastContainer } from '$modules/react-native-paper-toast';
 import { SplashScreen as AppSplashScreen } from '$screens/splash-screen';
 import { WeakSplashScreen } from '$screens/weak-splash-screen';
 import { commonStyles } from '$styles/common';
 // import Geocoder from 'react-native-geocoding';
 // import { GOOGLE_SERVICES_API } from '@env';
-import { useRefetchOnAppFocus } from '$libs/react-query/use-refetch-on-app-focus';
-import { useAxiosService } from '$libs/axios/hooks';
+import { usePaperTheme } from '$theme/hook';
 import { AppPaperProvider } from '$theme/provider';
-
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -60,37 +55,38 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
-function RootLayoutNav() {
+const Application: React.FC = () => {
   useRefetchOnAppFocus();
   useAxiosService();
-  const colorScheme = 'dark';
-  // const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <AppPaperProvider>
+        <AppErrorBoundary>
+          <AppStatusBar />
+          <Suspense fallback={<AppSplashScreen />}>
+            <PaperToastContainer variant='contained' />
+            <Stack>
+              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+              <Stack.Screen name='modal' options={{ presentation: 'modal' }} />
+            </Stack>
+          </Suspense>
+        </AppErrorBoundary>
+      </AppPaperProvider>
+    </SafeAreaProvider>
+  );
+};
+
+function RootLayoutNav() {
+  const theme = usePaperTheme();
+
+  return (
+    <ThemeProvider value={theme}>
       <Suspense fallback={<WeakSplashScreen />}>
         <AppErrorBoundary>
           <GestureHandlerRootView style={commonStyles.flexFull}>
             <QueryClientProvider client={queryClient}>
-              <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-                <AppPaperProvider>
-                  <AppErrorBoundary>
-                    <AppStatusBar />
-                    <AppNavigationContainer>
-                      <Suspense fallback={<AppSplashScreen />}>
-                        <PaperToastContainer variant='contained' />
-                        <Stack>
-                          <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-                          <Stack.Screen
-                            name='modal'
-                            options={{ presentation: 'modal' }}
-                          />
-                        </Stack>
-                      </Suspense>
-                    </AppNavigationContainer>
-                  </AppErrorBoundary>
-                </AppPaperProvider>
-              </SafeAreaProvider>
+              <Application />
             </QueryClientProvider>
           </GestureHandlerRootView>
         </AppErrorBoundary>

@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Checkbox, CheckboxProps, HelperText } from 'react-native-paper';
 

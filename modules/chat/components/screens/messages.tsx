@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Message } from '../message';
 import { MessageBar } from '../message-bar';
 
+import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { MessageModel } from '$modules/chat/models/message';
 import { commonStyles } from '$styles/common';
 import { spacing } from '$theme/spacing';
@@ -24,6 +25,7 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({
   onSend,
   onMessageBoxChangeText,
 }) => {
+  useHideRootTabs();
   const scrollViewRef = useRef<FlatList<MessageModel>>(null);
 
   const revertedMessages = useMemo(() => messages, [messages]);

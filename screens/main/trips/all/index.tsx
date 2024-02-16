@@ -1,10 +1,9 @@
 import { useNavigation } from '@react-navigation/native';
-
-import { IDUnion } from '$models/id';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
 import { VirtualizedList } from 'react-native';
 import { FAB } from 'react-native-paper';
+
 import { useTripsQuery } from '$apis/trips';
 import { tripsFiltersAtom } from '$atoms/trips-filters';
 import { LoadingSection } from '$components/dumb/loading-section';
@@ -15,6 +14,7 @@ import { useCheckIsUserInTrip } from '$hooks/use-check-is-user-in-trip';
 import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
+import { IDUnion } from '$models/id';
 import { spacing } from '$theme/spacing';
 
 export type AllTripsScreenProps = {

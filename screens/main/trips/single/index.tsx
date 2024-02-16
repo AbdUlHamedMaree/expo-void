@@ -6,37 +6,32 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import MapView, { Details, Region } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-
+import { Button, FAB, IconButton, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSingleTripQuery } from '$apis/trips';
-import { ScreenWrapper } from '$components/smart/screen-wrapper';
 
+import { useSingleTripQuery } from '$apis/trips';
+import { mapRegionAtom } from '$atoms/map-region';
+import { LoadingSection } from '$components/dumb/loading-section';
+import { MapTrip } from '$components/dumb/map-trip';
+import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
+import { MaterialCommunityIcon } from '$components/icons';
+import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { toTripRoute } from '$fragments/trip-route';
 import {
   dropoffToLatlng,
   pickupDropoffToLatlng,
   pickupToLatlng,
 } from '$helpers/pickup-dropoff-to-latlng';
-import { TripsStackScreenProps } from '$navigation/main/trips/model';
-import { LoadingSection } from '$components/dumb/loading-section';
-
-
-import { mapRegionAtom } from '$atoms/map-region';
-import { commonStyles } from '$styles/common';
-import { MapTrip } from '$components/dumb/map-trip';
-
-
-import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
-
-import { Button, FAB, IconButton, Text } from 'react-native-paper';
-
-import { MaterialCommunityIcon } from '$components/icons';
-import { useAppTheme } from '$theme/hook';
-import { spacing } from '$theme/spacing';
-import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { useIsUserPartOfTheTrip } from '$hooks/use-is-user-in-trip';
+import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useToggleState } from '$hooks/use-toggle-state';
+import { TripsStackScreenProps } from '$navigation/main/trips/model';
+
+
+import { commonStyles } from '$styles/common';
+import { useAppTheme } from '$theme/hook';
+import { spacing } from '$theme/spacing';
 
 const BOTTOM_SHEET_CLOSED_SIZE = 48;
 

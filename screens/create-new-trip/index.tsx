@@ -1,30 +1,30 @@
-import { useAtomValue } from 'jotai';
-import { mapRegionAtom } from '$atoms/map-region';
-import { spacing } from '$theme/spacing';
-import { TripMapMarkerCard } from '$components/dumb/trip-map-marker-card';
-import Geocoder from 'react-native-geocoding';
-import { number, object, string, date, coerce } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
-import { getAddressComponent } from '$libs/geocoding/get-adress-component';
-import { MaskedTextField } from '$components/fields/masked-text';
 import { useNavigation } from '@react-navigation/native';
+import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
+import Geocoder from 'react-native-geocoding';
 import MapView, { MapPressEvent, Marker } from 'react-native-maps';
 import { Button, IconButton, SegmentedButtons } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { number, object, string, date, coerce } from 'zod';
 
 import { useCreateTripMutation } from '$apis/trips';
+import { mapRegionAtom } from '$atoms/map-region';
 import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
+import { TripMapMarkerCard } from '$components/dumb/trip-map-marker-card';
 import { DateTimeField } from '$components/fields/date-time';
+import { MaskedTextField } from '$components/fields/masked-text';
 import { TextField } from '$components/fields/text';
 import { MaterialCommunityIcon } from '$components/icons';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
+import { getAddressComponent } from '$libs/geocoding/get-adress-component';
+import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
 import { toast } from '$modules/react-native-paper-toast';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
+import { spacing } from '$theme/spacing';
 
 const addressValidation = object({
   addressLineOne: string(),

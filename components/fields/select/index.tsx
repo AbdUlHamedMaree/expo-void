@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Controller, ControllerProps, useFormContext } from 'react-hook-form';
 import { View, ViewProps } from 'react-native';
 import { HelperText } from 'react-native-paper';
