@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+// import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { IconButton, Text, TextInput } from 'react-native-paper';
-import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+// import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Animated, {
   useAnimatedStyle,
   withSpring,
@@ -14,7 +14,7 @@ import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
 
-const audioRecorderPlayer = new AudioRecorderPlayer();
+// const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const AnimatedIconButton = Animated.createAnimatedComponent(IconButton);
 

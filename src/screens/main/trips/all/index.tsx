@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
 import { VirtualizedList } from 'react-native';
@@ -67,8 +67,6 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
 
   const trips = tripsQuery.data?.trips.items;
 
-  const { navigate } = useNavigation();
-
   const [selectedTripId, setSelectedTripId] = useState<IDUnion | null>(null);
 
   const selectedTrip = useMemo(
@@ -98,15 +96,9 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
     [joinTripModal]
   );
 
-  const handleShowMore = useCallback(
-    (id: number) => {
-      navigate('Main', {
-        screen: 'Trips',
-        params: { screen: 'Single', params: { id } },
-      });
-    },
-    [navigate]
-  );
+  const handleShowMore = useCallback((id: number) => {
+    router.navigate({ pathname: '/main/trips/single', params: { id } });
+  }, []);
 
   return (
     <ScreenWrapper disablePadding>
@@ -149,7 +141,7 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
           right: 0,
           bottom: 0,
         }}
-        onPress={() => navigate('CreateNewTrip', {})}
+        onPress={() => router.navigate('/create-new-trip')}
       />
       {joinTripModal.modal}
     </ScreenWrapper>

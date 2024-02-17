@@ -5,7 +5,7 @@ import { getNavigationIcon } from '$libs/react-native-paper/get-navigation-icon'
 
 export default function Layout(): React.ReactNode {
   return (
-    <Tabs initialRouteName='home'>
+    <Tabs initialRouteName='home' screenOptions={{ headerShown: false }}>
       <Tabs.Screen
         name='home'
         options={{

@@ -8,7 +8,11 @@ import { useAtomValue } from 'jotai';
 import { useEffect, Suspense } from 'react';
 import Geocoder from 'react-native-geocoding';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+  initialWindowMetrics,
+} from 'react-native-safe-area-context';
 
 // import { RootStack } from '$navigation';
 import { isWelcomeStepperSkippedAtom } from '$atoms/is-welcome-stepper-skipped';
@@ -60,7 +64,9 @@ const RootLayoutNav: React.FC = () => {
         <AppErrorBoundary>
           <GestureHandlerRootView style={commonStyles.flexFull}>
             <QueryClientProvider client={queryClient}>
-              <Application />
+              <SafeAreaView style={commonStyles.flexFull}>
+                <Application />
+              </SafeAreaView>
             </QueryClientProvider>
           </GestureHandlerRootView>
         </AppErrorBoundary>

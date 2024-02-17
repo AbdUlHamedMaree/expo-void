@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import { View } from 'react-native';
@@ -13,7 +13,6 @@ import { TripsFiltersScreen } from '$screens/main/trips/filters';
 import { SingleTripsScreen } from '$screens/main/trips/single';
 
 export const MainProfileAccountStackNavigation: React.FC = () => {
-  const { navigate } = useNavigation();
   const tripsFilters = useAtomValue(tripsFiltersAtom);
 
   return (
@@ -33,12 +32,7 @@ export const MainProfileAccountStackNavigation: React.FC = () => {
             <View style={{ position: 'relative' }}>
               <IconButton
                 icon='filter-outline'
-                onPress={() =>
-                  navigate('Main', {
-                    screen: 'Profile',
-                    params: { screen: 'Account', params: { screen: 'TripsFilters' } },
-                  })
-                }
+                onPress={() => router.navigate('/main/profile/account/trips-filters')}
               />
               <Badge
                 visible={!!tripsFilters}

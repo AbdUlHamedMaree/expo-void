@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { router } from 'expo-router';
 import { ObjectTypeDefinitionNode } from 'graphql';
 import { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
@@ -40,7 +40,6 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
 
   const { data } = useMeQuery();
   const user = data?.me;
-  const { navigate } = useNavigation();
 
   const langStorage = useStorageState(storage.lang);
 
@@ -62,8 +61,8 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
     queryClient.invalidateQueries({
       queryKey: [(meDocument.definitions[0] as ObjectTypeDefinitionNode).name],
     });
-    navigate('Main', { screen: 'Profile', params: { screen: 'Login', params: {} } });
-  }, [navigate]);
+    router.navigate('/main/profile/login');
+  }, []);
 
   if (!user) return null;
 
@@ -83,12 +82,7 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
       <View style={{ marginTop: spacing.xl, flex: 1 }}>
         <List.Item
           title='My Trips'
-          onPress={() =>
-            navigate('Main', {
-              screen: 'Profile',
-              params: { screen: 'Account', params: { screen: 'MyTrips', params: {} } },
-            })
-          }
+          onPress={() => router.navigate('/main/profile/account/my-trips')}
         />
         <Divider style={{ marginVertical: spacing.md }} />
         <DropdownInput

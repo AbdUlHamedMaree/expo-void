@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import React from 'react';
 import { View } from 'react-native';
@@ -12,7 +12,6 @@ import { TripsFiltersScreen } from '$screens/main/trips/filters';
 import { ChatSingleTripsMainScreen } from '$screens/main/trips/single/chat';
 
 export const TripsStackNavigation: React.FC = () => {
-  const { navigate } = useNavigation();
   const tripsFilters = useAtomValue(tripsFiltersAtom);
 
   return (
@@ -27,12 +26,7 @@ export const TripsStackNavigation: React.FC = () => {
             <View style={{ position: 'relative' }}>
               <IconButton
                 icon='filter-outline'
-                onPress={() =>
-                  navigate('Main', {
-                    screen: 'Trips',
-                    params: { screen: 'Filters', params: {} },
-                  })
-                }
+                onPress={() => router.navigate('/main/trips/filters')}
               />
               <Badge
                 visible={!!tripsFilters}

@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { router, useNavigation } from 'expo-router';
 import { useAtom } from 'jotai';
 import { useCallback, useLayoutEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -41,7 +41,7 @@ export type TripsFiltersScreenProps = {
 export const TripsFiltersScreen: React.FC<TripsFiltersScreenProps> = () => {
   useHideRootTabs();
 
-  const { navigate, setOptions } = useNavigation();
+  const { setOptions } = useNavigation();
   const [tripsFilters, setTripsFilters] = useAtom(tripsFiltersAtom);
 
   const defaultValues = useMemo<TripsFiltersModel>(
@@ -73,15 +73,15 @@ export const TripsFiltersScreen: React.FC<TripsFiltersScreenProps> = () => {
     () =>
       methods.handleSubmit(values => {
         setTripsFilters(values);
-        navigate('Main', { screen: 'Trips', params: { screen: 'All', params: {} } });
+        router.navigate('/main/trips/all');
       }),
-    [methods, navigate, setTripsFilters]
+    [methods, setTripsFilters]
   );
 
   const handleClearFilters = useCallback(() => {
     setTripsFilters(undefined);
-    navigate('Main', { screen: 'Trips', params: { screen: 'All', params: {} } });
-  }, [navigate, setTripsFilters]);
+    router.navigate('/main/trips/all');
+  }, [setTripsFilters]);
 
   useLayoutEffect(() => {
     setOptions({

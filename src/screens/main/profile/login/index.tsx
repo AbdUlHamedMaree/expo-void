@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
 import { isAxiosError } from 'axios';
+import { router } from 'expo-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { Button, Divider, IconButton, Text, TextInput } from 'react-native-paper';
@@ -46,8 +46,6 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
     resolver: zodResolver(validationSchema),
   });
 
-  const { navigate } = useNavigation();
-
   const theme = useAppTheme();
 
   const handleSubmit = methods.handleSubmit(async values => {
@@ -62,11 +60,7 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
 
       await storage.accessToken.set(accessToken);
       await storage.refreshToken.set(refreshToken);
-
-      navigate('Main', {
-        screen: 'Profile',
-        params: { screen: 'Account', params: { screen: 'AccountMain', params: {} } },
-      });
+      router.navigate('/main/profile/account/main');
     } catch (err) {
       console.error(err);
 
@@ -133,16 +127,7 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
         }}
       >
         <Text>Don&apos;t have an account?</Text>
-        <Button
-          onPress={() =>
-            navigate('Main', {
-              screen: 'Profile',
-              params: { screen: 'SignUp', params: {} },
-            })
-          }
-        >
-          Sign Up
-        </Button>
+        <Button onPress={() => router.navigate('main/profile/sign-up')}>Sign Up</Button>
       </View>
 
       <Divider style={{ marginVertical: spacing.lg }} />

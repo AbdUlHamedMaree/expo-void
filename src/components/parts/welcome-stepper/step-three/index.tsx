@@ -14,7 +14,7 @@ export const WelcomeStepperStepThree: React.FC<WelcomeStepperStepThreeProps> = (
   return (
     <View style={[commonStyles.flexFull, commonStyles.flexCenter]}>
       <LottieView
-        source={require('../../../../assets/animations/time-and-money.lottie')}
+        source={require('$assets/animations/time-and-money.lottie')}
         autoPlay
         loop
         style={{ height: width, width: '100%' }}

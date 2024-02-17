@@ -1,5 +1,5 @@
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { format } from 'date-fns';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
@@ -25,7 +25,6 @@ import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { useIsUserPartOfTheTrip } from '$hooks/use-is-user-in-trip';
 import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useToggleState } from '$hooks/use-toggle-state';
-import { TripsStackScreenProps } from '$navigation/main/trips/model';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
@@ -41,13 +40,9 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
 
   const theme = useAppTheme();
 
-  const {
-    params: { id },
-  } = useRoute<TripsStackScreenProps<'Single'>['route']>();
+  const { id } = useLocalSearchParams();
 
-  const { goBack } = useNavigation();
-
-  const singleTripQuery = useSingleTripQuery({ singleTripId: id });
+  const singleTripQuery = useSingleTripQuery({ singleTripId: +id });
   const trip = singleTripQuery.data?.trip;
 
   const [isMapFittedToTrip, setIsMapFittedToTrip] = useState(false);
@@ -126,7 +121,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
       <IconButton
         icon='arrow-left'
         mode='contained'
-        onPress={goBack}
+        onPress={router.back}
         style={{ position: 'absolute', left: 8, top: 8 }}
       />
 

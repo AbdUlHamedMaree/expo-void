@@ -32,7 +32,7 @@ export const LoadingSection: React.FC<LoadingSectionProps> = ({
         ]}
       >
         <LottieView
-          source={require('../../../../assets/animations/loading.lottie')}
+          source={require('$assets/animations/loading.lottie')}
           autoPlay
           loop
           style={{ height: viewWidth.width, width: '100%' }}

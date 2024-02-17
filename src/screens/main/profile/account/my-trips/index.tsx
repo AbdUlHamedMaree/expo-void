@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
 import { VirtualizedList } from 'react-native';
@@ -68,8 +68,6 @@ export const MainProfileAccountMyTripsScreen: React.FC<
 
   const trips = tripsQuery.data?.trips.items;
 
-  const { navigate } = useNavigation();
-
   const [selectedTripId, setSelectedTripId] = useState<IDUnion | null>(null);
 
   const selectedTrip = useMemo(
@@ -99,15 +97,9 @@ export const MainProfileAccountMyTripsScreen: React.FC<
     [joinTripModal]
   );
 
-  const handleShowMore = useCallback(
-    (id: number) => {
-      navigate('Main', {
-        screen: 'Profile',
-        params: { screen: 'Account', params: { screen: 'SingleTrip', params: { id } } },
-      });
-    },
-    [navigate]
-  );
+  const handleShowMore = useCallback((id: number) => {
+    router.navigate({ pathname: '/main/profile/account/single-trip', params: { id } });
+  }, []);
 
   return (
     <ScreenWrapper disablePadding>

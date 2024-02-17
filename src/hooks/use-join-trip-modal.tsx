@@ -1,5 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
 import { isAxiosError } from 'axios';
+import { router } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 
 import { useJoinTripMutation } from '$apis/trips';
@@ -23,26 +23,21 @@ export const useJoinTripModal = ({ trip, onJoin, onCancel }: UseJoinTripModalArg
 
   const [visible, setVisible] = useState(false);
 
-  const { navigate } = useNavigation();
-
   const open = useCallback(() => {
     if (!user) {
-      return navigate('Main', {
-        screen: 'Profile',
+      router.navigate({
+        pathname: '/main/profile/login',
         params: {
-          screen: 'Login',
-          params: {
-            toast: {
-              message: 'You need to be logged in to be able to join trips!',
-              type: 'warning',
-            },
+          toast: {
+            message: 'You need to be logged in to be able to join trips!',
+            type: 'warning',
           },
         },
       });
     }
 
     setVisible(true);
-  }, [navigate, user]);
+  }, [user]);
 
   const close = useCallback(() => setVisible(false), []);
 

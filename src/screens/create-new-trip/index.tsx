@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -58,8 +58,6 @@ export type CreateNewTripScreenProps = {
 };
 
 export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
-  const { navigate, goBack } = useNavigation();
-
   const createTripMutation = useCreateTripMutation();
 
   const theme = useAppTheme();
@@ -96,7 +94,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
           category: 'one_time',
         },
       });
-      navigate('Main', { screen: 'Home', params: {} });
+      router.navigate('/main/home');
       toast.success('Trip created successfully!');
     } catch (err) {
       console.error(err);
@@ -216,7 +214,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       <IconButton
         icon='arrow-left'
         mode='contained'
-        onPress={() => goBack()}
+        onPress={() => router.back()}
         style={{ position: 'absolute', left: 8, top: 8 }}
       />
 

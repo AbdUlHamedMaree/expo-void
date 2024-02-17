@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
+import { router } from 'expo-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { Button, Divider, IconButton, Text, TextInput } from 'react-native-paper';
@@ -38,7 +38,6 @@ export type MainProfileSignUpScreenProps = {
 export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = () => {
   useShowRootTabs();
 
-  const { navigate } = useNavigation();
   const theme = useAppTheme();
 
   const signUpMutation = useSignUpMutation();
@@ -80,9 +79,9 @@ export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = (
 
       console.log('otp:', otp);
 
-      navigate('Main', {
-        screen: 'Profile',
-        params: { screen: 'OTP', params: { phone: phoneWithCountryCode, otp } },
+      router.navigate({
+        pathname: '/main/profile/otp',
+        params: { phone: phoneWithCountryCode, otp },
       });
     } catch (err) {
       console.error(err);
@@ -147,16 +146,7 @@ export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = (
         }}
       >
         <Text>Already have an account?</Text>
-        <Button
-          onPress={() =>
-            navigate('Main', {
-              screen: 'Profile',
-              params: { screen: 'Login', params: {} },
-            })
-          }
-        >
-          Login
-        </Button>
+        <Button onPress={() => router.navigate('/main/profile/login')}>Login</Button>
       </View>
 
       <Divider style={{ marginVertical: spacing.lg }} />

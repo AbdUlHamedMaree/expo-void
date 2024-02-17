@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import { useQueryClient } from '@tanstack/react-query';
+import { router, useLocalSearchParams } from 'expo-router';
 import { FormProvider, useForm } from 'react-hook-form';
 import { View } from 'react-native';
 import { Button, Divider, IconButton, Text } from 'react-native-paper';
@@ -12,7 +12,6 @@ import { MaskedTextField } from '$components/fields/masked-text';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import { storage } from '$libs/async-storage/storage';
-import { ProfileStackScreenProps } from '$navigation/main/profile/model';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
@@ -31,7 +30,6 @@ export type MainProfileOTPScreenProps = {
 export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
   useShowRootTabs();
 
-  const { navigate } = useNavigation();
   const queryClient = useQueryClient();
 
   const verifyOTPMutation = useVerifyOTPMutation();
@@ -43,9 +41,7 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
     resolver: zodResolver(validationSchema),
   });
 
-  const {
-    params: { phone, otp },
-  } = useRoute<ProfileStackScreenProps<'OTP'>['route']>();
+  const { phone, otp } = useLocalSearchParams();
 
   const theme = useAppTheme();
 
@@ -55,24 +51,14 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
         verifyOtp: { accessToken, refreshToken },
         // TODO: user values.otp later
       } = await verifyOTPMutation.mutateAsync({
-        verifyOTPPayload: { otp, phoneNumber: phone },
+        verifyOTPPayload: { otp: otp as string, phoneNumber: phone as string },
       });
 
       await storage.accessToken.set(accessToken);
       await storage.refreshToken.set(refreshToken);
 
       queryClient.invalidateQueries({ queryKey: ['MeQuery'] });
-
-      navigate('Main', {
-        screen: 'Profile',
-        params: {
-          screen: 'Account',
-          params: {
-            screen: 'AccountMain',
-            params: {},
-          },
-        },
-      });
+      router.navigate('/main/profile/account/main');
     } catch (err) {
       console.error(err);
     }
@@ -131,10 +117,7 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
         <Text>{phone} isn&apos;t your number?</Text>
         <Button
           onPress={() => {
-            navigate('Main', {
-              screen: 'Profile',
-              params: { screen: 'SignUp', params: {} },
-            });
+            router.navigate('/main/profile/sign-up');
           }}
         >
           Change Number

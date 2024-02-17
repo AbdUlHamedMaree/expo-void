@@ -1,4 +1,4 @@
-import { useRoute } from '@react-navigation/native';
+import { useLocalSearchParams } from 'expo-router';
 import { forwardRef, memo, useEffect } from 'react';
 import { View } from 'react-native';
 import { SafeAreaView, SafeAreaProviderProps } from 'react-native-safe-area-context';
@@ -6,7 +6,6 @@ import { SafeAreaView, SafeAreaProviderProps } from 'react-native-safe-area-cont
 import { PaperToastContainer, toast } from '$modules/react-native-paper-toast';
 import { ToastOptionsModel } from '$modules/react-native-paper-toast/model';
 import { commonStyles } from '$styles/common';
-import { router } from 'expo-router';
 
 export type ScreenWrapperProps = {
   disablePadding?: boolean;
@@ -33,7 +32,7 @@ export const ScreenWrapper = memo(
       },
       forwardRef
     ) {
-      const { params } = useRoute();
+      const params = useLocalSearchParams();
 
       useEffect(() => {
         if (!params) return;
