@@ -1,6 +1,6 @@
-import { graphql } from '$gql';
+import { gql } from '$gql';
 
-export const singleTripDocument = graphql(`
+export const singleTripDocument = gql(`
   query SingleTripQuery($singleTripId: Float!) {
     trip(id: $singleTripId) {
       id

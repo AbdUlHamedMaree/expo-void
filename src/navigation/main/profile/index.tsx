@@ -10,9 +10,9 @@ import { MainProfileOTPScreen } from '$screens/main/profile/otp';
 import { MainProfileSignUpScreen } from '$screens/main/profile/sign-up';
 
 export const ProfileStackNavigation: React.FC = () => {
-  const { data, isLoading } = useMeQuery();
+  const { data, loading } = useMeQuery();
 
-  if (isLoading) return <LoadingSection loading />;
+  if (loading) return <LoadingSection loading />;
 
   return (
     <ProfileStackNavigator.Navigator

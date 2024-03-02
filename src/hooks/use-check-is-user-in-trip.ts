@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 
 import { useMeQuery } from '$apis/user';
-import { graphql } from '$gql';
+import { gql } from '$gql';
 import { FragmentModel } from '$types/fragment-model';
 
-const Trip = graphql(`
+const Trip = gql(`
   fragment UseIsUserPartOfTheTrip on TripOt {
     driverId
 

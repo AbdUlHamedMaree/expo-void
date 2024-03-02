@@ -62,7 +62,7 @@ export const MainProfileAccountMyTripsScreen: React.FC<
   );
 
   const tripsQuery = useTripsQuery({
-    tripsQueryFilters,
+    variables: { tripsQueryFilters },
   });
   useRefreshOnFocus(tripsQuery.refetch);
 
@@ -104,8 +104,8 @@ export const MainProfileAccountMyTripsScreen: React.FC<
   return (
     <ScreenWrapper disablePadding>
       <LoadingSection
-        loading={tripsQuery.isLoading}
-        error={tripsQuery.isError}
+        loading={tripsQuery.loading}
+        error={!!tripsQuery.error}
         empty={trips?.length === 0}
       >
         {trips && (

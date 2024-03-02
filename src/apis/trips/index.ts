@@ -4,12 +4,12 @@ import { mapTripsDocument } from './queries/map-trips';
 import { singleTripDocument } from './queries/single-trip';
 import { tripsDocument } from './queries/trips';
 
-import { createGraphQLCRUDEntity } from '$libs/graphql-react-query/create-graphql-crud-entity';
+import { createApolloCRUDEntity } from '$libs/apollo-client-react-crud/create-apollo-crud-entity';
 
 export const {
   queries: [useTripsQuery, useMapTripsQuery, useSingleTripQuery],
   mutations: [useJoinTripMutation, useCreateTripMutation],
-} = createGraphQLCRUDEntity(
+} = createApolloCRUDEntity(
   tripsDocument,
   mapTripsDocument,
   singleTripDocument

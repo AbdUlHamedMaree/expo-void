@@ -1,5 +1,5 @@
-import React, { forwardRef, memo, useCallback } from 'react';
-import { Controller, ControllerProps, useFormContext } from 'react-hook-form';
+import React, { forwardRef, memo } from 'react';
+import { ControllerProps, useController, useFormContext } from 'react-hook-form';
 
 export type FieldProps<T> = T & Omit<ControllerProps, 'render' | 'control'>;
 export type FieldComponentProps<T> = T & { form: RenderArg };
@@ -14,21 +14,15 @@ export const createField = <T,>(Component: React.ComponentType<FieldComponentPro
     ) {
       const { control } = useFormContext();
 
-      const render = useCallback<RenderFn>(
-        form => <Component {...(props as T)} form={form} ref={ref} />,
-        [props, ref]
-      );
+      const form = useController({
+        name,
+        control,
+        defaultValue,
+        disabled,
+        rules,
+        shouldUnregister,
+      });
 
-      return (
-        <Controller
-          name={name}
-          defaultValue={defaultValue}
-          disabled={disabled}
-          rules={rules}
-          shouldUnregister={shouldUnregister}
-          control={control}
-          render={render}
-        />
-      );
+      return <Component {...(props as T)} form={form} ref={ref} />;
     })
   );

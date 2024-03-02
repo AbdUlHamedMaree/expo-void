@@ -37,8 +37,10 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
   }>();
 
   const tripsQuery = useMapTripsQuery({
-    tripsQueryFilters: {
-      boundaries: mapBoundaries,
+    variables: {
+      tripsQueryFilters: {
+        boundaries: mapBoundaries,
+      },
     },
   });
 

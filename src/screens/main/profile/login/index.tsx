@@ -36,7 +36,7 @@ export type MainProfileLoginScreenProps = {
 export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () => {
   useShowRootTabs();
 
-  const loginMutation = useLoginMutation();
+  const [login, loginResult] = useLoginMutation();
 
   const methods = useForm({
     defaultValues: {
@@ -52,11 +52,18 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
     try {
       const phoneWithCountryCode = '+971' + values.phone;
 
-      const {
-        login: { accessToken, refreshToken },
-      } = await loginMutation.mutateAsync({
-        loginPayload: { username: phoneWithCountryCode, password: values.password },
+      const result = await login({
+        variables: {
+          loginPayload: { username: phoneWithCountryCode, password: values.password },
+        },
       });
+
+      if (!result.data) {
+        if (result.errors) console.error(...result.errors);
+        return;
+      }
+
+      const { accessToken, refreshToken } = result.data.login;
 
       await storage.accessToken.set(accessToken);
       await storage.refreshToken.set(refreshToken);
@@ -114,7 +121,7 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
           padding: spacing.sm,
           marginTop: spacing.xl,
         }}
-        loading={loginMutation.isPending}
+        loading={loginResult.loading}
       >
         Login
       </PaperButton>

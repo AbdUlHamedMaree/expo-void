@@ -40,8 +40,8 @@ export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = (
 
   const theme = useAppTheme();
 
-  const signUpMutation = useSignUpMutation();
-  const sendOTPMutation = useSendOtpMutation();
+  const [signUp] = useSignUpMutation();
+  const [sendOTP] = useSendOtpMutation();
 
   const methods = useForm({
     defaultValues: {
@@ -56,23 +56,32 @@ export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = (
     const phoneWithCountryCode = '+971' + values.phone;
 
     try {
-      await signUpMutation.mutateAsync({
-        signUpPayload: {
-          phone: phoneWithCountryCode,
-          email: 'a@a.com',
-          name: 'hmid',
-          password: values.password,
-          role: 'user',
+      await signUp({
+        variables: {
+          signUpPayload: {
+            phone: phoneWithCountryCode,
+            email: 'a@a.com',
+            name: 'hmid',
+            password: values.password,
+            role: 'user',
+          },
         },
       });
 
-      const {
-        sendOtp: { message },
-      } = await sendOTPMutation.mutateAsync({
-        sendOTPPayload: {
-          phone: phoneWithCountryCode,
+      const otpResult = await sendOTP({
+        variables: {
+          sendOTPPayload: {
+            phone: phoneWithCountryCode,
+          },
         },
       });
+
+      if (!otpResult.data) {
+        if (otpResult.errors) console.error(...otpResult.errors);
+        return;
+      }
+
+      const message = otpResult.data.sendOtp.message;
 
       // *(1234)*
       const otp = message.substring(message.indexOf('(') + 1, message.indexOf(')'));

@@ -1,6 +1,6 @@
-import { graphql } from '$gql';
+import { gql } from '$gql';
 
-export const meDocument = graphql(`
+export const meDocument = gql(`
   query MeQuery {
     me {
       id

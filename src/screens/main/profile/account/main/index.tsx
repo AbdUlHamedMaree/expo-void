@@ -12,6 +12,7 @@ import { DropdownInput } from '$components/inputs/dropdown';
 import { ListItem } from '$components/inputs/select/types';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { useShowRootTabs } from '$hooks/use-show-root-tabs';
+import { apolloClient } from '$libs/apollo-client/client';
 import { storage } from '$libs/async-storage/storage';
 import { useStorageState } from '$libs/async-storage/use-storage-state';
 import { queryClient } from '$libs/react-query/client';
@@ -38,8 +39,8 @@ export type MainProfileAccountMainProps = NativeStackScreenProps<
 export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps> = () => {
   useShowRootTabs();
 
-  const { data } = useMeQuery();
-  const user = data?.me;
+  const result = useMeQuery();
+  const user = result.data?.me;
 
   const langStorage = useStorageState(storage.lang);
 
@@ -54,9 +55,11 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
     return [selectedLanguage];
   }, [langStorage.value]);
 
-  const handleLogout = useCallback(() => {
-    storage.accessToken.delete();
-    storage.refreshToken.delete();
+  const handleLogout = useCallback(async () => {
+    await storage.accessToken.delete();
+    await storage.refreshToken.delete();
+
+    await apolloClient.clearStore();
 
     queryClient.invalidateQueries({
       queryKey: [(meDocument.definitions[0] as ObjectTypeDefinitionNode).name],

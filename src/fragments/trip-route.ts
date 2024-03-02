@@ -1,7 +1,7 @@
-import { graphql } from '$gql';
+import { gql } from '$gql';
 import { FragmentModel } from '$types/fragment-model';
 
-export const TripRouteFragment = graphql(`
+export const TripRouteFragment = gql(`
   fragment TripRoute on TripOt {
     pickupLatitude
     pickupLongitude

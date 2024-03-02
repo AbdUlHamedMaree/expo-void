@@ -1,7 +1,6 @@
-import { graphql } from '$gql';
 import { FragmentModel } from '$types/fragment-model';
 
-export const TripCardFragment = graphql(`
+export const TripCardFragment = gql(`
   fragment TripCard on TripOt {
     capacity
     occupiedSeats

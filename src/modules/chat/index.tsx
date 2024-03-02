@@ -1,14 +1,12 @@
 import { MessagesScreen } from './components/screens/messages';
-import { MessageModel } from './models/message';
+import { ChatAppProvider, type ChatAppContextModel } from './context';
 
-export type ChatAppProps = {
-  messageBoxText?: string;
-  messages?: MessageModel[];
-
-  onSend?: () => void;
-  onMessageBoxChangeText?: (text: string) => void;
-};
+export type ChatAppProps = ChatAppContextModel;
 
 export const ChatApp: React.FC<ChatAppProps> = props => {
-  return <MessagesScreen {...props} />;
+  return (
+    <ChatAppProvider value={props}>
+      <MessagesScreen />
+    </ChatAppProvider>
+  );
 };

@@ -208,7 +208,7 @@ export const getGoogleMapsDirections = (
     {
       ...config,
       params: {
-        key: process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API,
+        key: process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API_KEY,
 
         origin: origin ? getLatLngString(origin) : '',
         destination: destination ? getLatLngString(destination) : '',

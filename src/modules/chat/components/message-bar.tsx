@@ -1,95 +1,155 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-// import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import { useMachine } from '@xstate/react';
+import { Audio } from 'expo-av';
+import React, { useCallback, useMemo } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { IconButton, Text, TextInput } from 'react-native-paper';
-// import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Animated, {
+  interpolate,
   useAnimatedStyle,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
 
+import { messageMachine } from './message-bar.machine';
+import { useChatAppContext } from '../context';
+
+import { mmss } from '$helpers/mmss';
+import { useOnUnmount } from '$hooks/use-lifecycle';
+import { isDefined } from '$modules/checks';
 import { toast } from '$modules/react-native-paper-toast';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
 
-// const audioRecorderPlayer = new AudioRecorderPlayer();
-
 const AnimatedIconButton = Animated.createAnimatedComponent(IconButton);
 
-export type MessageBarProps = {
-  messageBoxText?: string;
+export type MessageBarProps = object;
 
-  onSend?: () => void;
-  onVoiceClick?: () => void;
-  onMessageBoxChangeText?: (text: string) => void;
-};
+export const MessageBar: React.FC<MessageBarProps> = () => {
+  const { onSend } = useChatAppContext();
 
-export const MessageBar: React.FC<MessageBarProps> = ({
-  messageBoxText,
+  const [state, send] = useMachine(
+    messageMachine.provide({
+      actions: {
+        send: ({ context }) => onSend?.(context.text),
+      },
+    })
+  );
 
-  onSend,
-  onVoiceClick,
-  onMessageBoxChangeText,
-}) => {
+  const [permissionResponse, requestPermission] = Audio.usePermissions();
   const theme = useAppTheme();
 
-  const [test, setTest] = useState('');
-
-  const [isPressed, setIsPressed] = useState(false);
-  const [recordInput, setRecordInput] = useState(false);
-  const [playerStatus, setPlayerStatus] = useState<'paused' | 'playing'>('paused');
-  const [meters, setMeters] = useState<number[]>([]);
-
-  const showSendIcon = useMemo(() => {
-    if (recordInput && !isPressed) return true;
-
-    return !!messageBoxText?.trim();
-  }, [isPressed, messageBoxText, recordInput]);
+  const showSendIcon = useMemo(() => state.hasTag('show-send'), [state]);
 
   const textInputAnimatedStyle = useAnimatedStyle(() => ({
     left: withTiming(showSendIcon ? 0 : 60),
   }));
 
   const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{ scale: withSpring(isPressed ? 2 : 1) }],
+    transform: [{ scale: withSpring(state.value === 'recording' ? 1.7 : 1) }],
   }));
 
+  const handleMessageChange = useCallback(
+    (text: string) => {
+      const trimmedText = text.trim();
+
+      if (trimmedText) send({ type: 'text.typing', text });
+      else send({ type: 'text.erase' });
+    },
+    [send]
+  );
+
+  const handleSend = useCallback(() => {
+    send({ type: 'send' });
+  }, [send]);
+
   const onRecordStart = useCallback(async () => {
-    setIsPressed(true);
     try {
-      const result = await request(PERMISSIONS.ANDROID.RECORD_AUDIO);
-
-      if (result !== RESULTS.GRANTED) {
-        toast.warning('Permission required');
-        return;
+      if (!permissionResponse?.granted) {
+        await requestPermission();
       }
-
-      setRecordInput(true);
-
-      const toLog = await audioRecorderPlayer.startRecorder(undefined, undefined, true);
-
-      audioRecorderPlayer.addRecordBackListener(e => {
-        setTest(audioRecorderPlayer.mmss(Math.floor(e.currentPosition)));
-        setMeters(v => [...v, e.currentMetering!]);
-        console.log(e.currentMetering);
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
       });
-      console.log(toLog);
+
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY,
+        status => {
+          send({ type: 'record.duration.set', duration: mmss(status.durationMillis) });
+
+          if (status.isDoneRecording) return;
+
+          const metering = status.metering;
+          isDefined(metering) &&
+            send({ type: 'record.meters.add', meter: Math.max(metering + 80, 0) });
+        },
+        100
+      );
+
+      send({ type: 'record.start', recording });
     } catch (err) {
-      setIsPressed(false);
-      console.error(err);
+      toast.warning('Recording Permission required');
+
+      console.error('[onRecordStart] Error', err);
     }
-  }, []);
+  }, [permissionResponse?.granted, requestPermission, send]);
 
   const onRecordEnd = useCallback(async () => {
-    const result = await audioRecorderPlayer.stopRecorder();
+    const recording = state.context.recording;
 
-    audioRecorderPlayer.removeRecordBackListener();
+    await recording?.stopAndUnloadAsync();
 
-    console.log(result);
-    setIsPressed(false);
-  }, []);
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+    });
+
+    if (!recording) {
+      send({ type: 'record.cancel' });
+      return;
+    }
+
+    const uri = recording.getURI();
+    if (!uri) {
+      send({ type: 'record.cancel' });
+      return;
+    }
+
+    const { sound } = await Audio.Sound.createAsync({
+      uri,
+    });
+
+    send({ type: 'record.end', uri, sound });
+  }, [send, state.context.recording]);
+
+  useOnUnmount(() => {
+    state.context.sound?.unloadAsync();
+    state.context.recording?.stopAndUnloadAsync();
+  });
+
+  const metersJsx = useMemo(
+    () => (
+      <ScrollView
+        contentContainerStyle={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
+        horizontal
+      >
+        {state.context.meters.map((meter, i) => (
+          <View
+            key={i}
+            style={{
+              height: interpolate(meter, [0, 80], [2, 36]),
+              backgroundColor: '#FFFFFF',
+              width: 2,
+              minWidth: 2,
+              borderRadius: 1,
+              marginRight: 1,
+            }}
+          />
+        ))}
+      </ScrollView>
+    ),
+    [state.context.meters]
+  );
 
   return (
     <View
@@ -102,7 +162,6 @@ export const MessageBar: React.FC<MessageBarProps> = ({
     >
       <AnimatedIconButton
         icon='microphone'
-        onPress={!showSendIcon ? onVoiceClick : undefined}
         iconColor={theme.colors.onPrimary}
         containerColor={theme.colors.primary}
         onPressIn={onRecordStart}
@@ -110,46 +169,53 @@ export const MessageBar: React.FC<MessageBarProps> = ({
         style={[styles.voiceIconButton, animatedStyles]}
       />
       <Animated.View
-        style={[textInputAnimatedStyle, styles.textInputWrapper, { height: 44 }]}
+        style={[
+          textInputAnimatedStyle,
+          styles.textInputWrapper,
+          {
+            height: 44,
+            backgroundColor: theme.colors.elevation.level3,
+            borderRadius: 22,
+          },
+        ]}
       >
-        {recordInput ? (
+        {state.hasTag('record-input') ? (
           <View
             style={{
               flex: 1,
-              borderRadius: 28,
               flexDirection: 'row',
-              backgroundColor: theme.colors.elevation.level3,
               alignItems: 'center',
-              paddingVertical: 22 + spacing.sm,
-              paddingHorizontal: spacing.sm,
             }}
           >
-            {!isPressed && (
+            {state.value === 'finished' && (
               <>
                 <IconButton
-                  icon={playerStatus !== 'playing' ? 'play' : 'pause'}
+                  icon={state.context.soundStatus === 'paused' ? 'play' : 'pause'}
                   onPress={async () => {
-                    if (playerStatus !== 'playing') {
-                      setPlayerStatus('playing');
-                      await audioRecorderPlayer.startPlayer();
-                      audioRecorderPlayer.addPlayBackListener(e => {});
+                    if (state.context.soundStatus === 'paused') {
+                      send({ type: 'record.sound.start' });
+
+                      state.context.sound?.playAsync();
 
                       return;
                     }
+                    send({ type: 'record.sound.pause' });
 
-                    setPlayerStatus('paused');
-                    await audioRecorderPlayer.pausePlayer();
-                    audioRecorderPlayer.removePlayBackListener();
+                    state.context.sound?.pauseAsync();
                   }}
                   style={{
                     margin: 0,
                   }}
                 />
-                <View style={{ flex: 1 }} />
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                  {metersJsx}
+                </View>
                 <IconButton
                   icon='close'
-                  onPress={() => {
-                    setRecordInput(false);
+                  onPress={async () => {
+                    await state.context.sound?.stopAsync();
+                    await state.context.sound?.unloadAsync();
+                    send({ type: 'record.cancel' });
                   }}
                   style={{
                     margin: 0,
@@ -157,19 +223,13 @@ export const MessageBar: React.FC<MessageBarProps> = ({
                 />
               </>
             )}
-            {isPressed && (
+            {state.value === 'recording' && (
               <>
-                <Text>{test}</Text>
-                {meters.map((meter, i) => (
-                  <View
-                    key={i}
-                    style={{
-                      height: 44 + meter,
-                      backgroundColor: theme.colors.elevation.level1,
-                      width: 5,
-                    }}
-                  />
-                ))}
+                <Text style={{ marginHorizontal: spacing.lg }}>
+                  {state.context.duration}
+                </Text>
+                {metersJsx}
+                <View style={{ width: spacing.lg }} />
               </>
             )}
           </View>
@@ -179,10 +239,10 @@ export const MessageBar: React.FC<MessageBarProps> = ({
             placeholder='Message'
             outlineColor='transparent'
             activeOutlineColor='transparent'
-            value={messageBoxText}
-            onChangeText={onMessageBoxChangeText}
+            value={state.context.text}
+            onChangeText={handleMessageChange}
             returnKeyType='send'
-            onSubmitEditing={showSendIcon ? onSend : undefined}
+            onSubmitEditing={handleSend}
             style={styles.textInput}
             outlineStyle={[
               styles.outlineTextInput,
@@ -195,7 +255,7 @@ export const MessageBar: React.FC<MessageBarProps> = ({
       </Animated.View>
       <IconButton
         icon='arrow-up'
-        onPress={showSendIcon ? onSend : undefined}
+        onPress={handleSend}
         iconColor={theme.colors.onPrimaryContainer}
         containerColor={theme.colors.primaryContainer}
         style={styles.sendIconButton}
@@ -222,7 +282,7 @@ const styles = StyleSheet.create({
   },
   sendIconButton: {
     margin: 0,
-    zIndex: -1,
+    zIndex: -2,
   },
   voiceIconButton: {
     margin: 0,

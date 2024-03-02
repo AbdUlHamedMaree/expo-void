@@ -1,6 +1,6 @@
-import { graphql } from '$gql';
+import { gql } from '$gql';
 
-export const sendOTPDocument = graphql(`
+export const sendOTPDocument = gql(`
   mutation SendOTPMutation($sendOTPPayload: OtpLoginPayloadIt!) {
     sendOtp(payload: $sendOTPPayload) {
       message

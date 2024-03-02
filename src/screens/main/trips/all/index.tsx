@@ -60,9 +60,7 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
     ]
   );
 
-  const tripsQuery = useTripsQuery({
-    tripsQueryFilters,
-  });
+  const tripsQuery = useTripsQuery({ variables: { tripsQueryFilters } });
   useRefreshOnFocus(tripsQuery.refetch);
 
   const trips = tripsQuery.data?.trips.items;
@@ -103,8 +101,8 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
   return (
     <ScreenWrapper disablePadding>
       <LoadingSection
-        loading={tripsQuery.isLoading}
-        error={tripsQuery.isError}
+        loading={tripsQuery.loading}
+        error={!!tripsQuery.error}
         empty={trips?.length === 0}
       >
         {trips && (

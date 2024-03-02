@@ -18,6 +18,7 @@ import {
 import { isWelcomeStepperSkippedAtom } from '$atoms/is-welcome-stepper-skipped';
 import { AppErrorBoundary } from '$components/dumb/app-error-boundary';
 import { AppStatusBar } from '$components/smart/app-status-bar';
+import { ApolloClientProvider } from '$libs/apollo-client/provider';
 import { useAxiosService } from '$libs/axios/hooks';
 import { queryClient } from '$libs/react-query/client';
 import { useRefetchOnAppFocus } from '$libs/react-query/use-refetch-on-app-focus';
@@ -28,7 +29,7 @@ import { commonStyles } from '$styles/common';
 import { usePaperTheme } from '$theme/hook';
 import { AppPaperProvider } from '$theme/provider';
 
-Geocoder.init(process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API);
+Geocoder.init(process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API_KEY);
 
 SplashScreen.preventAutoHideAsync();
 
@@ -64,9 +65,11 @@ const RootLayoutNav: React.FC = () => {
         <AppErrorBoundary>
           <GestureHandlerRootView style={commonStyles.flexFull}>
             <QueryClientProvider client={queryClient}>
-              <SafeAreaView style={commonStyles.flexFull}>
-                <Application />
-              </SafeAreaView>
+              <ApolloClientProvider>
+                <SafeAreaView style={commonStyles.flexFull}>
+                  <Application />
+                </SafeAreaView>
+              </ApolloClientProvider>
             </QueryClientProvider>
           </GestureHandlerRootView>
         </AppErrorBoundary>

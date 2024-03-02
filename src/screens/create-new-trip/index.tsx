@@ -58,7 +58,7 @@ export type CreateNewTripScreenProps = {
 };
 
 export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
-  const createTripMutation = useCreateTripMutation();
+  const [createTrip, createTripResult] = useCreateTripMutation();
 
   const theme = useAppTheme();
   const initialMapRegion = useAtomValue(mapRegionAtom);
@@ -87,11 +87,13 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
 
   const onSubmit = methods.handleSubmit(async data => {
     try {
-      await createTripMutation.mutateAsync({
-        createTripPayload: {
-          ...data,
-          type: 'in_app',
-          category: 'one_time',
+      await createTrip({
+        variables: {
+          createTripPayload: {
+            ...data,
+            type: 'in_app',
+            category: 'one_time',
+          },
         },
       });
       router.navigate('/main/home');
@@ -151,14 +153,28 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       const pickupAddress = getValues('pickupAddress');
       const dropoffAddress = getValues('dropoffAddress');
 
-      if (!pickupAddress && pickupLocation)
+      if (!pickupAddress?.addressLineOne && pickupLocation)
         Geocoder.from(pickupLocation)
-          .then(response => setValue('pickupAddress', getAddress(response)))
+          .then(response => {
+            const address = getAddress(response);
+
+            setValue('pickupAddress', address, {
+              shouldDirty: true,
+              shouldTouch: true,
+            });
+          })
           .catch(err => console.error(err));
 
-      if (!dropoffAddress && dropoffLocation)
+      if (!dropoffAddress?.addressLineOne && dropoffLocation)
         Geocoder.from(dropoffLocation)
-          .then(response => setValue('dropoffAddress', getAddress(response)))
+          .then(response => {
+            const address = getAddress(response);
+
+            setValue('dropoffAddress', address, {
+              shouldDirty: true,
+              shouldTouch: true,
+            });
+          })
           .catch(err => console.error(err));
     },
     [dropoffLocation, pickupLocation, getValues, setValue]
@@ -189,7 +205,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
           <MapViewDirections
             origin={pickupLocation}
             destination={dropoffLocation}
-            apikey={process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API}
+            apikey={process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API_KEY}
             strokeWidth={4}
             strokeColor='#0005'
           />
@@ -263,8 +279,8 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
             <Button
               mode='contained'
               onPress={onSubmit}
-              loading={createTripMutation.isPending}
-              disabled={createTripMutation.isPending}
+              loading={createTripResult.loading}
+              disabled={createTripResult.loading}
             >
               Create
             </Button>

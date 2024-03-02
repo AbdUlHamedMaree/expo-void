@@ -42,7 +42,9 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
 
   const { id } = useLocalSearchParams();
 
-  const singleTripQuery = useSingleTripQuery({ singleTripId: +id });
+  const singleTripQuery = useSingleTripQuery({
+    variables: { singleTripId: +id },
+  });
   const trip = singleTripQuery.data?.trip;
 
   const [isMapFittedToTrip, setIsMapFittedToTrip] = useState(false);
@@ -86,7 +88,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
         <MapViewDirections
           origin={pickupToLatlng(trip)}
           destination={dropoffToLatlng(trip)}
-          apikey={process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API}
+          apikey={process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API_KEY}
           strokeWidth={3}
           strokeColor='#000'
         />
@@ -101,8 +103,8 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
 
   const tripModal = useJoinTripModal({ trip });
 
-  if (singleTripQuery.isLoading) return <LoadingSection loading />;
-  if (singleTripQuery.isError || !trip) return <LoadingSection error />;
+  if (singleTripQuery.loading) return <LoadingSection loading />;
+  if (singleTripQuery.error || !trip) return <LoadingSection error />;
 
   const emptySeatsCount = (trip.capacity ?? 1) - (trip.occupiedSeats ?? 1);
 
@@ -140,7 +142,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
           {
             icon: 'chat-outline',
             label: 'Chat',
-            onPress: () => console.log('Chat Pressed'),
+            onPress: () => router.navigate('main/trips/single/chat'),
           },
           {
             icon: 'logout',

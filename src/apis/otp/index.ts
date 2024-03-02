@@ -1,9 +1,9 @@
 import { sendOTPDocument } from './mutations/send-otp';
 import { verifyOTPDocument } from './mutations/verify-otp';
 
-import { createGraphQLCRUDEntity } from '$libs/graphql-react-query/create-graphql-crud-entity';
+import { createApolloCRUDEntity } from '$libs/apollo-client-react-crud/create-apollo-crud-entity';
 
 export const {
   queries: _,
   mutations: [useSendOtpMutation, useVerifyOTPMutation],
-} = createGraphQLCRUDEntity()(sendOTPDocument, verifyOTPDocument);
+} = createApolloCRUDEntity()(sendOTPDocument, verifyOTPDocument);

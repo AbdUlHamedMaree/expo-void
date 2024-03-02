@@ -16,7 +16,7 @@ export type UseJoinTripModalArg = {
 };
 
 export const useJoinTripModal = ({ trip, onJoin, onCancel }: UseJoinTripModalArg) => {
-  const joinTripMutation = useJoinTripMutation();
+  const [joinTrip] = useJoinTripMutation();
   const meQuery = useMeQuery();
 
   const user = meQuery.data?.me;
@@ -28,10 +28,10 @@ export const useJoinTripModal = ({ trip, onJoin, onCancel }: UseJoinTripModalArg
       router.navigate({
         pathname: '/main/profile/login',
         params: {
-          toast: {
+          toast: JSON.stringify({
             message: 'You need to be logged in to be able to join trips!',
             type: 'warning',
-          },
+          }),
         },
       });
     }
@@ -51,11 +51,13 @@ export const useJoinTripModal = ({ trip, onJoin, onCancel }: UseJoinTripModalArg
       if (!trip) return;
 
       try {
-        await joinTripMutation.mutateAsync({
-          joinTripId: trip.id,
-          joinTripPayload: {
-            requestedSeatsCount: values.count,
-            poolerType: values.isDriver ? 'driver' : 'passenger',
+        await joinTrip({
+          variables: {
+            joinTripId: trip.id,
+            joinTripPayload: {
+              requestedSeatsCount: values.count,
+              poolerType: values.isDriver ? 'driver' : 'passenger',
+            },
           },
         });
 
@@ -70,7 +72,7 @@ export const useJoinTripModal = ({ trip, onJoin, onCancel }: UseJoinTripModalArg
         }
       }
     },
-    [close, joinTripMutation, onJoin, trip]
+    [close, joinTrip, onJoin, trip]
   );
 
   const handleCancel = useCallback(async () => {

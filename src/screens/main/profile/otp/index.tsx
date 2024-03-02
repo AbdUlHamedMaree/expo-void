@@ -32,7 +32,7 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
 
   const queryClient = useQueryClient();
 
-  const verifyOTPMutation = useVerifyOTPMutation();
+  const [verifyOTP] = useVerifyOTPMutation();
 
   const methods = useForm({
     defaultValues: {
@@ -47,12 +47,19 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
 
   const handleSubmit = methods.handleSubmit(async value => {
     try {
-      const {
-        verifyOtp: { accessToken, refreshToken },
-        // TODO: user values.otp later
-      } = await verifyOTPMutation.mutateAsync({
-        verifyOTPPayload: { otp: otp as string, phoneNumber: phone as string },
+      const result = await verifyOTP({
+        variables: {
+          verifyOTPPayload: { otp: otp as string, phoneNumber: phone as string },
+        },
       });
+
+      if (!result.data) {
+        if (result.errors) console.error(...result.errors);
+
+        return;
+      }
+
+      const { accessToken, refreshToken } = result.data.verifyOtp;
 
       await storage.accessToken.set(accessToken);
       await storage.refreshToken.set(refreshToken);

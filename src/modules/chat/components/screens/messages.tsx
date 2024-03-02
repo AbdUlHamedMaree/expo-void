@@ -7,28 +7,19 @@ import { Message } from '../message';
 import { MessageBar } from '../message-bar';
 
 import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
+import { useChatAppContext } from '$modules/chat/context';
 import { MessageModel } from '$modules/chat/models/message';
 import { commonStyles } from '$styles/common';
 import { spacing } from '$theme/spacing';
 
-export type MessagesScreenProps = {
-  messageBoxText?: string;
-  messages?: MessageModel[];
+export type MessagesScreenProps = object;
 
-  onSend?: () => void;
-  onMessageBoxChangeText?: (text: string) => void;
-};
-
-export const MessagesScreen: React.FC<MessagesScreenProps> = ({
-  messageBoxText,
-  messages,
-  onSend,
-  onMessageBoxChangeText,
-}) => {
+export const MessagesScreen: React.FC<MessagesScreenProps> = () => {
   useHideRootTabs();
   const scrollViewRef = useRef<FlatList<MessageModel>>(null);
+  const { messages } = useChatAppContext();
 
-  const revertedMessages = useMemo(() => messages, [messages]);
+  const revertedMessages = useMemo(() => [...(messages ?? [])].reverse(), [messages]);
 
   return (
     <SafeAreaView style={[commonStyles.flexFull]}>
@@ -45,16 +36,11 @@ export const MessagesScreen: React.FC<MessagesScreenProps> = ({
           />
         )}
         keyExtractor={item => item.id + ''}
-        // onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
         inverted
         contentContainerStyle={styles.messagesContentContainer}
         style={[commonStyles.screenHorizontalPadding]}
       />
-      <MessageBar
-        messageBoxText={messageBoxText}
-        onSend={onSend}
-        onMessageBoxChangeText={onMessageBoxChangeText}
-      />
+      <MessageBar />
     </SafeAreaView>
   );
 };

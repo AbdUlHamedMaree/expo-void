@@ -1,6 +1,6 @@
-import { graphql } from '$gql';
+import { gql } from '$gql';
 
-export const verifyOTPDocument = graphql(`
+export const verifyOTPDocument = gql(`
   mutation VeryOTPMutation($verifyOTPPayload: OtpVerificationPayloadIt!) {
     verifyOtp(payload: $verifyOTPPayload) {
       accessToken

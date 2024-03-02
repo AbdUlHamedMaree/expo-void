@@ -1,6 +1,6 @@
-import { graphql } from '$gql';
+import { gql } from '$gql';
 
-export const mapTripsDocument = graphql(`
+export const mapTripsDocument = gql(`
   query MapTripsQuery(
     $tripsQueryFilters: GetTripsFiltersIt
     $tripsQueryMeta: TripsMetaRequest

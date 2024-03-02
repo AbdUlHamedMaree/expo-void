@@ -24,7 +24,7 @@ export const useGraphQlSubscription = <TResult, TVariables extends Variables = V
       ? [undefined?]
       : [TVariables]
 ) => {
-  const unsubscribe = useState(() => {
+  const unsubscribe = useState(() =>
     graphqlWsClient.subscribe<TResult>(
       {
         ...resolveRequestDocument(document),
@@ -39,8 +39,8 @@ export const useGraphQlSubscription = <TResult, TVariables extends Variables = V
         error: err => handlers?.onUnknownError?.(err),
         complete: () => handlers?.onComplete?.(),
       }
-    );
-  })[0];
+    )
+  )[0];
 
   return unsubscribe;
 

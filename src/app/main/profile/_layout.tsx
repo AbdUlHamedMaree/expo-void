@@ -5,9 +5,10 @@ import { useMeQuery } from '$apis/user';
 import { LoadingSection } from '$components/dumb/loading-section';
 
 export default function Layout(): React.ReactNode {
-  const { data, isLoading } = useMeQuery();
+  const { data, loading } = useMeQuery();
 
-  if (isLoading) return <LoadingSection loading />;
+  if (loading) return <LoadingSection loading />;
+
   return (
     <Stack
       screenOptions={{

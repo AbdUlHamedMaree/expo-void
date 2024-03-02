@@ -1,6 +1,6 @@
-import { graphql } from '$gql';
+import { gql } from '$gql';
 
-export const joinTripDocument = graphql(`
+export const joinTripDocument = gql(`
   mutation JoinTripMutation($joinTripId: Float!, $joinTripPayload: JoinTripIt!) {
     joinTrip(id: $joinTripId, payload: $joinTripPayload) {
       id

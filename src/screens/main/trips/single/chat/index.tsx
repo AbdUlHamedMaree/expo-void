@@ -1,13 +1,13 @@
-import { useMemo, useRef, useState } from 'react';
+import { useSubscription } from '@apollo/client';
+import { useRef, useState } from 'react';
 
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { graphql } from '$gql';
+import { gql } from '$gql';
 import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
-import { useGraphQlSubscription } from '$libs/graphql-ws/hook';
 import { ChatApp } from '$modules/chat';
 import { MessageModel } from '$modules/chat/models/message';
 
-const MessageDocument = graphql(`
+const MessageDocument = gql(`
   subscription Message {
     messageReceivedOnAChat {
       chatId
@@ -29,24 +29,14 @@ export type ChatSingleTripsMainScreenProps = {
 export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps> = () => {
   useHideRootTabs();
 
-  const unsubscribe = useGraphQlSubscription(
-    MessageDocument,
-    useMemo(
-      () => ({
-        onData: console.log,
-        onError: console.error,
-        onResult: console.log,
-        onUnknownError: console.error,
-        onComplete: () => console.log('complete'),
-      }),
-      []
-    )
-  );
+  useSubscription(MessageDocument, {
+    onData: console.log,
+    onError: console.error,
+    onComplete: console.warn,
+  });
 
   const idRef = useRef(1);
   const sendedRef = useRef(false);
-
-  const [messageBoxText, setMessageBoxText] = useState('');
 
   const [messages, setMessages] = useState<MessageModel[]>([
     {
@@ -215,21 +205,18 @@ export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps>
     <ScreenWrapper disablePadding>
       <ChatApp
         messages={messages}
-        messageBoxText={messageBoxText}
-        onMessageBoxChangeText={setMessageBoxText}
-        onSend={() => {
+        onSend={text => {
           setMessages(v => [
             ...v,
             {
               id: idRef.current++,
               type: 'text',
-              content: messageBoxText,
+              content: text,
               sended: (sendedRef.current = Math.random() > 0.5),
               sender: 'Ahmad',
               senderPicture: `https://randomuser.me/api/portraits/lego/6.jpg`,
             },
           ]);
-          setMessageBoxText('');
         }}
       />
     </ScreenWrapper>

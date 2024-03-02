@@ -4,7 +4,6 @@ import { View } from 'react-native';
 import { SafeAreaView, SafeAreaProviderProps } from 'react-native-safe-area-context';
 
 import { PaperToastContainer, toast } from '$modules/react-native-paper-toast';
-import { ToastOptionsModel } from '$modules/react-native-paper-toast/model';
 import { commonStyles } from '$styles/common';
 
 export type ScreenWrapperProps = {
@@ -38,7 +37,13 @@ export const ScreenWrapper = memo(
         if (!params) return;
         if (!('toast' in params)) return;
 
-        const toastOptions = params.toast as ToastOptionsModel;
+        if (Array.isArray(params.toast)) {
+          params.toast.forEach(str => toast(JSON.parse(str)));
+
+          return;
+        }
+
+        const toastOptions = JSON.parse(params.toast);
 
         toast(toastOptions);
       }, [params]);

@@ -1,10 +1,17 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "skipLibCheck": true,
     "strict": true,
     "paths": {
       "$*": ["./src/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "https://carpool.void-ae.com/graphql"
+      }
+    ]
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

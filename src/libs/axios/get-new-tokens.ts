@@ -1,9 +1,9 @@
 import { graphqlRequest } from './graphql';
 
-import { graphql } from '$gql';
+import { gql } from '$gql';
 import { storage } from '$libs/async-storage/storage';
 
-const getNewTokensDocument = graphql(`
+const getNewTokensDocument = gql(`
   mutation GetNewTokens {
     getNewTokens {
       accessToken
