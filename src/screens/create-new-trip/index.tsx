@@ -10,6 +10,7 @@ import { Button, IconButton, SegmentedButtons } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { number, object, string, date, coerce } from 'zod';
 
+import { useCreateChatMutation } from '$apis/messages';
 import { useCreateTripMutation } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
 import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
@@ -25,6 +26,7 @@ import { toast } from '$modules/react-native-paper-toast';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
+import { throwIfGqlErrors } from '$tools/throw-if-gql-errors';
 
 const addressValidation = object({
   addressLineOne: string(),
@@ -59,6 +61,7 @@ export type CreateNewTripScreenProps = {
 
 export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
   const [createTrip, createTripResult] = useCreateTripMutation();
+  const [createChat, createChatResult] = useCreateChatMutation();
 
   const theme = useAppTheme();
   const initialMapRegion = useAtomValue(mapRegionAtom);
@@ -87,7 +90,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
 
   const onSubmit = methods.handleSubmit(async data => {
     try {
-      await createTrip({
+      const result = await createTrip({
         variables: {
           createTripPayload: {
             ...data,
@@ -96,7 +99,18 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
           },
         },
       });
-      router.navigate('/main/home');
+
+      const {
+        createTrip: { id: newTripId },
+      } = throwIfGqlErrors(result);
+
+      await createChat({
+        variables: {
+          createChatTripId: newTripId,
+        },
+      });
+
+      router.push('/(home)/map');
       toast.success('Trip created successfully!');
     } catch (err) {
       console.error(err);
@@ -279,8 +293,8 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
             <Button
               mode='contained'
               onPress={onSubmit}
-              loading={createTripResult.loading}
-              disabled={createTripResult.loading}
+              loading={createTripResult.loading || createChatResult.loading}
+              disabled={createTripResult.loading || createChatResult.loading}
             >
               Create
             </Button>

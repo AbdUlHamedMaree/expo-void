@@ -98,7 +98,10 @@ export const MainProfileAccountMyTripsScreen: React.FC<
   );
 
   const handleShowMore = useCallback((id: number) => {
-    router.navigate({ pathname: '/main/profile/account/single-trip', params: { id } });
+    router.push({
+      pathname: `/(trips)/single-trip/[trip-id]`,
+      params: { 'trip-id': id },
+    });
   }, []);
 
   return (

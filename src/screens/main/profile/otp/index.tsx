@@ -65,7 +65,7 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
       await storage.refreshToken.set(refreshToken);
 
       queryClient.invalidateQueries({ queryKey: ['MeQuery'] });
-      router.navigate('/main/profile/account/main');
+      router.push('/(home)/profile/account');
     } catch (err) {
       console.error(err);
     }
@@ -124,7 +124,7 @@ export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
         <Text>{phone} isn&apos;t your number?</Text>
         <Button
           onPress={() => {
-            router.navigate('/main/profile/sign-up');
+            router.push('/(home)/profile/sign-up');
           }}
         >
           Change Number

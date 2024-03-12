@@ -25,8 +25,8 @@ export const useJoinTripModal = ({ trip, onJoin, onCancel }: UseJoinTripModalArg
 
   const open = useCallback(() => {
     if (!user) {
-      router.navigate({
-        pathname: '/main/profile/login',
+      router.push({
+        pathname: '/(home)/profile/login',
         params: {
           toast: JSON.stringify({
             message: 'You need to be logged in to be able to join trips!',

@@ -64,7 +64,7 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
     queryClient.invalidateQueries({
       queryKey: [(meDocument.definitions[0] as ObjectTypeDefinitionNode).name],
     });
-    router.navigate('/main/profile/login');
+    router.push('/(home)/profile/login');
   }, []);
 
   if (!user) return null;
@@ -83,10 +83,7 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
       </Text>
       <Text style={{ textAlign: 'center', marginTop: spacing.sm }}>{user.phone}</Text>
       <View style={{ marginTop: spacing.xl, flex: 1 }}>
-        <List.Item
-          title='My Trips'
-          onPress={() => router.navigate('/main/profile/account/my-trips')}
-        />
+        <List.Item title='My Trips' onPress={() => router.push('/(account)/my-trips')} />
         <Divider style={{ marginVertical: spacing.md }} />
         <DropdownInput
           mode='outlined'

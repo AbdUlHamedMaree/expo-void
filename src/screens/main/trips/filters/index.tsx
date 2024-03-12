@@ -73,14 +73,14 @@ export const TripsFiltersScreen: React.FC<TripsFiltersScreenProps> = () => {
     () =>
       methods.handleSubmit(values => {
         setTripsFilters(values);
-        router.navigate('/main/trips/all');
+        router.back();
       }),
     [methods, setTripsFilters]
   );
 
   const handleClearFilters = useCallback(() => {
     setTripsFilters(undefined);
-    router.navigate('/main/trips/all');
+    router.back();
   }, [setTripsFilters]);
 
   useLayoutEffect(() => {

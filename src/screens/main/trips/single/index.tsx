@@ -40,7 +40,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
 
   const theme = useAppTheme();
 
-  const { id } = useLocalSearchParams();
+  const { 'trip-id': id } = useLocalSearchParams();
 
   const singleTripQuery = useSingleTripQuery({
     variables: { singleTripId: +id },
@@ -142,7 +142,11 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
           {
             icon: 'chat-outline',
             label: 'Chat',
-            onPress: () => router.navigate('main/trips/single/chat'),
+            onPress: () =>
+              router.push({
+                pathname: `/(trips)/single-trip/[trip-id]/chat`,
+                params: { 'trip-id': id },
+              }),
           },
           {
             icon: 'logout',

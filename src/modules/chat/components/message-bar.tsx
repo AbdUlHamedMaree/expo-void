@@ -14,7 +14,7 @@ import { messageMachine } from './message-bar.machine';
 import { useChatAppContext } from '../context';
 
 import { mmss } from '$helpers/mmss';
-import { useOnUnmount } from '$hooks/use-lifecycle';
+import { useUnmountEffect } from '$hooks/use-lifecycle';
 import { isDefined } from '$modules/checks';
 import { toast } from '$modules/react-native-paper-toast';
 import { commonStyles } from '$styles/common';
@@ -122,7 +122,7 @@ export const MessageBar: React.FC<MessageBarProps> = () => {
     send({ type: 'record.end', uri, sound });
   }, [send, state.context.recording]);
 
-  useOnUnmount(() => {
+  useUnmountEffect(() => {
     state.context.sound?.unloadAsync();
     state.context.recording?.stopAndUnloadAsync();
   });

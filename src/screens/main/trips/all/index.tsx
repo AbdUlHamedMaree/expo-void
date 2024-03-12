@@ -95,7 +95,10 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
   );
 
   const handleShowMore = useCallback((id: number) => {
-    router.navigate({ pathname: '/main/trips/single', params: { id } });
+    router.push({
+      pathname: `/(trips)/single-trip/[trip-id]`,
+      params: { 'trip-id': id },
+    });
   }, []);
 
   return (
@@ -139,7 +142,7 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
           right: 0,
           bottom: 0,
         }}
-        onPress={() => router.navigate('/create-new-trip')}
+        onPress={() => router.push('/create-new-trip')}
       />
       {joinTripModal.modal}
     </ScreenWrapper>

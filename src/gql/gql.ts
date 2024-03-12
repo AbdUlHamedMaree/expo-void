@@ -13,6 +13,9 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  mutation CreateChat($createChatTripId: Int!) {\n    createChat(tripId: $createChatTripId) {\n      id\n    }\n  }\n": types.CreateChatDocument,
+    "\n  mutation SendMessage($chatId: Int!, $message: String!) {\n    sendMessage(chatId: $chatId, message: $message) {\n      id\n    }\n  }\n": types.SendMessageDocument,
+    "\n  query ChatByTripId($chatTripId: Int!) {\n    chatByTripId(tripId: $chatTripId) {\n      id\n      messages {\n        createdAt\n        message\n        user {\n          id\n          email\n          name\n        }\n      }\n    }\n  }\n": types.ChatByTripIdDocument,
     "\n  mutation SendOTPMutation($sendOTPPayload: OtpLoginPayloadIt!) {\n    sendOtp(payload: $sendOTPPayload) {\n      message\n    }\n  }\n": types.SendOtpMutationDocument,
     "\n  mutation VeryOTPMutation($verifyOTPPayload: OtpVerificationPayloadIt!) {\n    verifyOtp(payload: $verifyOTPPayload) {\n      accessToken\n      refreshToken\n    }\n  }\n": types.VeryOtpMutationDocument,
     "\n  mutation CreateTripMutation($createTripPayload: CreateTripIt!) {\n    createTrip(payload: $createTripPayload) {\n      id\n    }\n  }\n": types.CreateTripMutationDocument,
@@ -44,6 +47,18 @@ const documents = {
  */
 export function gql(source: string): unknown;
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateChat($createChatTripId: Int!) {\n    createChat(tripId: $createChatTripId) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation CreateChat($createChatTripId: Int!) {\n    createChat(tripId: $createChatTripId) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation SendMessage($chatId: Int!, $message: String!) {\n    sendMessage(chatId: $chatId, message: $message) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation SendMessage($chatId: Int!, $message: String!) {\n    sendMessage(chatId: $chatId, message: $message) {\n      id\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query ChatByTripId($chatTripId: Int!) {\n    chatByTripId(tripId: $chatTripId) {\n      id\n      messages {\n        createdAt\n        message\n        user {\n          id\n          email\n          name\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query ChatByTripId($chatTripId: Int!) {\n    chatByTripId(tripId: $chatTripId) {\n      id\n      messages {\n        createdAt\n        message\n        user {\n          id\n          email\n          name\n        }\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

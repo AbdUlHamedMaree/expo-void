@@ -67,7 +67,7 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
 
       await storage.accessToken.set(accessToken);
       await storage.refreshToken.set(refreshToken);
-      router.navigate('/main/profile/account/main');
+      router.push('/(home)/profile/account');
     } catch (err) {
       console.error(err);
 
@@ -134,7 +134,7 @@ export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () 
         }}
       >
         <Text>Don&apos;t have an account?</Text>
-        <Button onPress={() => router.navigate('main/profile/sign-up')}>Sign Up</Button>
+        <Button onPress={() => router.push('/(home)/profile/sign-up')}>Sign Up</Button>
       </View>
 
       <Divider style={{ marginVertical: spacing.lg }} />

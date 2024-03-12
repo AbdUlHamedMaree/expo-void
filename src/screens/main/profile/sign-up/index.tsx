@@ -60,8 +60,8 @@ export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = (
         variables: {
           signUpPayload: {
             phone: phoneWithCountryCode,
-            email: 'a@a.com',
-            name: 'hmid',
+            email: 'c@c.com',
+            name: 'c',
             password: values.password,
             role: 'user',
           },
@@ -88,8 +88,8 @@ export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = (
 
       console.log('otp:', otp);
 
-      router.navigate({
-        pathname: '/main/profile/otp',
+      router.push({
+        pathname: '/(auth)/otp',
         params: { phone: phoneWithCountryCode, otp },
       });
     } catch (err) {
@@ -155,7 +155,7 @@ export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = (
         }}
       >
         <Text>Already have an account?</Text>
-        <Button onPress={() => router.navigate('/main/profile/login')}>Login</Button>
+        <Button onPress={() => router.push('/(home)/profile/login')}>Login</Button>
       </View>
 
       <Divider style={{ marginVertical: spacing.lg }} />

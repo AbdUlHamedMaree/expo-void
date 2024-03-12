@@ -26,7 +26,7 @@ export const TripsStackNavigation: React.FC = () => {
             <View style={{ position: 'relative' }}>
               <IconButton
                 icon='filter-outline'
-                onPress={() => router.navigate('/main/trips/filters')}
+                onPress={() => router.push('/(trips)/trips-filters')}
               />
               <Badge
                 visible={!!tripsFilters}

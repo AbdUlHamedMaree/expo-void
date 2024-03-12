@@ -19,7 +19,6 @@ export default function Layout(): React.ReactNode {
       <Stack.Screen name='login' />
       <Stack.Screen name='sign-up' />
       <Stack.Screen name='account' />
-      <Stack.Screen name='otp' />
     </Stack>
   );
 }
