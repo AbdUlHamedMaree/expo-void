@@ -4,7 +4,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useAtomValue } from 'jotai';
 import { useEffect, Suspense } from 'react';
 import Geocoder from 'react-native-geocoding';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -15,7 +14,6 @@ import {
 } from 'react-native-safe-area-context';
 
 // import { RootStack } from '$navigation';
-import { isWelcomeStepperSkippedAtom } from '$atoms/is-welcome-stepper-skipped';
 import { AppErrorBoundary } from '$components/dumb/app-error-boundary';
 import { AppStatusBar } from '$components/smart/app-status-bar';
 import { ApolloClientProvider } from '$libs/apollo-client/provider';
@@ -82,8 +80,6 @@ const Application: React.FC = () => {
   useRefetchOnAppFocus();
   useAxiosService();
 
-  const isWelcomeStepperSkipped = useAtomValue(isWelcomeStepperSkippedAtom);
-
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <AppPaperProvider>
@@ -95,7 +91,6 @@ const Application: React.FC = () => {
               screenOptions={{
                 headerShown: false,
               }}
-              initialRouteName={isWelcomeStepperSkipped ? 'main' : 'welcome-stepper'}
             />
           </Suspense>
         </AppErrorBoundary>

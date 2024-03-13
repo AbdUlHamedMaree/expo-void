@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useAtom } from 'jotai/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import MapView, { Details, LatLng, Region } from 'react-native-maps';
@@ -46,7 +47,7 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
 
   useRefreshOnFocus(tripsQuery.refetch);
 
-  const trips = tripsQuery.data?.trips.items;
+  const trips = (tripsQuery.data ?? tripsQuery.previousData)?.trips.items;
 
   type SingleTrip = Exclude<typeof trips, undefined>[number];
 
@@ -140,7 +141,12 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
           style={{ position: 'absolute', top: 16, left: 16, right: 16 }}
           {...focusedTrip}
           onJoin={() => {}}
-          onShowMore={() => {}}
+          onShowMore={() =>
+            router.push({
+              pathname: '/(trips)/single-trip/[trip-id]',
+              params: { 'trip-id': focusedTrip.id },
+            })
+          }
           onClose={() => setFocusedTripId(undefined)}
         />
       )}

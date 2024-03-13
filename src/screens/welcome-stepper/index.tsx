@@ -15,7 +15,7 @@ export const WelcomeStepperScreen: React.FC = () => {
 
   const prevStep = () => setStepIndex(v => Math.max(v - 1, 0));
 
-  const handleFinishOrSkip = () => router.replace('/main/home');
+  const handleFinishOrSkip = () => router.replace('/(home)/map');
 
   return (
     <SafeAreaView style={[commonStyles.flexFull, commonStyles.screenPadding]}>

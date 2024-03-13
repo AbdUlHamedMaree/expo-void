@@ -91,7 +91,7 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
           items={languages}
           selected={selectedItem}
           onSelectFinish={selected =>
-            langStorage.set(selected[0].value as AvailableLanguagesUnion)
+            selected[0] && langStorage.set(selected[0].value as AvailableLanguagesUnion)
           }
         />
         <View style={{ flex: 1 }} />

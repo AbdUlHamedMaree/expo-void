@@ -6,12 +6,9 @@ import { getNewTokensRequest } from './get-new-tokens';
 import { request } from './instance';
 import { AxiosGraphQlResponse, isGraphQlErrorResponse } from './response';
 
-import { useMeQuery } from '$apis/user';
 import { storage } from '$libs/async-storage/storage';
 
 export const useAxiosService = () => {
-  useMeQuery();
-
   const errorInterceptor = useCallback(
     async (error: AxiosError<AxiosGraphQlErrorResponseData>) => {
       if (error?.code === '401') {

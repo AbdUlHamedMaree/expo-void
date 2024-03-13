@@ -1,5 +1,5 @@
 import { useQuery, useSubscription } from '@apollo/client';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { useSendMessageMutation } from '$apis/messages';
 import { chatByTripIdDocument } from '$apis/messages/queries/trips';
