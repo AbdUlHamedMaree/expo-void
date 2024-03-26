@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
-import MapView, { MapPressEvent, Marker } from 'react-native-maps';
+import MapView, { MapPressEvent, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Button, IconButton, SegmentedButtons } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { number, object, string, date, coerce } from 'zod';
@@ -197,6 +197,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
   return (
     <ScreenWrapper disablePadding>
       <MapView
+        provider={PROVIDER_GOOGLE}
         style={[commonStyles.flexFull]}
         initialRegion={initialMapRegion}
         onPress={onMapPress}

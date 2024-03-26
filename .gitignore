@@ -43,4 +43,8 @@ expo-env.d.ts
 # graphql
 graphql.schema.json
 
+# IDE
+.idea
+
+# devtools
 %ProgramData%

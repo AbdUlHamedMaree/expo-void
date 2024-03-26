@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useAtom } from 'jotai/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import MapView, { Details, LatLng, Region } from 'react-native-maps';
+import MapView, { Details, LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
 import { useMapTripsQuery } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
@@ -126,6 +126,7 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
   return (
     <ScreenWrapper disablePadding>
       <MapView
+        provider={PROVIDER_GOOGLE}
         ref={mapRef}
         style={commonStyles.flexFull}
         initialRegion={mapRegion}

@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import MapView, { Details, Region } from 'react-native-maps';
+import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { Button, FAB, IconButton, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -111,6 +111,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
   return (
     <ScreenWrapper disablePadding>
       <MapView
+        provider={PROVIDER_GOOGLE}
         ref={mapRef}
         onMapReady={handleMapReady}
         initialRegion={initialMapRegion}
