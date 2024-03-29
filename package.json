@@ -19,7 +19,8 @@
     "test": "jest --watchAll",
     "lint": "eslint ./src",
     "lint:fix": "npm run lint -- --fix",
-    "prettify": "prettier --write ./src"
+    "prettify": "prettier --write ./src",
+    "copy-env": "echo -n \"\" >> .env && cat .env.local >> .env"
   },
   "dependencies": {
     "@apollo/client": "^3.9.5",

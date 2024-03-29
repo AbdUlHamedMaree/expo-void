@@ -67,7 +67,6 @@ export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps>
 
   const chatQueryResult = useQuery(chatByTripIdDocument, {
     variables: { chatTripId: tripId },
-    onCompleted: () => console.log('pizza', 'useLazyQuery'),
   });
 
   const apiMessages = useMemo<MessageModel[]>(

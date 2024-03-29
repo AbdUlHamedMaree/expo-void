@@ -70,7 +70,16 @@ export const useDirectionPolylinePoints = ({
   precision = 'low',
 }: UseDirectionPolylinePointsArg) => {
   const points = useMemo(() => {
-    if (!response) return [];
+    if (!response) {
+      console.warn(`direction api empty response`);
+      return [];
+    }
+    if (response.status !== 'OK') {
+      console.warn(
+        `direction api response status: '${response.status}', with message: ${response.error_message}`
+      );
+      return [];
+    }
 
     return precision === 'high'
       ? response.routes[0].legs[0].steps
