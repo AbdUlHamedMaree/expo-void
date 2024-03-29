@@ -1,3 +1,8 @@
+import dotenvFlow from 'dotenv-flow';
+import { expand as dotenvExpand } from 'dotenv-expand';
+
+dotenvExpand(dotenvFlow.config());
+
 const config = {
   expo: {
     name: 'VoidCarpool',
