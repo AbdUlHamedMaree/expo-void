@@ -29,13 +29,21 @@ export const MapTrip: React.FC<MapTripProps> = ({
 
   return (
     <>
-      <Marker onPress={onPickupMarkerClick} coordinate={locations.pickup}>
+      <Marker
+        onPress={onPickupMarkerClick}
+        coordinate={locations.pickup}
+        tracksViewChanges={false}
+      >
         <TripMapMarkerCard>
           <MaterialCommunityIcon name='car' size={18} />
         </TripMapMarkerCard>
       </Marker>
 
-      <Marker onPress={onDropoffMarkerClick} coordinate={locations.dropoff}>
+      <Marker
+        onPress={onDropoffMarkerClick}
+        coordinate={locations.dropoff}
+        tracksViewChanges={false}
+      >
         <TripMapMarkerCard>
           <MaterialCommunityIcon name='flag-checkered' size={18} />
         </TripMapMarkerCard>

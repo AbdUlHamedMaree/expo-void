@@ -1,4 +1,3 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { router } from 'expo-router';
 import { ObjectTypeDefinitionNode } from 'graphql';
 import { useCallback, useMemo } from 'react';
@@ -17,7 +16,6 @@ import { storage } from '$libs/async-storage/storage';
 import { useStorageState } from '$libs/async-storage/use-storage-state';
 import { queryClient } from '$libs/react-query/client';
 import { AvailableLanguagesUnion } from '$models/available-languages';
-import { AccountStackParamList } from '$navigation/main/profile/account/model';
 import { spacing } from '$theme/spacing';
 
 const languages: ListItem[] = [
@@ -31,10 +29,9 @@ const languages: ListItem[] = [
   },
 ];
 
-export type MainProfileAccountMainProps = NativeStackScreenProps<
-  AccountStackParamList,
-  'AccountMain'
->;
+export type MainProfileAccountMainProps = {
+  //
+};
 
 export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps> = () => {
   useShowRootTabs();

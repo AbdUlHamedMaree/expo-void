@@ -67,6 +67,7 @@ export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps>
 
   const chatQueryResult = useQuery(chatByTripIdDocument, {
     variables: { chatTripId: tripId },
+    fetchPolicy: 'no-cache',
   });
 
   const apiMessages = useMemo<MessageModel[]>(

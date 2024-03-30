@@ -203,14 +203,14 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
         onPress={onMapPress}
       >
         {pickupLocation && (
-          <Marker coordinate={pickupLocation}>
+          <Marker coordinate={pickupLocation} tracksViewChanges={false}>
             <TripMapMarkerCard>
               <MaterialCommunityIcon name='car' size={18} />
             </TripMapMarkerCard>
           </Marker>
         )}
         {dropoffLocation && (
-          <Marker coordinate={dropoffLocation}>
+          <Marker coordinate={dropoffLocation} tracksViewChanges={false}>
             <TripMapMarkerCard>
               <MaterialCommunityIcon name='flag-checkered' size={18} />
             </TripMapMarkerCard>

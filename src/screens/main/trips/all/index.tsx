@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
-import { VirtualizedList } from 'react-native';
+import { View, VirtualizedList } from 'react-native';
 import { FAB } from 'react-native-paper';
 
 import { useTripsQuery } from '$apis/trips';
@@ -114,6 +114,8 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
             getItemCount={trips => trips.length}
             getItem={(trips, i) => trips[i]}
             data={trips}
+            contentContainerStyle={{ padding: spacing.lg }}
+            ItemSeparatorComponent={() => <View style={{ marginVertical: spacing.md }} />}
             renderItem={item => {
               const { id, ...props } = item.item;
 
@@ -121,10 +123,6 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
                 <Trip
                   key={id}
                   {...props}
-                  style={{
-                    marginHorizontal: spacing.lg,
-                    marginTop: spacing.lg,
-                  }}
                   joined={checkIsUserInTrip(props)}
                   onJoin={() => handleCardJoin(id)}
                   onShowMore={() => handleShowMore(id)}
