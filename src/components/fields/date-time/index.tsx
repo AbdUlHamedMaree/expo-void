@@ -29,15 +29,15 @@ import { mergeFunctions } from '$tools/merge-functions';
 registerTranslation('en', en);
 
 export const dateTimeRegex =
-  /[0-3]?[0-9]\/[01]?[0-9]\/[12]?[09]?[0-9][0-9] [01]?[0-6]:[0-6][0-9] [aApP][mM]/;
+  /[0-3]?[0-9]\/[01]?[0-9]\/[12]?[09]?[0-9][0-9] [01]?[0-6]:[0-6][0-9]/;
 
-export const dateTimeFormat = 'dd/LL/yyyy hh:mm aa';
+export const dateTimeFormat = 'dd/LL/yyyy HH:mm';
 
 export const fallbackDateTimeString = format(Date.now(), dateTimeFormat);
 
-export const dateTimeMask = '99/99/9999 99:99 AA';
+export const dateTimeMask = '99/99/9999 99:99';
 
-export const dateTimeFormatHelperText = 'DD/MM/YYYY HH:MM XP';
+export const dateTimeFormatHelperText = 'DD/MM/YYYY hh:mm';
 
 const completeDateStringWithDefault = (value: string) =>
   value + fallbackDateTimeString.substring(value.length, fallbackDateTimeString.length);

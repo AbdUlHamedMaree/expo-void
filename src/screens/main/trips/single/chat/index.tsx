@@ -7,7 +7,6 @@ import { useMeQuery } from '$apis/user';
 import { LoadingSection } from '$components/dumb/loading-section';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { gql } from '$gql';
-import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { ChatApp } from '$modules/chat';
 import { MessageModel } from '$modules/chat/models/message';
 
@@ -33,8 +32,6 @@ export type ChatSingleTripsMainScreenProps = {
 export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps> = ({
   tripId,
 }) => {
-  useHideRootTabs();
-
   const idRef = useRef(1);
 
   const [subscriptionMessages, setSubscriptionMessages] = useState<MessageModel[]>([]);

@@ -13,7 +13,6 @@ import { TripsFiltersModel, tripsFiltersAtom } from '$atoms/trips-filters';
 import { DateTimeField } from '$components/fields/date-time';
 import { TextField } from '$components/fields/text';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
 import { commonStyles } from '$styles/common';
 import { spacing } from '$theme/spacing';
@@ -39,8 +38,6 @@ export type TripsFiltersScreenProps = {
 };
 
 export const TripsFiltersScreen: React.FC<TripsFiltersScreenProps> = () => {
-  useHideRootTabs();
-
   const { setOptions } = useNavigation();
   const [tripsFilters, setTripsFilters] = useAtom(tripsFiltersAtom);
 

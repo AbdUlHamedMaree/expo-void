@@ -12,7 +12,6 @@ import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { GetTripsFiltersIt, InputMaybe } from '$gql/graphql';
 import { useCheckIsUserInTrip } from '$hooks/use-check-is-user-in-trip';
 import { useJoinTripModal } from '$hooks/use-join-trip-modal';
-import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
 import { IDUnion } from '$models/id';
 import { spacing } from '$theme/spacing';
@@ -22,8 +21,6 @@ export type AllTripsScreenProps = {
 };
 
 export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
-  useShowRootTabs();
-
   const tripsFilters = useAtomValue(tripsFiltersAtom);
 
   const tripsQueryFilters = useMemo<InputMaybe<GetTripsFiltersIt>>(
@@ -60,7 +57,9 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
     ]
   );
 
-  const tripsQuery = useTripsQuery({ variables: { tripsQueryFilters } });
+  const tripsQuery = useTripsQuery({
+    variables: { tripsQueryFilters },
+  });
   useRefreshOnFocus(tripsQuery.refetch);
 
   const trips = tripsQuery.data?.trips.items;
@@ -125,7 +124,7 @@ export const AllTripsScreen: React.FC<AllTripsScreenProps> = () => {
                   {...props}
                   joined={checkIsUserInTrip(props)}
                   onJoin={() => handleCardJoin(id)}
-                  onShowMore={() => handleShowMore(id)}
+                  onShowMap={() => handleShowMore(id)}
                 />
               );
             }}

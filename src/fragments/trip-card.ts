@@ -1,3 +1,4 @@
+import { gql } from '$gql';
 import { FragmentModel } from '$types/fragment-model';
 
 export const TripCardFragment = gql(`
@@ -8,10 +9,14 @@ export const TripCardFragment = gql(`
 
     pickupAddress {
       addressLineOne
+      area
+      city
     }
 
     dropoffAddress {
       addressLineOne
+      area
+      city
     }
   }
 `);
@@ -25,9 +30,13 @@ export const toTripCard = (obj: TripCardModel): TripCardModel => ({
 
   pickupAddress: {
     addressLineOne: obj.pickupAddress.addressLineOne,
+    area: obj.pickupAddress.area,
+    city: obj.pickupAddress.city,
   },
 
   dropoffAddress: {
     addressLineOne: obj.dropoffAddress.addressLineOne,
+    area: obj.dropoffAddress.area,
+    city: obj.dropoffAddress.city,
   },
 });

@@ -10,7 +10,6 @@ import { useVerifyOTPMutation } from '$apis/otp';
 import { PaperButton } from '$components/dumb/paper-button';
 import { MaskedTextField } from '$components/fields/masked-text';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import { storage } from '$libs/async-storage/storage';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
@@ -28,8 +27,6 @@ export type MainProfileOTPScreenProps = {
 };
 
 export const MainProfileOTPScreen: React.FC<MainProfileOTPScreenProps> = () => {
-  useShowRootTabs();
-
   const queryClient = useQueryClient();
 
   const [verifyOTP] = useVerifyOTPMutation();

@@ -1,32 +1,31 @@
 import { gql } from '$gql';
 
-export const mapTripsDocument = gql(`
-  query MapTripsQuery(
-    $tripsQueryFilters: GetTripsFiltersIt
-    $tripsQueryMeta: TripsMetaRequest
+export const myTripsDocument = gql(`
+  query MyTripsQuery(
+    $filters: GetTripsFiltersIt
+    $meta: TripsMetaRequest
   ) {
-    trips(filters: $tripsQueryFilters, meta: $tripsQueryMeta) {
+    myTrips(filters: $filters, meta: $meta) {
       items {
         id
         capacity
         occupiedSeats
         plannedAt
+        passengers {
+          id
+        }
 
         pickupAddress {
           addressLineOne
           area
           city
         }
-        pickupLatitude
-        pickupLongitude
 
         dropoffAddress {
           addressLineOne
           area
           city
         }
-        dropoffLatitude
-        dropoffLongitude
       }
       meta {
         limit

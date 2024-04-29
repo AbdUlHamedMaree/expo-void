@@ -11,7 +11,6 @@ import { PaperButton } from '$components/dumb/paper-button';
 import { MaskedTextField } from '$components/fields/masked-text';
 import { TextField } from '$components/fields/text';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import { storage } from '$libs/async-storage/storage';
 import { PaperToastContainer, toast } from '$modules/react-native-paper-toast';
 import { commonStyles } from '$styles/common';
@@ -34,8 +33,6 @@ export type MainProfileLoginScreenProps = {
 };
 
 export const MainProfileLoginScreen: React.FC<MainProfileLoginScreenProps> = () => {
-  useShowRootTabs();
-
   const [login, loginResult] = useLoginMutation();
 
   const methods = useForm({

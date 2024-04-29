@@ -10,7 +10,6 @@ import { PaperButton } from '$components/dumb/paper-button';
 import { DropdownInput } from '$components/inputs/dropdown';
 import { ListItem } from '$components/inputs/select/types';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import { apolloClient } from '$libs/apollo-client/client';
 import { storage } from '$libs/async-storage/storage';
 import { useStorageState } from '$libs/async-storage/use-storage-state';
@@ -34,8 +33,6 @@ export type MainProfileAccountMainProps = {
 };
 
 export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps> = () => {
-  useShowRootTabs();
-
   const result = useMeQuery();
   const user = result.data?.me;
 
@@ -79,7 +76,14 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
         {user.name}
       </Text>
       <Text style={{ textAlign: 'center', marginTop: spacing.sm }}>{user.phone}</Text>
+
       <View style={{ marginTop: spacing.xl, flex: 1 }}>
+        <Text variant='displaySmall'>Subscription: Free Trail</Text>
+        <Text style={{ marginTop: spacing.sm }}>
+          App and Service will be free until further notice
+        </Text>
+
+        <Divider style={{ marginBottom: spacing.md, marginTop: spacing.xl }} />
         <List.Item title='My Trips' onPress={() => router.push('/(account)/my-trips')} />
         <Divider style={{ marginVertical: spacing.md }} />
         <DropdownInput
@@ -91,6 +95,7 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
             selected[0] && langStorage.set(selected[0].value as AvailableLanguagesUnion)
           }
         />
+        <Divider style={{ marginVertical: spacing.md }} />
         <View style={{ flex: 1 }} />
         <PaperButton onPress={handleLogout} style={{ marginTop: spacing.lg }}>
           Logout

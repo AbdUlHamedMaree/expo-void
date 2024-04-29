@@ -6,7 +6,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
 import MapView, { MapPressEvent, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Button, IconButton, SegmentedButtons } from 'react-native-paper';
+import { Button, IconButton, SegmentedButtons, Surface, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { number, object, string, date, coerce } from 'zod';
 
@@ -20,6 +20,7 @@ import { MaskedTextField } from '$components/fields/masked-text';
 import { TextField } from '$components/fields/text';
 import { MaterialCommunityIcon } from '$components/icons';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
+import { formateGeocodingResults } from '$libs/geocoding/formate-geocoding-results';
 import { getAddressComponent } from '$libs/geocoding/get-adress-component';
 import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
 import { toast } from '$modules/react-native-paper-toast';
@@ -55,6 +56,8 @@ type ValidationSchema = Zod.infer<typeof validationSchema>;
 
 const key = createKeyGetter<ValidationSchema>();
 
+const formateGeocoder = formateGeocodingResults`${'route'} - ${'neighborhood'} - ${'sublocality'} - ${'locality'}`;
+
 export type CreateNewTripScreenProps = {
   children?: React.ReactNode;
 };
@@ -63,10 +66,17 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
   const [createTrip, createTripResult] = useCreateTripMutation();
   const [createChat, createChatResult] = useCreateChatMutation();
 
+  const [helperText, setHelperText] = useState<string | undefined>(
+    'Choose the trip pickup location'
+  );
+
   const theme = useAppTheme();
   const initialMapRegion = useAtomValue(mapRegionAtom);
 
   const bottomSheetRef = useRef<React.ComponentRef<typeof PaperBottomSheet>>(null);
+
+  const firstSwitchRef = useRef(true);
+  const firstDrawRef = useRef(true);
 
   const [activeButton, setActiveButton] = useState<'pickup' | 'dropoff'>('pickup');
 
@@ -84,6 +94,8 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       plannedAt: null,
     } as any,
     resolver: zodResolver(validationSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
   });
 
   const { getValues, setValue, watch, resetField } = methods;
@@ -110,7 +122,11 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
         },
       });
 
-      router.push('/(home)/map');
+      router.push({
+        pathname: '/(trips)/single-trip/[trip-id]/',
+        params: { 'trip-id': newTripId },
+      });
+
       toast.success('Trip created successfully!');
     } catch (err) {
       console.error(err);
@@ -152,9 +168,17 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
         setValue('dropoffLatitude', coordinate.latitude);
         setValue('dropoffLongitude', coordinate.longitude);
         resetField('dropoffAddress');
-        setTimeout(() => bottomSheetRef.current?.snapToIndex(1), 200);
+        if (firstDrawRef.current) {
+          setTimeout(() => bottomSheetRef.current?.snapToIndex(1), 200);
+          setHelperText('');
+          firstDrawRef.current = false;
+        }
       }
-      setActiveButton(v => (v === 'pickup' ? 'dropoff' : 'pickup'));
+      if (firstSwitchRef.current) {
+        setActiveButton(v => (v === 'pickup' ? 'dropoff' : 'pickup'));
+        setHelperText('Great! now choose dropoff location');
+        firstSwitchRef.current = false;
+      }
     },
     [activeButton, resetField, setValue]
   );
@@ -170,6 +194,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       if (!pickupAddress?.addressLineOne && pickupLocation)
         Geocoder.from(pickupLocation)
           .then(response => {
+            console.log('pickup', response.results);
             const address = getAddress(response);
 
             setValue('pickupAddress', address, {
@@ -182,6 +207,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       if (!dropoffAddress?.addressLineOne && dropoffLocation)
         Geocoder.from(dropoffLocation)
           .then(response => {
+            console.log('dropoff', response.results);
             const address = getAddress(response);
 
             setValue('dropoffAddress', address, {
@@ -241,6 +267,17 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
             { label: 'Drop off', value: 'dropoff' },
           ]}
         />
+        {helperText && (
+          <Surface
+            style={{
+              padding: spacing.sm,
+              borderRadius: spacing.sm,
+              marginTop: spacing.lg,
+            }}
+          >
+            <Text variant='bodyLarge'>{helperText}</Text>
+          </Surface>
+        )}
       </View>
       <IconButton
         icon='arrow-left'
@@ -265,18 +302,18 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
           <FormProvider {...methods}>
             <TextField
               label='Pickup'
-              name={key('pickupAddress.addressLineOne')}
+              name={key('pickupAddress.addressLineTwo')}
               disabled
             />
 
             <TextField
               label='Dropoff'
-              name={key('dropoffAddress.addressLineOne')}
+              name={key('dropoffAddress.addressLineTwo')}
               disabled
             />
 
             <MaskedTextField
-              label='Capacity'
+              label='Car Capacity'
               name={key('capacity')}
               mask='99'
               keyboardType='number-pad'
@@ -325,6 +362,6 @@ const getAddress = (response: Geocoder.GeocoderResponse) => ({
     getAddressComponent(response, 'neighborhood')
   ),
   addressLineOne: response.results[0].formatted_address,
-  addressLineTwo: response.results[0].formatted_address,
+  addressLineTwo: formateGeocoder(response.results).result,
   postCode: 'UNKNOWN',
 });

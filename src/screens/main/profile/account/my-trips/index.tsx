@@ -3,14 +3,13 @@ import { useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
 import { VirtualizedList } from 'react-native';
 
-import { useTripsQuery } from '$apis/trips';
+import { useMyTripsQuery } from '$apis/trips';
 import { tripsFiltersAtom } from '$atoms/trips-filters';
 import { LoadingSection } from '$components/dumb/loading-section';
 import { Trip } from '$components/dumb/trip';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { GetTripsFiltersIt, InputMaybe } from '$gql/graphql';
 import { useCheckIsUserInTrip } from '$hooks/use-check-is-user-in-trip';
-import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
 import { IDUnion } from '$models/id';
@@ -23,8 +22,6 @@ export type MainProfileAccountMyTripsScreenProps = {
 export const MainProfileAccountMyTripsScreen: React.FC<
   MainProfileAccountMyTripsScreenProps
 > = () => {
-  useHideRootTabs();
-
   const tripsFilters = useAtomValue(tripsFiltersAtom);
 
   const tripsQueryFilters = useMemo<InputMaybe<GetTripsFiltersIt>>(
@@ -61,12 +58,12 @@ export const MainProfileAccountMyTripsScreen: React.FC<
     ]
   );
 
-  const tripsQuery = useTripsQuery({
-    variables: { tripsQueryFilters },
+  const tripsQuery = useMyTripsQuery({
+    variables: { filters: tripsQueryFilters },
   });
   useRefreshOnFocus(tripsQuery.refetch);
 
-  const trips = tripsQuery.data?.trips.items;
+  const trips = tripsQuery.data?.myTrips.items;
 
   const [selectedTripId, setSelectedTripId] = useState<IDUnion | null>(null);
 
@@ -130,7 +127,7 @@ export const MainProfileAccountMyTripsScreen: React.FC<
                   }}
                   joined={checkIsUserInTrip(props)}
                   onJoin={() => handleCardJoin(id)}
-                  onShowMore={() => handleShowMore(id)}
+                  onShowMap={() => handleShowMore(id)}
                 />
               );
             }}

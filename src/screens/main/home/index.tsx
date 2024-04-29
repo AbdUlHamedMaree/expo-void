@@ -11,7 +11,6 @@ import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { toTripRoute } from '$fragments/trip-route';
 import { dropoffToLatlng, pickupToLatlng } from '$helpers/pickup-dropoff-to-latlng';
 import { useAppColorSchema } from '$hooks/use-app-color-schema';
-import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import {
   useGoogleMapsDirectionsQuery,
   useDirectionPolyline,
@@ -25,8 +24,6 @@ export type MainHomeScreenProps = {
 };
 
 export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
-  useShowRootTabs();
-
   const mapRef = useRef<MapView>(null);
 
   const [focusedTripId, setFocusedTripId] = useState<IDUnion | undefined>();
@@ -141,8 +138,13 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
         <Trip
           style={{ position: 'absolute', top: 16, left: 16, right: 16 }}
           {...focusedTrip}
-          onJoin={() => {}}
-          onShowMore={() =>
+          onJoin={() =>
+            router.push({
+              pathname: '/(trips)/join-trip/[trip-id]/',
+              params: { 'trip-id': focusedTrip.id },
+            })
+          }
+          onShowMap={() =>
             router.push({
               pathname: '/(trips)/single-trip/[trip-id]',
               params: { 'trip-id': focusedTrip.id },

@@ -1,10 +1,13 @@
 import { format } from 'date-fns';
-import { memo, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Card, CardProps, Divider, IconButton, Text } from 'react-native-paper';
+import { Card, CardProps, Divider, IconButton, Text } from 'react-native-paper';
+
+import { Collapsible } from '../collapsible';
 
 import { MaterialCommunityIcon } from '$components/icons';
 import { TripCardModel } from '$fragments/trip-card';
+import { isStringFull } from '$modules/checks';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
 
@@ -12,7 +15,7 @@ export type TripProps = TripCardModel & {
   joined?: boolean | null;
 
   onJoin?: () => void;
-  onShowMore?: () => void;
+  onShowMap?: () => void;
   onClose?: () => void;
 } & Omit<CardProps, 'children' | 'mode' | 'elevation' | 'id'>;
 
@@ -25,10 +28,16 @@ export const Trip = memo<TripProps>(function Trip({
 
   joined,
   onJoin,
-  onShowMore,
+  onShowMap: onShowMore,
   onClose,
   ...props
 }) {
+  const theme = useAppTheme();
+
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpand = useCallback(() => setExpanded(v => !v), []);
+
   const time = useMemo(() => new Date(plannedAt), [plannedAt]);
 
   const formattedTime = useMemo(
@@ -36,9 +45,9 @@ export const Trip = memo<TripProps>(function Trip({
     [time]
   );
 
-  const emptySeatsCount = (capacity ?? 1) - (occupiedSeats ?? 1);
+  const disableActions = !onJoin && !onShowMore;
 
-  const theme = useAppTheme();
+  const emptySeatsCount = (capacity ?? 1) - (occupiedSeats ?? 1);
 
   return (
     <Card {...props} id={undefined}>
@@ -46,7 +55,7 @@ export const Trip = memo<TripProps>(function Trip({
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <MaterialCommunityIcon name='car' size={24} color={theme.colors.primary} />
           <Text variant='titleMedium' style={{ marginLeft: spacing.md, flex: 1 }}>
-            {pickupAddress.addressLineOne ?? 'Unknown Destination'}
+            {getCityAreaAddress(pickupAddress) ?? 'Unknown Start'}
           </Text>
         </View>
 
@@ -59,7 +68,7 @@ export const Trip = memo<TripProps>(function Trip({
             color={theme.colors.primary}
           />
           <Text variant='titleMedium' style={{ marginLeft: spacing.md, flex: 1 }}>
-            {dropoffAddress.addressLineOne ?? 'Unknown Destination'}
+            {getCityAreaAddress(dropoffAddress) ?? 'Unknown Destination'}
           </Text>
         </View>
 
@@ -95,14 +104,25 @@ export const Trip = memo<TripProps>(function Trip({
             </Text>
           </View>
         </View>
+        <Collapsible expanded={expanded}>
+          <Text>pizza</Text>
+        </Collapsible>
       </Card.Content>
       <Card.Actions style={{ marginTop: spacing.lg }}>
-        <Button mode='text' onPress={onJoin} disabled={!!joined || emptySeatsCount === 0}>
-          {joined ? 'Joined' : 'Join'}
-        </Button>
-        <Button mode='outlined' onPress={onShowMore}>
-          Show More
-        </Button>
+        {onShowMore && (
+          <IconButton
+            mode='contained'
+            icon='map-marker-radius-outline'
+            onPress={onShowMore}
+          />
+        )}
+        <View style={{ flex: 1 }} />
+        {onJoin && <IconButton mode='contained' icon='login-variant' onPress={onJoin} />}
+        <IconButton
+          mode='contained'
+          icon={expanded ? 'chevron-up' : 'chevron-down'}
+          onPress={toggleExpand}
+        />
       </Card.Actions>
     </Card>
   );
@@ -113,3 +133,19 @@ const styles = StyleSheet.create({
     rowGap: spacing.md,
   },
 });
+
+const getCityAreaAddress = ({
+  addressLineOne,
+  area,
+  city,
+}: {
+  addressLineOne?: string | null | undefined;
+  area?: string | null | undefined;
+  city?: string | null | undefined;
+}) => {
+  if (isStringFull(city) && isStringFull(area)) {
+    return `${area} - ${city}`;
+  }
+
+  if (isStringFull(addressLineOne)) return addressLineOne;
+};

@@ -21,7 +21,6 @@ import {
   pickupDropoffToLatlng,
   pickupToLatlng,
 } from '$helpers/pickup-dropoff-to-latlng';
-import { useHideRootTabs } from '$hooks/use-hide-root-tabs';
 import { useIsUserPartOfTheTrip } from '$hooks/use-is-user-in-trip';
 import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useToggleState } from '$hooks/use-toggle-state';
@@ -36,8 +35,6 @@ export type SingleTripsScreenProps = {
 };
 
 export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
-  useHideRootTabs();
-
   const theme = useAppTheme();
 
   const { 'trip-id': id } = useLocalSearchParams();
@@ -152,7 +149,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
           {
             icon: 'logout',
             label: 'Leave Trip',
-            onPress: () => console.log('Logout Pressed'),
+            onPress: () => console.log('Leave Trip Pressed'),
           },
         ]}
         onStateChange={({ open }) => fabState.set(open)}

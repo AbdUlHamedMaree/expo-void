@@ -11,7 +11,6 @@ import { useSignUpMutation } from '$apis/user';
 import { PaperButton } from '$components/dumb/paper-button';
 import { MaskedTextField } from '$components/fields/masked-text';
 import { TextField } from '$components/fields/text';
-import { useShowRootTabs } from '$hooks/use-show-root-tabs';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
@@ -36,8 +35,6 @@ export type MainProfileSignUpScreenProps = {
 };
 
 export const MainProfileSignUpScreen: React.FC<MainProfileSignUpScreenProps> = () => {
-  useShowRootTabs();
-
   const theme = useAppTheme();
 
   const [signUp] = useSignUpMutation();
