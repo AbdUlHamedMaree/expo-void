@@ -6,6 +6,7 @@ export default function Layout(): React.ReactNode {
     <Stack>
       <Stack.Screen name='chat' options={{ headerTitle: 'Chat' }} />
       <Stack.Screen name='index' options={{ headerShown: false }} />
+      <Stack.Screen name='join-trip' options={{ headerTitle: 'Join Trip' }} />
     </Stack>
   );
 }

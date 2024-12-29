@@ -1,5 +1,6 @@
 import { createTripDocument } from './mutations/create-trip';
 import { joinTripDocument } from './mutations/join-trip';
+import { leaveTripDocument } from './mutations/leave-trip';
 import { mapTripsDocument } from './queries/map-trips';
 import { myTripsDocument } from './queries/my-trips';
 import { singleTripDocument } from './queries/single-trip';
@@ -9,10 +10,10 @@ import { createApolloCRUDEntity } from '$libs/apollo-client-react-crud/create-ap
 
 export const {
   queries: [useTripsQuery, useMapTripsQuery, useSingleTripQuery, useMyTripsQuery],
-  mutations: [useJoinTripMutation, useCreateTripMutation],
+  mutations: [useJoinTripMutation, useCreateTripMutation, useLeaveTripMutation],
 } = createApolloCRUDEntity(
   tripsDocument,
   mapTripsDocument,
   singleTripDocument,
   myTripsDocument
-)(joinTripDocument, createTripDocument);
+)(joinTripDocument, createTripDocument, leaveTripDocument);

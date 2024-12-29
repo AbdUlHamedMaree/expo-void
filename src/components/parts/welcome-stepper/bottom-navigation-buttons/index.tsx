@@ -36,8 +36,8 @@ export const WelcomeStepperBottomNavigationButtons: React.FC<
   );
 
   const toggle = useCallback(
-    () => setIsWelcomeStepperSkipped(v => !v),
-    [setIsWelcomeStepperSkipped]
+    () => setIsWelcomeStepperSkipped(!isWelcomeStepperSkipped),
+    [setIsWelcomeStepperSkipped, isWelcomeStepperSkipped]
   );
 
   return (

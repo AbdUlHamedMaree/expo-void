@@ -1,5 +1,15 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { BoundingBox, LatLng } from 'react-native-maps';
+import { LatLng } from 'react-native-maps';
+
+export type GoogleDirectionsLatLng = {
+  lat: number;
+  lng: number;
+};
+
+export type GoogleDirectionsBoundingBox = {
+  northeast: GoogleDirectionsLatLng;
+  southwest: GoogleDirectionsLatLng;
+};
 
 export type TravelModeUnion = 'DRIVING' | 'BICYCLING' | 'TRANSIT' | 'WALKING';
 
@@ -12,28 +22,8 @@ export type TimeZoneTextValueObject = TextValueObject & {
   time_zone: string;
 };
 
-export type GetGoogleMapsDirectionsArg = {
-  origin?: LatLng;
-  destination?: LatLng;
-
-  alternatives?: boolean;
-  departureTime?: number;
-  arrivalTime?: number;
-  avoid?: 'tolls' | 'highways' | 'ferries' | 'indoor';
-  language?: string;
-  mode?: 'driving' | 'bicycling' | 'transit' | 'walking';
-  region?: string;
-  trafficModel?: 'best_guess' | 'pessimistic' | 'optimistic';
-  transitMode?: 'bus' | 'subway' | 'train' | 'tram' | 'rail';
-  transitRoutingPreference?: 'less_walking' | 'fewer_transfers';
-  units?: 'metric' | 'imperial';
-  waypoints?: LatLng[];
-
-  optimizeWaypoints?: boolean;
-};
-
 export type DirectionsTransitStop = {
-  location: LatLng;
+  location: GoogleDirectionsLatLng;
   name: string;
 };
 
@@ -74,10 +64,10 @@ export type DirectionsTransitDetails = {
 
 export type DirectionsStep = {
   duration: TextValueObject;
-  end_location: LatLng;
+  end_location: GoogleDirectionsLatLng;
   html_instructions: string;
   polyline: DirectionsPolyline;
-  start_location: LatLng;
+  start_location: GoogleDirectionsLatLng;
   travel_mode: TravelModeUnion;
   distance?: TextValueObject;
   maneuver?: string;
@@ -87,16 +77,16 @@ export type DirectionsStep = {
 };
 
 export type DirectionsViaWaypoint = {
-  location?: LatLng;
+  location?: GoogleDirectionsLatLng;
   step_index?: number;
   step_interpolation?: number;
 };
 
 export type DirectionsLeg = {
   end_address: string;
-  end_location: LatLng;
+  end_location: GoogleDirectionsLatLng;
   start_address: string;
-  start_location: LatLng;
+  start_location: GoogleDirectionsLatLng;
   steps: DirectionsStep[];
   via_waypoint: DirectionsViaWaypoint[];
   arrival_time?: TimeZoneTextValueObject;
@@ -117,7 +107,7 @@ export type Fare = {
 };
 
 export type GoogleMapsDirectionsResponseRoutes = {
-  bounds: BoundingBox;
+  bounds: GoogleDirectionsBoundingBox;
   copyrights: string;
   legs: DirectionsLeg[];
   overview_polyline: DirectionsPolyline;
@@ -179,6 +169,25 @@ export type GetGoogleMapsDirectionsResponseBody = {
   geocoded_waypoints?: DirectionsGeocodedWaypoint[];
 };
 
+export type GetGoogleMapsDirectionsArg = {
+  origin?: LatLng;
+  destination?: LatLng;
+
+  alternatives?: boolean;
+  departureTime?: number;
+  arrivalTime?: number;
+  avoid?: 'tolls' | 'highways' | 'ferries' | 'indoor';
+  language?: string;
+  mode?: 'driving' | 'bicycling' | 'transit' | 'walking';
+  region?: string;
+  trafficModel?: 'best_guess' | 'pessimistic' | 'optimistic';
+  transitMode?: 'bus' | 'subway' | 'train' | 'tram' | 'rail';
+  transitRoutingPreference?: 'less_walking' | 'fewer_transfers';
+  units?: 'metric' | 'imperial';
+  waypoints?: GoogleDirectionsLatLng[];
+
+  optimizeWaypoints?: boolean;
+};
 export const getGoogleMapsDirections = (
   {
     origin,
@@ -237,4 +246,7 @@ export const getGoogleMapsDirections = (
   );
 };
 
-const getLatLngString = ({ latitude, longitude }: LatLng) => `${latitude},${longitude}`;
+const getLatLngString = (latlng: LatLng | GoogleDirectionsLatLng) =>
+  ('lat' in latlng ? [latlng.lat, latlng.lng] : [latlng.latitude, latlng.longitude]).join(
+    ','
+  );

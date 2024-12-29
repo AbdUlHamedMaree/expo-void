@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 import type { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 
 import type { FragmentType } from '$gql';

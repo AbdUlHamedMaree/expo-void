@@ -5,12 +5,12 @@ import MapView, { Details, LatLng, PROVIDER_GOOGLE, Region } from 'react-native-
 
 import { useMapTripsQuery } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
-import { MapTrip } from '$components/dumb/map-trip';
-import { Trip } from '$components/dumb/trip';
+import { MapTrip, mapToMapTrip } from '$components/dumb/map-trip';
+import { TripCard, mapToTripCard } from '$components/dumb/trip-card';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { toTripRoute } from '$fragments/trip-route';
 import { dropoffToLatlng, pickupToLatlng } from '$helpers/pickup-dropoff-to-latlng';
 import { useAppColorSchema } from '$hooks/use-app-color-schema';
+import { useCheckIsUserInTrip } from '$hooks/use-check-is-user-in-trip';
 import {
   useGoogleMapsDirectionsQuery,
   useDirectionPolyline,
@@ -51,6 +51,8 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
   const [mapRegion, setMapRegion] = useAtom(mapRegionAtom);
   const colorSchema = useAppColorSchema();
 
+  const checkIsUserInTrip = useCheckIsUserInTrip();
+
   const onMarkerClick = useCallback((trip: SingleTrip) => {
     setFocusedTripId(trip.id);
 
@@ -89,7 +91,7 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
       trips?.map(trip => (
         <MapTrip
           key={trip.id}
-          {...toTripRoute(trip)}
+          {...mapToMapTrip(trip)}
           onPickupMarkerClick={() => onMarkerClick(trip)}
           onDropoffMarkerClick={() => onMarkerClick(trip)}
         />
@@ -135,14 +137,16 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
         {focusedTrip && focusedTripMapViewDirections}
       </MapView>
       {focusedTrip && (
-        <Trip
+        <TripCard
           style={{ position: 'absolute', top: 16, left: 16, right: 16 }}
-          {...focusedTrip}
+          {...mapToTripCard(focusedTrip)}
           onJoin={() =>
-            router.push({
-              pathname: '/(trips)/join-trip/[trip-id]/',
-              params: { 'trip-id': focusedTrip.id },
-            })
+            checkIsUserInTrip(focusedTrip)
+              ? undefined
+              : router.push({
+                  pathname: '/(trips)/single-trip/[trip-id]/join-trip',
+                  params: { 'trip-id': focusedTrip.id },
+                })
           }
           onShowMap={() =>
             router.push({

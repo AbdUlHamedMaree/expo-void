@@ -1,18 +1,16 @@
 import { router } from 'expo-router';
 import { useAtomValue } from 'jotai';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { VirtualizedList } from 'react-native';
 
 import { useMyTripsQuery } from '$apis/trips';
 import { tripsFiltersAtom } from '$atoms/trips-filters';
 import { LoadingSection } from '$components/dumb/loading-section';
-import { Trip } from '$components/dumb/trip';
+import { TripCard, mapToTripCard } from '$components/dumb/trip-card';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { GetTripsFiltersIt, InputMaybe } from '$gql/graphql';
 import { useCheckIsUserInTrip } from '$hooks/use-check-is-user-in-trip';
-import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
-import { IDUnion } from '$models/id';
 import { spacing } from '$theme/spacing';
 
 export type MainProfileAccountMyTripsScreenProps = {
@@ -65,34 +63,7 @@ export const MainProfileAccountMyTripsScreen: React.FC<
 
   const trips = tripsQuery.data?.myTrips.items;
 
-  const [selectedTripId, setSelectedTripId] = useState<IDUnion | null>(null);
-
-  const selectedTrip = useMemo(
-    () => trips?.find(trip => trip.id === selectedTripId),
-    [selectedTripId, trips]
-  );
-
   const checkIsUserInTrip = useCheckIsUserInTrip();
-
-  const handleJoinTripModalCancel = useCallback(() => {
-    setSelectedTripId(null);
-  }, []);
-
-  const handleJoinTripModalJoin = handleJoinTripModalCancel;
-
-  const joinTripModal = useJoinTripModal({
-    trip: selectedTrip,
-    onCancel: handleJoinTripModalCancel,
-    onJoin: handleJoinTripModalJoin,
-  });
-
-  const handleCardJoin = useCallback(
-    (id: number) => {
-      setSelectedTripId(id);
-      joinTripModal.open();
-    },
-    [joinTripModal]
-  );
 
   const handleShowMore = useCallback((id: number) => {
     router.push({
@@ -115,26 +86,23 @@ export const MainProfileAccountMyTripsScreen: React.FC<
             getItem={(trips, i) => trips[i]}
             data={trips}
             renderItem={item => {
-              const { id, ...props } = item.item;
+              const trip = item.item;
 
               return (
-                <Trip
-                  key={id}
-                  {...props}
+                <TripCard
+                  key={trip.id}
+                  {...mapToTripCard(trip)}
                   style={{
                     marginHorizontal: spacing.lg,
                     marginTop: spacing.lg,
                   }}
-                  joined={checkIsUserInTrip(props)}
-                  onJoin={() => handleCardJoin(id)}
-                  onShowMap={() => handleShowMore(id)}
+                  onShowMap={() => handleShowMore(trip.id)}
                 />
               );
             }}
           />
         )}
       </LoadingSection>
-      {joinTripModal.modal}
     </ScreenWrapper>
   );
 };

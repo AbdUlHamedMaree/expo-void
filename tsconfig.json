@@ -3,13 +3,15 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "strict": true,
+    "moduleResolution": "Bundler",
+    "module": "ESNext",
     "paths": {
       "$*": ["./src/*"]
     },
     "plugins": [
       {
         "name": "@0no-co/graphqlsp",
-        "schema": "https://carpool.void-ae.com/graphql"
+        "schema": "https://prod.void-ae.com/graphql"
       }
     ]
   },

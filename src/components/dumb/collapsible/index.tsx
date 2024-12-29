@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { LayoutChangeEvent, View, type StyleProp, type ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -29,7 +29,6 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
   const handleLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const onLayoutHeight = event.nativeEvent.layout.height;
-
       if (onLayoutHeight > 0 && height !== onLayoutHeight) {
         setHeight(onLayoutHeight);
       }
@@ -37,13 +36,18 @@ export const Collapsible: React.FC<CollapsibleProps> = ({
     [height]
   );
 
-  const style = useAnimatedStyle(() => {
-    animatedHeight.value = expanded ? withTiming(height, timingConfig) : withTiming(0);
+  // Update the animated value when `expanded` or `height` changes
+  useEffect(() => {
+    animatedHeight.value = expanded
+      ? withTiming(height, timingConfig)
+      : withTiming(0, timingConfig);
+  }, [expanded, height, timingConfig, animatedHeight]);
 
+  const style = useAnimatedStyle(() => {
     return {
       height: animatedHeight.value,
     };
-  }, [expanded, height, timingConfig]);
+  });
 
   return (
     <Animated.View style={[style, { overflow: 'hidden' }, animatedContainerViewStyle]}>

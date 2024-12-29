@@ -1,4 +1,7 @@
 import { format } from 'date-fns';
+import flow from 'lodash/fp/flow';
+import pick from 'lodash/fp/pick';
+import update from 'lodash/fp/update';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card, CardProps, Divider, IconButton, Text } from 'react-native-paper';
@@ -6,29 +9,66 @@ import { Card, CardProps, Divider, IconButton, Text } from 'react-native-paper';
 import { Collapsible } from '../collapsible';
 
 import { MaterialCommunityIcon } from '$components/icons';
-import { TripCardModel } from '$fragments/trip-card';
+import { gql } from '$gql';
 import { isStringFull } from '$modules/checks';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
+import type { FragmentModel } from '$types/fragment-model';
 
-export type TripProps = TripCardModel & {
-  joined?: boolean | null;
+const fragment = gql(/* GraphQL */ `
+  fragment mapToTripCard on TripOt {
+    capacity
+    occupiedSeats
+    plannedAt
+    pickupAddress {
+      addressLineOne
+      city
+      area
+    }
+    dropoffAddress {
+      addressLineOne
+      city
+      area
+    }
+  }
+`);
 
+type Trip = FragmentModel<typeof fragment>;
+type TripAddress = Trip['pickupAddress'];
+
+export const mapToTripCardAddress = pick<TripAddress, keyof TripAddress>([
+  'addressLineOne',
+  'area',
+  'city',
+]);
+
+export const mapToTripCard = flow<Trip[], Trip, Trip, Trip>(
+  pick<Trip, keyof Trip>([
+    'capacity',
+    'occupiedSeats',
+    'plannedAt',
+    'pickupAddress',
+    'dropoffAddress',
+  ]),
+  update('pickupAddress', mapToTripCardAddress),
+  update('dropoffAddress', mapToTripCardAddress)
+);
+
+export type TripProps = Trip & {
   onJoin?: () => void;
   onShowMap?: () => void;
   onClose?: () => void;
 } & Omit<CardProps, 'children' | 'mode' | 'elevation' | 'id'>;
 
-export const Trip = memo<TripProps>(function Trip({
+export const TripCard = memo<TripProps>(function Trip({
   capacity,
   occupiedSeats,
   plannedAt,
   pickupAddress,
   dropoffAddress,
 
-  joined,
   onJoin,
-  onShowMap: onShowMore,
+  onShowMap,
   onClose,
   ...props
 }) {
@@ -44,8 +84,6 @@ export const Trip = memo<TripProps>(function Trip({
     () => (time ? format(time, 'Pp') : 'Unknown Time'),
     [time]
   );
-
-  const disableActions = !onJoin && !onShowMore;
 
   const emptySeatsCount = (capacity ?? 1) - (occupiedSeats ?? 1);
 
@@ -109,11 +147,11 @@ export const Trip = memo<TripProps>(function Trip({
         </Collapsible>
       </Card.Content>
       <Card.Actions style={{ marginTop: spacing.lg }}>
-        {onShowMore && (
+        {onShowMap && (
           <IconButton
             mode='contained'
             icon='map-marker-radius-outline'
-            onPress={onShowMore}
+            onPress={onShowMap}
           />
         )}
         <View style={{ flex: 1 }} />

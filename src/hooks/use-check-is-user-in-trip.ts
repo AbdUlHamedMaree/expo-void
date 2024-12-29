@@ -2,19 +2,18 @@ import { useCallback } from 'react';
 
 import { useMeQuery } from '$apis/user';
 import { gql } from '$gql';
-import { FragmentModel } from '$types/fragment-model';
+import type { FragmentModel } from '$types/fragment-model';
 
-const Trip = gql(`
-  fragment UseIsUserPartOfTheTrip on TripOt {
+const fragment = gql(/* GraphQL */ `
+  fragment useCheckIsUserInTrip on TripOt {
     driverId
-
     passengers {
       id
     }
   }
 `);
 
-export type UseCheckIsUserInTripTripModel = FragmentModel<typeof Trip>;
+export type UseCheckIsUserInTripTripModel = FragmentModel<typeof fragment>;
 
 export const useCheckIsUserInTrip = () => {
   const meQuery = useMeQuery();

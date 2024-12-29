@@ -7,17 +7,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, Suspense } from 'react';
 import Geocoder from 'react-native-geocoding';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-  initialWindowMetrics,
-} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// import { RootStack } from '$navigation';
 import { AppErrorBoundary } from '$components/dumb/app-error-boundary';
 import { AppStatusBar } from '$components/smart/app-status-bar';
 import { ApolloClientProvider } from '$libs/apollo-client/provider';
-import { useAxiosService } from '$libs/axios/hooks';
 import { queryClient } from '$libs/react-query/client';
 import { useRefetchOnAppFocus } from '$libs/react-query/use-refetch-on-app-focus';
 import { PaperToastContainer } from '$modules/react-native-paper-toast';
@@ -78,23 +72,20 @@ const RootLayoutNav: React.FC = () => {
 
 const Application: React.FC = () => {
   useRefetchOnAppFocus();
-  useAxiosService();
 
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <AppPaperProvider>
-        <AppErrorBoundary>
-          <AppStatusBar />
-          <Suspense fallback={<AppSplashScreen />}>
-            <PaperToastContainer variant='contained' />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}
-            />
-          </Suspense>
-        </AppErrorBoundary>
-      </AppPaperProvider>
-    </SafeAreaProvider>
+    <AppPaperProvider>
+      <AppErrorBoundary>
+        <AppStatusBar />
+        <Suspense fallback={<AppSplashScreen />}>
+          <PaperToastContainer variant='contained' />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          />
+        </Suspense>
+      </AppErrorBoundary>
+    </AppPaperProvider>
   );
 };

@@ -1,9 +1,10 @@
-import dotenvFlow from 'dotenv-flow';
 import { expand as dotenvExpand } from 'dotenv-expand';
+import dotenvFlow from 'dotenv-flow';
+import { type ExpoConfig } from 'expo/config';
 
 dotenvExpand(dotenvFlow.config());
 
-const config = {
+const config: { expo: ExpoConfig } = {
   expo: {
     name: 'VoidCarpool',
     slug: 'void',
@@ -45,6 +46,7 @@ const config = {
       favicon: './src/assets/images/favicon.png',
     },
     plugins: [
+      'expo-font',
       'expo-router',
       'expo-localization',
       [

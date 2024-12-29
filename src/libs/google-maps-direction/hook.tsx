@@ -19,6 +19,7 @@ import {
   decodeStepsToPolylinePoints,
 } from './tools';
 
+// TODO: use the new lib
 export const useGoogleMapsDirectionsQuery = (
   arg?: GetGoogleMapsDirectionsArg,
   queryConfig?: Omit<

@@ -5,7 +5,12 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import Geocoder from 'react-native-geocoding';
-import MapView, { MapPressEvent, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, {
+  MapPressEvent,
+  Marker,
+  PROVIDER_GOOGLE,
+  Polyline,
+} from 'react-native-maps';
 import { Button, IconButton, SegmentedButtons, Surface, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { number, object, string, date, coerce } from 'zod';
@@ -22,6 +27,10 @@ import { MaterialCommunityIcon } from '$components/icons';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { formateGeocodingResults } from '$libs/geocoding/formate-geocoding-results';
 import { getAddressComponent } from '$libs/geocoding/get-adress-component';
+import {
+  useDirectionPolylinePoints,
+  useGoogleMapsDirectionsQuery,
+} from '$libs/google-maps-direction/hook';
 import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
 import { toast } from '$modules/react-native-paper-toast';
 import { commonStyles } from '$styles/common';
@@ -100,12 +109,52 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
 
   const { getValues, setValue, watch, resetField } = methods;
 
+  const [pickupLatitude, pickupLongitude, dropoffLatitude, dropoffLongitude, plannedAt] =
+    watch([
+      'pickupLatitude',
+      'pickupLongitude',
+      'dropoffLatitude',
+      'dropoffLongitude',
+      'plannedAt',
+    ]);
+  const pickupLocation = useMemo(
+    () =>
+      pickupLatitude && pickupLongitude
+        ? { latitude: pickupLatitude, longitude: pickupLongitude }
+        : undefined,
+    [pickupLatitude, pickupLongitude]
+  );
+
+  const dropoffLocation = useMemo(
+    () =>
+      dropoffLatitude && dropoffLongitude
+        ? { latitude: dropoffLatitude, longitude: dropoffLongitude }
+        : undefined,
+    [dropoffLatitude, dropoffLongitude]
+  );
+
+  const googleMapsDirectionsResponse = useGoogleMapsDirectionsQuery(
+    {
+      origin: pickupLocation,
+      destination: dropoffLocation,
+      mode: 'driving',
+      departureTime: plannedAt?.getTime(),
+    },
+    { enabled: Boolean(pickupLocation && dropoffLocation) }
+  );
+
+  const directionPolyline = useDirectionPolylinePoints({
+    response: googleMapsDirectionsResponse.data?.data,
+  });
+
   const onSubmit = methods.handleSubmit(async data => {
     try {
+      console.log(googleMapsDirectionsResponse.data?.data);
       const result = await createTrip({
         variables: {
           createTripPayload: {
             ...data,
+            googleDirectionsApiData: googleMapsDirectionsResponse.data?.data as any,
             type: 'in_app',
             category: 'one_time',
           },
@@ -135,38 +184,27 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
 
   const snapPoints = useMemo(() => ['8%', '60%'], []);
 
-  const [pickupLatitude, pickupLongitude, dropoffLatitude, dropoffLongitude] = watch([
-    'pickupLatitude',
-    'pickupLongitude',
-    'dropoffLatitude',
-    'dropoffLongitude',
-  ]);
-
-  const pickupLocation = useMemo(
-    () =>
-      pickupLatitude && pickupLongitude
-        ? { latitude: pickupLatitude, longitude: pickupLongitude }
-        : undefined,
-    [pickupLatitude, pickupLongitude]
-  );
-
-  const dropoffLocation = useMemo(
-    () =>
-      dropoffLatitude && dropoffLongitude
-        ? { latitude: dropoffLatitude, longitude: dropoffLongitude }
-        : undefined,
-    [dropoffLatitude, dropoffLongitude]
-  );
-
   const onMapPress = useCallback(
     ({ nativeEvent: { coordinate } }: MapPressEvent) => {
       if (activeButton === 'pickup') {
-        setValue('pickupLatitude', coordinate.latitude);
-        setValue('pickupLongitude', coordinate.longitude);
+        setValue('pickupLatitude', coordinate.latitude, {
+          shouldTouch: true,
+          shouldDirty: true,
+        });
+        setValue('pickupLongitude', coordinate.longitude, {
+          shouldTouch: true,
+          shouldDirty: true,
+        });
         resetField('pickupAddress');
       } else {
-        setValue('dropoffLatitude', coordinate.latitude);
-        setValue('dropoffLongitude', coordinate.longitude);
+        setValue('dropoffLatitude', coordinate.latitude, {
+          shouldTouch: true,
+          shouldDirty: true,
+        });
+        setValue('dropoffLongitude', coordinate.longitude, {
+          shouldTouch: true,
+          shouldDirty: true,
+        });
         resetField('dropoffAddress');
         if (firstDrawRef.current) {
           setTimeout(() => bottomSheetRef.current?.snapToIndex(1), 200);
@@ -194,10 +232,13 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       if (!pickupAddress?.addressLineOne && pickupLocation)
         Geocoder.from(pickupLocation)
           .then(response => {
-            console.log('pickup', response.results);
             const address = getAddress(response);
 
             setValue('pickupAddress', address, {
+              shouldDirty: true,
+              shouldTouch: true,
+            });
+            setValue('pickupAddress.addressLineTwo', address.addressLineTwo, {
               shouldDirty: true,
               shouldTouch: true,
             });
@@ -207,10 +248,13 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       if (!dropoffAddress?.addressLineOne && dropoffLocation)
         Geocoder.from(dropoffLocation)
           .then(response => {
-            console.log('dropoff', response.results);
             const address = getAddress(response);
 
             setValue('dropoffAddress', address, {
+              shouldDirty: true,
+              shouldTouch: true,
+            });
+            setValue('dropoffAddress.addressLineTwo', address.addressLineTwo, {
               shouldDirty: true,
               shouldTouch: true,
             });
@@ -242,15 +286,11 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
             </TripMapMarkerCard>
           </Marker>
         )}
-        {/* {pickupLocation && dropoffLocation && (
-          <MapViewDirections
-            origin={pickupLocation}
-            destination={dropoffLocation}
-            apikey={process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API_KEY}
-            strokeWidth={4}
-            strokeColor='#0005'
-          />
-        )} */}
+        <Polyline
+          coordinates={directionPolyline}
+          strokeWidth={4}
+          strokeColor={theme.colors.primary}
+        />
       </MapView>
 
       <View style={styles.segmentedButtonsContainer}>
@@ -303,13 +343,13 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
             <TextField
               label='Pickup'
               name={key('pickupAddress.addressLineTwo')}
-              disabled
+              // disabled
             />
 
             <TextField
               label='Dropoff'
               name={key('dropoffAddress.addressLineTwo')}
-              disabled
+              // disabled
             />
 
             <MaskedTextField

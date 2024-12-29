@@ -39,10 +39,12 @@ export const getAndSetNewAccessToken = async () => {
     });
 
     const accessToken = refreshResolverResponse.data?.getNewTokens.accessToken;
+    const refreshToken = refreshResolverResponse.data?.getNewTokens.refreshToken;
 
     await storage.accessToken.set(accessToken);
+    await storage.refreshToken.set(refreshToken);
 
-    return accessToken;
+    return { accessToken, refreshToken };
   } catch (err) {
     await storage.accessToken.delete();
     throw err;

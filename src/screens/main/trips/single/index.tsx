@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useAtomValue } from 'jotai';
+import { compact } from 'lodash';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps';
@@ -8,21 +9,19 @@ import MapViewDirections from 'react-native-maps-directions';
 import { Button, FAB, IconButton, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { useSingleTripQuery } from '$apis/trips';
+import { useLeaveTripMutation, useSingleTripQuery } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
 import { LoadingSection } from '$components/dumb/loading-section';
-import { MapTrip } from '$components/dumb/map-trip';
+import { MapTrip, mapToMapTrip } from '$components/dumb/map-trip';
 import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
 import { MaterialCommunityIcon } from '$components/icons';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { toTripRoute } from '$fragments/trip-route';
 import {
   dropoffToLatlng,
   pickupDropoffToLatlng,
   pickupToLatlng,
 } from '$helpers/pickup-dropoff-to-latlng';
 import { useIsUserPartOfTheTrip } from '$hooks/use-is-user-in-trip';
-import { useJoinTripModal } from '$hooks/use-join-trip-modal';
 import { useToggleState } from '$hooks/use-toggle-state';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
@@ -37,11 +36,18 @@ export type SingleTripsScreenProps = {
 export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
   const theme = useAppTheme();
 
-  const { 'trip-id': id } = useLocalSearchParams();
+  const { 'trip-id': tripId } = useLocalSearchParams();
 
   const singleTripQuery = useSingleTripQuery({
-    variables: { singleTripId: +id },
+    variables: { singleTripId: +(tripId as string) },
   });
+
+  const [leaveTrip, leaveTripResult] = useLeaveTripMutation({
+    variables: {
+      leaveTripId: +(tripId as string),
+    },
+  });
+
   const trip = singleTripQuery.data?.trip;
 
   const [isMapFittedToTrip, setIsMapFittedToTrip] = useState(false);
@@ -75,10 +81,11 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
   }, [fitMapToTrip]);
 
   const mapTrip = useMemo(
-    () => trip && <MapTrip key={trip.id} {...toTripRoute(trip)} />,
+    () => trip && <MapTrip key={trip.id} {...mapToMapTrip(trip)} />,
     [trip]
   );
 
+  // TODO: use the internal component
   const mapViewDirections = useMemo(
     () =>
       trip && (
@@ -97,8 +104,6 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
     () => (trip?.plannedAt ? format(new Date(trip.plannedAt), 'PPPP') : 'Unknown Time'),
     [trip?.plannedAt]
   );
-
-  const tripModal = useJoinTripModal({ trip });
 
   if (singleTripQuery.loading) return <LoadingSection loading />;
   if (singleTripQuery.error || !trip) return <LoadingSection error />;
@@ -136,22 +141,22 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
         visible
         open={fabState.isOpen}
         icon={fabState.isOpen ? 'close' : 'plus'}
-        actions={[
+        actions={compact([
           {
             icon: 'chat-outline',
             label: 'Chat',
             onPress: () =>
               router.push({
                 pathname: `/(trips)/single-trip/[trip-id]/chat`,
-                params: { 'trip-id': id },
+                params: { 'trip-id': tripId },
               }),
           },
-          {
+          isUserInTrip && {
             icon: 'logout',
             label: 'Leave Trip',
-            onPress: () => console.log('Leave Trip Pressed'),
+            onPress: () => leaveTrip(),
           },
-        ]}
+        ])}
         onStateChange={({ open }) => fabState.set(open)}
         style={{
           bottom: BOTTOM_SHEET_CLOSED_SIZE,
@@ -208,13 +213,17 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
           <Button
             mode='contained'
             disabled={isUserInTrip}
-            onPress={() => tripModal.open()}
+            onPress={() => {
+              router.push({
+                pathname: `/(trips)/single-trip/[trip-id]/join-trip/`,
+                params: { 'trip-id': tripId },
+              });
+            }}
           >
             {isUserInTrip ? 'Joined' : 'Join'}
           </Button>
         </SafeAreaView>
       </PaperBottomSheet>
-      {tripModal.modal}
     </ScreenWrapper>
   );
 };

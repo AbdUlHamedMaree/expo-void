@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { type NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { router, useNavigation } from 'expo-router';
 import { useAtom } from 'jotai';
 import { useCallback, useLayoutEffect, useMemo } from 'react';
