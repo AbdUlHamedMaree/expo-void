@@ -1,19 +1,11 @@
-export const getAddressComponent = (
+export const getAddressComponent = <T extends string | undefined>(
   response: Geocoder.GeocoderResponse,
   type: 'country' | 'locality' | 'sublocality' | 'neighborhood' | 'street_number',
-  defaultValue = 'UNKNOWN'
-) => {
-  let country: string = '';
+  defaultValue: T = undefined as T
+): string | T => {
+  for (const result of response.results)
+    for (const component of result.address_components)
+      if (component.types.includes(type)) return component.long_name;
 
-  for (const result of response.results) {
-    for (const component of result.address_components) {
-      if (component.types.includes(type)) {
-        country = component.long_name;
-        break;
-      }
-    }
-    if (country) break;
-  }
-
-  return country || defaultValue;
+  return defaultValue;
 };

@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useAtomValue } from 'jotai';
 import { compact } from 'lodash';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { Button, FAB, IconButton, Text } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useLeaveTripMutation, useSingleTripQuery } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
@@ -34,7 +34,9 @@ export type SingleTripsScreenProps = {
 };
 
 export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
+  const insets = useSafeAreaInsets();
   const theme = useAppTheme();
+  const router = useRouter();
 
   const { 'trip-id': tripId } = useLocalSearchParams();
 
@@ -127,14 +129,14 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
         icon='arrow-left'
         mode='contained'
         onPress={router.back}
-        style={{ position: 'absolute', left: 8, top: 8 }}
+        style={{ position: 'absolute', left: 8, top: 8 + insets.top }}
       />
 
       <IconButton
         icon={isMapFittedToTrip ? 'crosshairs-gps' : 'crosshairs'}
         mode='contained'
         onPress={fitMapToTrip}
-        style={{ position: 'absolute', right: 8, top: 8 }}
+        style={{ position: 'absolute', right: 8, top: 8 + insets.top }}
       />
 
       <FAB.Group
@@ -215,7 +217,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
             disabled={isUserInTrip}
             onPress={() => {
               router.push({
-                pathname: `/(trips)/single-trip/[trip-id]/join-trip/`,
+                pathname: `/(trips)/single-trip/[trip-id]/join-trip`,
                 params: { 'trip-id': tripId },
               });
             }}

@@ -7,7 +7,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, Suspense } from 'react';
 import Geocoder from 'react-native-geocoding';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AppErrorBoundary } from '$components/dumb/app-error-boundary';
 import { AppStatusBar } from '$components/smart/app-status-bar';
@@ -58,9 +57,7 @@ const RootLayoutNav: React.FC = () => {
           <GestureHandlerRootView style={commonStyles.flexFull}>
             <QueryClientProvider client={queryClient}>
               <ApolloClientProvider>
-                <SafeAreaView style={commonStyles.flexFull}>
-                  <Application />
-                </SafeAreaView>
+                <Application />
               </ApolloClientProvider>
             </QueryClientProvider>
           </GestureHandlerRootView>
@@ -75,17 +72,15 @@ const Application: React.FC = () => {
 
   return (
     <AppPaperProvider>
-      <AppErrorBoundary>
-        <AppStatusBar />
-        <Suspense fallback={<AppSplashScreen />}>
-          <PaperToastContainer variant='contained' />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-            }}
-          />
-        </Suspense>
-      </AppErrorBoundary>
+      <AppStatusBar />
+      <Suspense fallback={<AppSplashScreen />}>
+        <PaperToastContainer variant='contained' />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        />
+      </Suspense>
     </AppPaperProvider>
   );
 };

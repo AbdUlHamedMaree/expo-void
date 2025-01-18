@@ -12,10 +12,9 @@ import MapView, {
   Polyline,
 } from 'react-native-maps';
 import { Button, IconButton, SegmentedButtons, Surface, Text } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { number, object, string, date, coerce } from 'zod';
 
-import { useCreateChatMutation } from '$apis/messages';
 import { useCreateTripMutation } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
 import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
@@ -72,8 +71,8 @@ export type CreateNewTripScreenProps = {
 };
 
 export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
+  const insets = useSafeAreaInsets();
   const [createTrip, createTripResult] = useCreateTripMutation();
-  const [createChat, createChatResult] = useCreateChatMutation();
 
   const [helperText, setHelperText] = useState<string | undefined>(
     'Choose the trip pickup location'
@@ -138,6 +137,8 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       origin: pickupLocation,
       destination: dropoffLocation,
       mode: 'driving',
+      units: 'metric',
+      language: 'en',
       departureTime: plannedAt?.getTime(),
     },
     { enabled: Boolean(pickupLocation && dropoffLocation) }
@@ -149,7 +150,6 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
 
   const onSubmit = methods.handleSubmit(async data => {
     try {
-      console.log(googleMapsDirectionsResponse.data?.data);
       const result = await createTrip({
         variables: {
           createTripPayload: {
@@ -165,12 +165,6 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
         createTrip: { id: newTripId },
       } = throwIfGqlErrors(result);
 
-      await createChat({
-        variables: {
-          createChatTripId: newTripId,
-        },
-      });
-
       router.push({
         pathname: '/(trips)/single-trip/[trip-id]/',
         params: { 'trip-id': newTripId },
@@ -183,6 +177,50 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
   });
 
   const snapPoints = useMemo(() => ['8%', '60%'], []);
+
+  // useEffect(() => {
+  //   const data = googleMapsDirectionsResponse.data?.data;
+  //   if (!data) return;
+  //   console.log('Directions', data);
+
+  //   const route = data.routes[0];
+
+  //   if (!route) return;
+
+  //   const leg = route.legs[0];
+
+  //   if (!leg) return;
+
+  //   setValue('pickupLatitude', leg.start_location.lat, {
+  //     shouldTouch: true,
+  //     shouldDirty: true,
+  //   });
+
+  //   setValue('pickupLongitude', leg.start_location.lng, {
+  //     shouldTouch: true,
+  //     shouldDirty: true,
+  //   });
+
+  //   // setValue('pickupAddress', leg.start_address, {
+  //   //   shouldTouch: true,
+  //   //   shouldDirty: true,
+  //   // });
+
+  //   setValue('pickupLatitude', leg.start_location.lat, {
+  //     shouldTouch: true,
+  //     shouldDirty: true,
+  //   });
+
+  //   setValue('pickupLongitude', leg.start_location.lng, {
+  //     shouldTouch: true,
+  //     shouldDirty: true,
+  //   });
+
+  //   // setValue('pickupAddress', leg.start_address, {
+  //   //   shouldTouch: true,
+  //   //   shouldDirty: true,
+  //   // });
+  // }, [googleMapsDirectionsResponse.data?.data]);
 
   const onMapPress = useCallback(
     ({ nativeEvent: { coordinate } }: MapPressEvent) => {
@@ -232,6 +270,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       if (!pickupAddress?.addressLineOne && pickupLocation)
         Geocoder.from(pickupLocation)
           .then(response => {
+            console.log('Geocoder', 'pickup', response);
             const address = getAddress(response);
 
             setValue('pickupAddress', address, {
@@ -248,6 +287,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       if (!dropoffAddress?.addressLineOne && dropoffLocation)
         Geocoder.from(dropoffLocation)
           .then(response => {
+            console.log('Geocoder', 'dropoff', response);
             const address = getAddress(response);
 
             setValue('dropoffAddress', address, {
@@ -293,7 +333,14 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
         />
       </MapView>
 
-      <View style={styles.segmentedButtonsContainer}>
+      <View
+        style={[
+          styles.segmentedButtonsContainer,
+          {
+            top: 12 + insets.top,
+          },
+        ]}
+      >
         <SegmentedButtons
           onValueChange={str => setActiveButton(str as 'pickup')}
           value={activeButton}
@@ -323,7 +370,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
         icon='arrow-left'
         mode='contained'
         onPress={() => router.back()}
-        style={{ position: 'absolute', left: 8, top: 8 }}
+        style={{ position: 'absolute', left: 8, top: 8 + insets.top }}
       />
 
       <PaperBottomSheet
@@ -371,8 +418,8 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
             <Button
               mode='contained'
               onPress={onSubmit}
-              loading={createTripResult.loading || createChatResult.loading}
-              disabled={createTripResult.loading || createChatResult.loading}
+              loading={createTripResult.loading}
+              disabled={createTripResult.loading}
             >
               Create
             </Button>
@@ -386,7 +433,6 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
 const styles = StyleSheet.create({
   segmentedButtonsContainer: {
     position: 'absolute',
-    top: 12,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -394,14 +440,20 @@ const styles = StyleSheet.create({
 });
 
 const getAddress = (response: Geocoder.GeocoderResponse) => ({
-  country: getAddressComponent(response, 'country'),
-  city: getAddressComponent(response, 'locality'),
+  country: getAddressComponent(response, 'country', 'UNKNOWN'),
+  city: getAddressComponent(response, 'locality', 'UNKNOWN'),
   area: getAddressComponent(
     response,
     'sublocality',
-    getAddressComponent(response, 'neighborhood')
+    getAddressComponent(response, 'neighborhood', 'UNKNOWN')
   ),
-  addressLineOne: response.results[0].formatted_address,
-  addressLineTwo: formateGeocoder(response.results).result,
+  addressLineOne: response.results[0].formatted_address.replace(
+    ' - United Arab Emirates',
+    ''
+  ),
+  addressLineTwo: response.results[0].formatted_address.replace(
+    ' - United Arab Emirates',
+    ''
+  ),
   postCode: 'UNKNOWN',
 });

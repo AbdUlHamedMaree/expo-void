@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useAtom } from 'jotai/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import MapView, { Details, LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useMapTripsQuery } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
@@ -25,6 +26,7 @@ export type MainHomeScreenProps = {
 
 export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
   const mapRef = useRef<MapView>(null);
+  const insets = useSafeAreaInsets();
 
   const [focusedTripId, setFocusedTripId] = useState<IDUnion | undefined>();
   const [mapBoundaries, setMapBoundaries] = useState<{
@@ -138,7 +140,7 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
       </MapView>
       {focusedTrip && (
         <TripCard
-          style={{ position: 'absolute', top: 16, left: 16, right: 16 }}
+          style={{ position: 'absolute', top: 16 + insets.top, left: 16, right: 16 }}
           {...mapToTripCard(focusedTrip)}
           onJoin={() =>
             checkIsUserInTrip(focusedTrip)

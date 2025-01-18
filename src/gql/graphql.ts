@@ -18,9 +18,49 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type AppUsersEntity = {
+  __typename?: 'AppUsersEntity';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  documents?: Maybe<Array<UserDocumentsEntity>>;
+  email: Scalars['String']['output'];
+  id: Scalars['Float']['output'];
+  name: Scalars['String']['output'];
+  password?: Maybe<Scalars['String']['output']>;
+  phone: Scalars['String']['output'];
+  role: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  uuid: Scalars['String']['output'];
+  vehicle?: Maybe<VehiclesEntity>;
+};
+
+export type AppUsersOt = {
+  __typename?: 'AppUsersOt';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  documents?: Maybe<Array<UserDocumentsEntity>>;
+  email: Scalars['String']['output'];
+  id: Scalars['Float']['output'];
+  name: Scalars['String']['output'];
+  password?: Maybe<Scalars['String']['output']>;
+  phone: Scalars['String']['output'];
+  role: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  uuid: Scalars['String']['output'];
+  vehicle?: Maybe<VehiclesEntity>;
+};
+
+export type BoundingBox = {
+  __typename?: 'BoundingBox';
+  northeast?: Maybe<LatLng>;
+  southwest?: Maybe<LatLng>;
+};
+
 export type BoundingBoxIt = {
-  northEast?: InputMaybe<LatLngIt>;
-  southWest?: InputMaybe<LatLngIt>;
+  northeast?: InputMaybe<LatLngIt>;
+  southwest?: InputMaybe<LatLngIt>;
 };
 
 export type CreateAppUsersIt = {
@@ -45,6 +85,14 @@ export type CreateTripIt = {
   type: Scalars['String']['input'];
 };
 
+export type DirectionsGeocodedWaypoint = {
+  __typename?: 'DirectionsGeocodedWaypoint';
+  geocoder_status?: Maybe<Scalars['String']['output']>;
+  partial_match?: Maybe<Scalars['String']['output']>;
+  place_id?: Maybe<Scalars['String']['output']>;
+  types?: Maybe<Array<Scalars['String']['output']>>;
+};
+
 export type DirectionsGeocodedWaypointIt = {
   geocoder_status?: InputMaybe<Scalars['String']['input']>;
   partial_match?: InputMaybe<Scalars['String']['input']>;
@@ -52,41 +100,95 @@ export type DirectionsGeocodedWaypointIt = {
   types?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+export type DirectionsLeg = {
+  __typename?: 'DirectionsLeg';
+  arrival_time?: Maybe<TimeZoneTextValueObject>;
+  departure_time?: Maybe<TimeZoneTextValueObject>;
+  distance?: Maybe<TextValueObject>;
+  duration?: Maybe<TextValueObject>;
+  duration_in_traffic?: Maybe<TextValueObject>;
+  end_address?: Maybe<Scalars['String']['output']>;
+  end_location?: Maybe<LatLng>;
+  start_address?: Maybe<Scalars['String']['output']>;
+  start_location?: Maybe<LatLng>;
+  steps?: Maybe<Array<DirectionsStep>>;
+  traffic_speed_entry?: Maybe<Array<Scalars['String']['output']>>;
+  via_waypoint?: Maybe<Array<DirectionsViaWaypoint>>;
+};
+
 export type DirectionsLegIt = {
   arrival_time?: InputMaybe<TimeZoneTextValueObjectIt>;
   departure_time?: InputMaybe<TimeZoneTextValueObjectIt>;
   distance?: InputMaybe<TextValueObjectIt>;
   duration?: InputMaybe<TextValueObjectIt>;
-  duration_in_traffic: TextValueObjectIt;
-  end_address: Scalars['String']['input'];
-  end_location: LatLngIt;
-  start_address: Scalars['String']['input'];
-  start_location: LatLngIt;
-  steps: Array<DirectionsStepIt>;
-  via_waypoint: Array<DirectionsViaWaypointIt>;
+  duration_in_traffic?: InputMaybe<TextValueObjectIt>;
+  end_address?: InputMaybe<Scalars['String']['input']>;
+  end_location?: InputMaybe<LatLngIt>;
+  start_address?: InputMaybe<Scalars['String']['input']>;
+  start_location?: InputMaybe<LatLngIt>;
+  steps?: InputMaybe<Array<DirectionsStepIt>>;
+  traffic_speed_entry?: InputMaybe<Array<Scalars['String']['input']>>;
+  via_waypoint?: InputMaybe<Array<DirectionsViaWaypointIt>>;
+};
+
+export type DirectionsPolyline = {
+  __typename?: 'DirectionsPolyline';
+  points?: Maybe<Scalars['String']['output']>;
 };
 
 export type DirectionsPolylineIt = {
   points?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type DirectionsStep = {
+  __typename?: 'DirectionsStep';
+  distance?: Maybe<TextValueObject>;
+  duration?: Maybe<TextValueObject>;
+  end_location?: Maybe<LatLng>;
+  html_instructions?: Maybe<Scalars['String']['output']>;
+  maneuver?: Maybe<Scalars['String']['output']>;
+  polyline?: Maybe<DirectionsPolyline>;
+  start_location?: Maybe<LatLng>;
+  steps?: Maybe<Scalars['String']['output']>;
+  transit_details?: Maybe<DirectionsTransitDetails>;
+  travel_mode?: Maybe<Scalars['String']['output']>;
+};
+
 export type DirectionsStepIt = {
   distance?: InputMaybe<TextValueObjectIt>;
-  duration: TextValueObjectIt;
-  end_location: LatLngIt;
-  html_instructions: Scalars['String']['input'];
+  duration?: InputMaybe<TextValueObjectIt>;
+  end_location?: InputMaybe<LatLngIt>;
+  html_instructions?: InputMaybe<Scalars['String']['input']>;
   maneuver?: InputMaybe<Scalars['String']['input']>;
-  polyline: DirectionsPolylineIt;
-  start_location: LatLngIt;
+  polyline?: InputMaybe<DirectionsPolylineIt>;
+  start_location?: InputMaybe<LatLngIt>;
   steps?: InputMaybe<Scalars['String']['input']>;
   transit_details?: InputMaybe<DirectionsTransitDetailsIt>;
-  travel_mode: Scalars['String']['input'];
+  travel_mode?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type DirectionsTransitAgency = {
+  __typename?: 'DirectionsTransitAgency';
+  name?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type DirectionsTransitAgencyIt = {
   name?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type DirectionsTransitDetails = {
+  __typename?: 'DirectionsTransitDetails';
+  arrival_stop?: Maybe<DirectionsTransitStop>;
+  arrival_time?: Maybe<TimeZoneTextValueObject>;
+  departure_stop?: Maybe<DirectionsTransitStop>;
+  departure_time?: Maybe<TimeZoneTextValueObject>;
+  headsign?: Maybe<Scalars['String']['output']>;
+  headway?: Maybe<Scalars['Float']['output']>;
+  line?: Maybe<DirectionsTransitLine>;
 };
 
 export type DirectionsTransitDetailsIt = {
@@ -99,15 +201,33 @@ export type DirectionsTransitDetailsIt = {
   line?: InputMaybe<DirectionsTransitLineIt>;
 };
 
+export type DirectionsTransitLine = {
+  __typename?: 'DirectionsTransitLine';
+  agencies?: Maybe<Array<DirectionsTransitAgency>>;
+  color?: Maybe<Scalars['String']['output']>;
+  icon?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  short_name?: Maybe<Scalars['String']['output']>;
+  text_color?: Maybe<Scalars['String']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  vehicle?: Maybe<DirectionsTransitAgency>;
+};
+
 export type DirectionsTransitLineIt = {
   agencies?: InputMaybe<Array<DirectionsTransitAgencyIt>>;
   color?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
   short_name?: InputMaybe<Scalars['String']['input']>;
   text_color?: InputMaybe<Scalars['String']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
   vehicle?: InputMaybe<DirectionsTransitAgencyIt>;
+};
+
+export type DirectionsTransitStop = {
+  __typename?: 'DirectionsTransitStop';
+  location?: Maybe<LatLng>;
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type DirectionsTransitStopIt = {
@@ -115,10 +235,24 @@ export type DirectionsTransitStopIt = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type DirectionsViaWaypoint = {
+  __typename?: 'DirectionsViaWaypoint';
+  location?: Maybe<LatLng>;
+  step_index?: Maybe<Scalars['Int']['output']>;
+  step_interpolation?: Maybe<Scalars['Float']['output']>;
+};
+
 export type DirectionsViaWaypointIt = {
   location?: InputMaybe<LatLngIt>;
   step_index?: InputMaybe<Scalars['Int']['input']>;
   step_interpolation?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type Fare = {
+  __typename?: 'Fare';
+  currency?: Maybe<Scalars['String']['output']>;
+  text?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['Float']['output']>;
 };
 
 export type FareIt = {
@@ -130,6 +264,15 @@ export type FareIt = {
 export type GeoPointIt = {
   latitude?: InputMaybe<Scalars['Float']['input']>;
   longitude?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type GetGoogleMapsDirectionsResponseBody = {
+  __typename?: 'GetGoogleMapsDirectionsResponseBody';
+  available_travel_modes?: Maybe<Array<Scalars['String']['output']>>;
+  error_message?: Maybe<Scalars['String']['output']>;
+  geocoded_waypoints?: Maybe<Array<DirectionsGeocodedWaypoint>>;
+  routes?: Maybe<Array<GoogleMapsDirectionsResponseRoutes>>;
+  status?: Maybe<Scalars['String']['output']>;
 };
 
 export type GetGoogleMapsDirectionsResponseBodyIt = {
@@ -162,10 +305,28 @@ export type GetTripsFiltersIt = {
   status?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type GetTripsOt = {
+  __typename?: 'GetTripsOt';
+  items: Array<TripOt>;
+  meta: MetaResponse;
+};
+
+export type GoogleMapsDirectionsResponseRoutes = {
+  __typename?: 'GoogleMapsDirectionsResponseRoutes';
+  bounds?: Maybe<BoundingBox>;
+  copyrights?: Maybe<Scalars['String']['output']>;
+  fare?: Maybe<Fare>;
+  legs?: Maybe<Array<DirectionsLeg>>;
+  overview_polyline?: Maybe<DirectionsPolyline>;
+  summary?: Maybe<Scalars['String']['output']>;
+  warnings?: Maybe<Array<Scalars['String']['output']>>;
+  waypoint_order?: Maybe<Array<Scalars['Int']['output']>>;
+};
+
 export type GoogleMapsDirectionsResponseRoutesIt = {
   bounds?: InputMaybe<BoundingBoxIt>;
   copyrights?: InputMaybe<Scalars['String']['input']>;
-  fare: FareIt;
+  fare?: InputMaybe<FareIt>;
   legs?: InputMaybe<Array<DirectionsLegIt>>;
   overview_polyline?: InputMaybe<DirectionsPolylineIt>;
   summary?: InputMaybe<Scalars['String']['input']>;
@@ -178,14 +339,130 @@ export type JoinTripIt = {
   requestedSeatsCount: Scalars['Float']['input'];
 };
 
+export type LatLng = {
+  __typename?: 'LatLng';
+  lat?: Maybe<Scalars['Float']['output']>;
+  latitude?: Maybe<Scalars['Float']['output']>;
+  lng?: Maybe<Scalars['Float']['output']>;
+  longitude?: Maybe<Scalars['Float']['output']>;
+};
+
 export type LatLngIt = {
+  lat?: InputMaybe<Scalars['Float']['input']>;
   latitude?: InputMaybe<Scalars['Float']['input']>;
+  lng?: InputMaybe<Scalars['Float']['input']>;
   longitude?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type LoginPayloadIt = {
   password: Scalars['String']['input'];
   username?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type LoginResponseOt = {
+  __typename?: 'LoginResponseOt';
+  accessToken: Scalars['String']['output'];
+  refreshToken: Scalars['String']['output'];
+  user: AppUsersOt;
+};
+
+export type MessageResponseOt = {
+  __typename?: 'MessageResponseOt';
+  message: Scalars['String']['output'];
+};
+
+export type MetaResponse = {
+  __typename?: 'MetaResponse';
+  limit?: Maybe<Scalars['Float']['output']>;
+  page?: Maybe<Scalars['Float']['output']>;
+  totalCount?: Maybe<Scalars['Float']['output']>;
+  totalPages?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createChat: TripChatOt;
+  createTrip: TripsEntity;
+  createUser: AppUsersOt;
+  getNewTokens: LoginResponseOt;
+  joinTrip: TripsEntity;
+  leaveTrip: TripsEntity;
+  login: LoginResponseOt;
+  resendOtp: MessageResponseOt;
+  sendMessage: TripChatOt;
+  sendOtp: MessageResponseOt;
+  signup: AppUsersOt;
+  startTrip: TripsEntity;
+  updateTrip: TripsEntity;
+  verifyOtp: LoginResponseOt;
+};
+
+
+export type MutationCreateChatArgs = {
+  tripId: Scalars['Int']['input'];
+};
+
+
+export type MutationCreateTripArgs = {
+  payload: CreateTripIt;
+};
+
+
+export type MutationCreateUserArgs = {
+  payload: CreateAppUsersIt;
+};
+
+
+export type MutationJoinTripArgs = {
+  id: Scalars['Float']['input'];
+  payload: JoinTripIt;
+};
+
+
+export type MutationLeaveTripArgs = {
+  id: Scalars['Float']['input'];
+};
+
+
+export type MutationLoginArgs = {
+  payload: LoginPayloadIt;
+};
+
+
+export type MutationResendOtpArgs = {
+  payload: OtpLoginPayloadIt;
+};
+
+
+export type MutationSendMessageArgs = {
+  chatId: Scalars['Int']['input'];
+  message: Scalars['String']['input'];
+};
+
+
+export type MutationSendOtpArgs = {
+  payload: OtpLoginPayloadIt;
+};
+
+
+export type MutationSignupArgs = {
+  payload: SignupAppUsersIt;
+};
+
+
+export type MutationStartTripArgs = {
+  id: Scalars['Float']['input'];
+};
+
+
+export type MutationUpdateTripArgs = {
+  id: Scalars['Float']['input'];
+  payload: UpdateTripIt;
+};
+
+
+export type MutationVerifyOtpArgs = {
+  payload: OtpVerificationPayloadIt;
 };
 
 export type NearbyTrips = {
@@ -199,6 +476,44 @@ export type OtpLoginPayloadIt = {
 export type OtpVerificationPayloadIt = {
   otp: Scalars['String']['input'];
   phoneNumber: Scalars['String']['input'];
+};
+
+export type Query = {
+  __typename?: 'Query';
+  chat: TripChatOt;
+  chatByTripId?: Maybe<TripChatOt>;
+  me: AppUsersOt;
+  myTrips: GetTripsOt;
+  trip: TripsEntity;
+  trips: GetTripsOt;
+  users: Array<AppUsersOt>;
+};
+
+
+export type QueryChatArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryChatByTripIdArgs = {
+  tripId: Scalars['Int']['input'];
+};
+
+
+export type QueryMyTripsArgs = {
+  filters?: InputMaybe<GetTripsFiltersIt>;
+  meta?: InputMaybe<TripsMetaRequest>;
+};
+
+
+export type QueryTripArgs = {
+  id: Scalars['Float']['input'];
+};
+
+
+export type QueryTripsArgs = {
+  filters?: InputMaybe<GetTripsFiltersIt>;
+  meta?: InputMaybe<TripsMetaRequest>;
 };
 
 export type ScreenGpsBoundariesIt = {
@@ -216,9 +531,27 @@ export type SignupAppUsersIt = {
   role: Scalars['String']['input'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  messageReceivedOnAChat: TripChatMessageOverSubscriptionOt;
+};
+
+export type TextValueObject = {
+  __typename?: 'TextValueObject';
+  text?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['Float']['output']>;
+};
+
 export type TextValueObjectIt = {
   text?: InputMaybe<Scalars['String']['input']>;
   value?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type TimeZoneTextValueObject = {
+  __typename?: 'TimeZoneTextValueObject';
+  text?: Maybe<Scalars['String']['output']>;
+  time_zone?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['Float']['output']>;
 };
 
 export type TimeZoneTextValueObjectIt = {
@@ -236,12 +569,161 @@ export type TripAddressIt = {
   postCode?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type TripAddressOt = {
+  __typename?: 'TripAddressOt';
+  addressLineOne?: Maybe<Scalars['String']['output']>;
+  addressLineTwo?: Maybe<Scalars['String']['output']>;
+  area?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Scalars['String']['output']>;
+  postCode?: Maybe<Scalars['String']['output']>;
+};
+
+export type TripChatMessageOt = {
+  __typename?: 'TripChatMessageOt';
+  createdAt: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  user: AppUsersEntity;
+};
+
+export type TripChatMessageOverSubscriptionOt = {
+  __typename?: 'TripChatMessageOverSubscriptionOt';
+  chatId: Scalars['Float']['output'];
+  createdAt: Scalars['String']['output'];
+  fromUser: AppUsersEntity;
+  message: Scalars['String']['output'];
+  tripId: Scalars['Float']['output'];
+};
+
+export type TripChatOt = {
+  __typename?: 'TripChatOt';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['Float']['output'];
+  messages?: Maybe<Array<TripChatMessageOt>>;
+  trip?: Maybe<TripsEntity>;
+  tripId?: Maybe<Scalars['Int']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type TripOt = {
+  __typename?: 'TripOt';
+  capacity?: Maybe<Scalars['Float']['output']>;
+  category: Scalars['String']['output'];
+  chat?: Maybe<TripsChatEntity>;
+  checkpoints?: Maybe<Array<TripsCheckpoints>>;
+  createdAt: Scalars['DateTime']['output'];
+  createdById: Scalars['Float']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  driver?: Maybe<AppUsersEntity>;
+  driverId?: Maybe<Scalars['Float']['output']>;
+  dropoffAddress: TripAddressOt;
+  dropoffLatitude: Scalars['Float']['output'];
+  dropoffLongitude: Scalars['Float']['output'];
+  endedAt?: Maybe<Scalars['DateTime']['output']>;
+  googleDirectionsApiData?: Maybe<GetGoogleMapsDirectionsResponseBody>;
+  id: Scalars['Float']['output'];
+  occupiedSeats?: Maybe<Scalars['Float']['output']>;
+  passengers?: Maybe<Array<AppUsersEntity>>;
+  pickupAddress: TripAddressOt;
+  pickupLatitude: Scalars['Float']['output'];
+  pickupLongitude: Scalars['Float']['output'];
+  plannedAt: Scalars['DateTime']['output'];
+  reservations?: Maybe<Array<TripReservationOt>>;
+  riders?: Maybe<Array<AppUsersEntity>>;
+  seatsStatus: Scalars['String']['output'];
+  startedAt?: Maybe<Scalars['DateTime']['output']>;
+  status: Scalars['String']['output'];
+  timeline?: Maybe<Array<TripsTimelineEntity>>;
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  uuid: Scalars['String']['output'];
+};
+
+export type TripReservationOt = {
+  __typename?: 'TripReservationOt';
+  createdAt?: Maybe<Scalars['String']['output']>;
+  poolerType: Scalars['String']['output'];
+  requestedSeatsCount: Scalars['Float']['output'];
+  userId: Scalars['Float']['output'];
+};
+
+export type TripsChatEntity = {
+  __typename?: 'TripsChatEntity';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['Float']['output'];
+  messages?: Maybe<Array<TripChatMessageOt>>;
+  trip?: Maybe<TripsEntity>;
+  tripId?: Maybe<Scalars['Int']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type TripsCheckpoints = {
+  __typename?: 'TripsCheckpoints';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['Float']['output'];
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+  trip?: Maybe<TripsEntity>;
+  tripId?: Maybe<Scalars['Float']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type TripsEntity = {
+  __typename?: 'TripsEntity';
+  capacity?: Maybe<Scalars['Float']['output']>;
+  category: Scalars['String']['output'];
+  chat?: Maybe<TripsChatEntity>;
+  checkpoints?: Maybe<Array<TripsCheckpoints>>;
+  createdAt: Scalars['DateTime']['output'];
+  createdById: Scalars['Float']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  driver?: Maybe<AppUsersEntity>;
+  driverId?: Maybe<Scalars['Float']['output']>;
+  dropoffAddress: TripAddressOt;
+  dropoffLatitude: Scalars['Float']['output'];
+  dropoffLongitude: Scalars['Float']['output'];
+  endedAt?: Maybe<Scalars['DateTime']['output']>;
+  googleDirectionsApiData?: Maybe<GetGoogleMapsDirectionsResponseBody>;
+  id: Scalars['Float']['output'];
+  occupiedSeats?: Maybe<Scalars['Float']['output']>;
+  passengers?: Maybe<Array<AppUsersEntity>>;
+  pickupAddress: TripAddressOt;
+  pickupLatitude: Scalars['Float']['output'];
+  pickupLongitude: Scalars['Float']['output'];
+  plannedAt: Scalars['DateTime']['output'];
+  reservations?: Maybe<Array<TripReservationOt>>;
+  riders?: Maybe<Array<AppUsersEntity>>;
+  seatsStatus: Scalars['String']['output'];
+  startedAt?: Maybe<Scalars['DateTime']['output']>;
+  status: Scalars['String']['output'];
+  timeline?: Maybe<Array<TripsTimelineEntity>>;
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  uuid: Scalars['String']['output'];
+};
+
 export type TripsMetaRequest = {
   limit?: InputMaybe<Scalars['Float']['input']>;
   nearby?: InputMaybe<NearbyTrips>;
   order?: InputMaybe<Scalars['String']['input']>;
   page?: InputMaybe<Scalars['Float']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type TripsTimelineEntity = {
+  __typename?: 'TripsTimelineEntity';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['Float']['output'];
+  occupiedSeats?: Maybe<Scalars['Float']['output']>;
+  status: Scalars['String']['output'];
+  trip?: Maybe<TripsEntity>;
+  tripId?: Maybe<Scalars['Float']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type UpdateTripIt = {
@@ -256,6 +738,44 @@ export type UpdateTripIt = {
   pickupLongitude?: InputMaybe<Scalars['Float']['input']>;
   plannedAt?: InputMaybe<Scalars['DateTime']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UserDocumentsEntity = {
+  __typename?: 'UserDocumentsEntity';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  expiryDate: Scalars['DateTime']['output'];
+  id: Scalars['Float']['output'];
+  issuer: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+  user: AppUsersEntity;
+  userId: Scalars['String']['output'];
+  uuid: Scalars['String']['output'];
+};
+
+export type VehiclesEntity = {
+  __typename?: 'VehiclesEntity';
+  brand: Scalars['String']['output'];
+  capacity: Scalars['Float']['output'];
+  country: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  driver: AppUsersEntity;
+  driverId: Scalars['String']['output'];
+  id: Scalars['Float']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  insuranceExpiryDate: Scalars['DateTime']['output'];
+  model: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  plateNumber: Scalars['String']['output'];
+  registrationExpiryDate: Scalars['DateTime']['output'];
+  registrationNumber: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  uuid: Scalars['String']['output'];
 };
 
 export type CreateChatMutationVariables = Exact<{
@@ -345,7 +865,7 @@ export type TripsQueryQueryVariables = Exact<{
 }>;
 
 
-export type TripsQueryQuery = { __typename?: 'Query', trips: { __typename?: 'GetTripsOt', items: Array<{ __typename?: 'TripOt', id: number, capacity?: number | null, occupiedSeats?: number | null, plannedAt: any, passengers?: Array<{ __typename?: 'AppUsersEntity', id: number }> | null, pickupAddress: { __typename?: 'TripAddressOt', addressLineOne?: string | null, area?: string | null, city?: string | null }, dropoffAddress: { __typename?: 'TripAddressOt', addressLineOne?: string | null, area?: string | null, city?: string | null } }>, meta: { __typename?: 'MetaResponse', limit?: number | null, page?: number | null, totalCount?: number | null, totalPages?: number | null } } };
+export type TripsQueryQuery = { __typename?: 'Query', trips: { __typename?: 'GetTripsOt', items: Array<{ __typename?: 'TripOt', id: number, capacity?: number | null, occupiedSeats?: number | null, plannedAt: any, passengers?: Array<{ __typename?: 'AppUsersEntity', id: number }> | null, googleDirectionsApiData?: { __typename?: 'GetGoogleMapsDirectionsResponseBody', routes?: Array<{ __typename?: 'GoogleMapsDirectionsResponseRoutes', overview_polyline?: { __typename?: 'DirectionsPolyline', points?: string | null } | null, legs?: Array<{ __typename?: 'DirectionsLeg', steps?: Array<{ __typename?: 'DirectionsStep', steps?: string | null, distance?: { __typename?: 'TextValueObject', text?: string | null, value?: number | null } | null, duration?: { __typename?: 'TextValueObject', text?: string | null, value?: number | null } | null, start_location?: { __typename?: 'LatLng', lat?: number | null, lng?: number | null } | null, end_location?: { __typename?: 'LatLng', lat?: number | null, lng?: number | null } | null, polyline?: { __typename?: 'DirectionsPolyline', points?: string | null } | null, transit_details?: { __typename?: 'DirectionsTransitDetails', departure_time?: { __typename?: 'TimeZoneTextValueObject', text?: string | null, time_zone?: string | null, value?: number | null } | null, departure_stop?: { __typename?: 'DirectionsTransitStop', name?: string | null, location?: { __typename?: 'LatLng', lat?: number | null, lng?: number | null } | null } | null, arrival_time?: { __typename?: 'TimeZoneTextValueObject', text?: string | null, time_zone?: string | null, value?: number | null } | null, arrival_stop?: { __typename?: 'DirectionsTransitStop', name?: string | null, location?: { __typename?: 'LatLng', lat?: number | null, lng?: number | null } | null } | null } | null }> | null }> | null, fare?: { __typename?: 'Fare', currency?: string | null, text?: string | null, value?: number | null } | null, bounds?: { __typename?: 'BoundingBox', northeast?: { __typename?: 'LatLng', lat?: number | null, lng?: number | null } | null, southwest?: { __typename?: 'LatLng', lat?: number | null, lng?: number | null } | null } | null }> | null } | null, pickupAddress: { __typename?: 'TripAddressOt', addressLineOne?: string | null, area?: string | null, city?: string | null }, dropoffAddress: { __typename?: 'TripAddressOt', addressLineOne?: string | null, area?: string | null, city?: string | null } }>, meta: { __typename?: 'MetaResponse', limit?: number | null, page?: number | null, totalCount?: number | null, totalPages?: number | null } } };
 
 export type LoginMutationMutationVariables = Exact<{
   loginPayload: LoginPayloadIt;
@@ -396,7 +916,7 @@ export const LeaveTripMutationDocument = {"kind":"Document","definitions":[{"kin
 export const MapTripsQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MapTripsQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryFilters"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"GetTripsFiltersIt"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryMeta"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"TripsMetaRequest"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trips"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filters"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryFilters"}}},{"kind":"Argument","name":{"kind":"Name","value":"meta"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryMeta"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"capacity"}},{"kind":"Field","name":{"kind":"Name","value":"occupiedSeats"}},{"kind":"Field","name":{"kind":"Name","value":"plannedAt"}},{"kind":"Field","name":{"kind":"Name","value":"driverId"}},{"kind":"Field","name":{"kind":"Name","value":"pickupAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"city"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pickupLatitude"}},{"kind":"Field","name":{"kind":"Name","value":"pickupLongitude"}},{"kind":"Field","name":{"kind":"Name","value":"dropoffAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"city"}}]}},{"kind":"Field","name":{"kind":"Name","value":"dropoffLatitude"}},{"kind":"Field","name":{"kind":"Name","value":"dropoffLongitude"}},{"kind":"Field","name":{"kind":"Name","value":"passengers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"limit"}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<MapTripsQueryQuery, MapTripsQueryQueryVariables>;
 export const MyTripsQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyTripsQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"filters"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"GetTripsFiltersIt"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"meta"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"TripsMetaRequest"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myTrips"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filters"},"value":{"kind":"Variable","name":{"kind":"Name","value":"filters"}}},{"kind":"Argument","name":{"kind":"Name","value":"meta"},"value":{"kind":"Variable","name":{"kind":"Name","value":"meta"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"capacity"}},{"kind":"Field","name":{"kind":"Name","value":"occupiedSeats"}},{"kind":"Field","name":{"kind":"Name","value":"plannedAt"}},{"kind":"Field","name":{"kind":"Name","value":"passengers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pickupAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"city"}}]}},{"kind":"Field","name":{"kind":"Name","value":"dropoffAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"city"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"limit"}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<MyTripsQueryQuery, MyTripsQueryQueryVariables>;
 export const SingleTripQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"SingleTripQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"singleTripId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Float"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"singleTripId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"capacity"}},{"kind":"Field","name":{"kind":"Name","value":"occupiedSeats"}},{"kind":"Field","name":{"kind":"Name","value":"plannedAt"}},{"kind":"Field","name":{"kind":"Name","value":"driverId"}},{"kind":"Field","name":{"kind":"Name","value":"passengers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pickupAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pickupLatitude"}},{"kind":"Field","name":{"kind":"Name","value":"pickupLongitude"}},{"kind":"Field","name":{"kind":"Name","value":"dropoffAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}}]}},{"kind":"Field","name":{"kind":"Name","value":"dropoffLatitude"}},{"kind":"Field","name":{"kind":"Name","value":"dropoffLongitude"}}]}}]}}]} as unknown as DocumentNode<SingleTripQueryQuery, SingleTripQueryQueryVariables>;
-export const TripsQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"TripsQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryFilters"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"GetTripsFiltersIt"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryMeta"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"TripsMetaRequest"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trips"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filters"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryFilters"}}},{"kind":"Argument","name":{"kind":"Name","value":"meta"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryMeta"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"capacity"}},{"kind":"Field","name":{"kind":"Name","value":"occupiedSeats"}},{"kind":"Field","name":{"kind":"Name","value":"plannedAt"}},{"kind":"Field","name":{"kind":"Name","value":"passengers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"pickupAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"city"}}]}},{"kind":"Field","name":{"kind":"Name","value":"dropoffAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"city"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"limit"}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<TripsQueryQuery, TripsQueryQueryVariables>;
+export const TripsQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"TripsQuery"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryFilters"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"GetTripsFiltersIt"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryMeta"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"TripsMetaRequest"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trips"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"filters"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryFilters"}}},{"kind":"Argument","name":{"kind":"Name","value":"meta"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripsQueryMeta"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"capacity"}},{"kind":"Field","name":{"kind":"Name","value":"occupiedSeats"}},{"kind":"Field","name":{"kind":"Name","value":"plannedAt"}},{"kind":"Field","name":{"kind":"Name","value":"passengers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"googleDirectionsApiData"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"routes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"overview_polyline"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"points"}}]}},{"kind":"Field","name":{"kind":"Name","value":"legs"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"steps"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"distance"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"duration"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"start_location"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"end_location"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"polyline"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"points"}}]}},{"kind":"Field","name":{"kind":"Name","value":"steps"}},{"kind":"Field","name":{"kind":"Name","value":"transit_details"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"departure_time"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"time_zone"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"departure_stop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"location"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrival_time"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"time_zone"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrival_stop"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"location"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"fare"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"currency"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"value"}}]}},{"kind":"Field","name":{"kind":"Name","value":"bounds"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"northeast"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"southwest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"pickupAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"city"}}]}},{"kind":"Field","name":{"kind":"Name","value":"dropoffAddress"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addressLineOne"}},{"kind":"Field","name":{"kind":"Name","value":"area"}},{"kind":"Field","name":{"kind":"Name","value":"city"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"meta"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"limit"}},{"kind":"Field","name":{"kind":"Name","value":"page"}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}},{"kind":"Field","name":{"kind":"Name","value":"totalPages"}}]}}]}}]}}]} as unknown as DocumentNode<TripsQueryQuery, TripsQueryQueryVariables>;
 export const LoginMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"LoginMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"loginPayload"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"LoginPayloadIt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"payload"},"value":{"kind":"Variable","name":{"kind":"Name","value":"loginPayload"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"accessToken"}},{"kind":"Field","name":{"kind":"Name","value":"refreshToken"}}]}}]}}]} as unknown as DocumentNode<LoginMutationMutation, LoginMutationMutationVariables>;
 export const SignUpMutationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SignUpMutation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"signUpPayload"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SignupAppUsersIt"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"signup"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"payload"},"value":{"kind":"Variable","name":{"kind":"Name","value":"signUpPayload"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<SignUpMutationMutation, SignUpMutationMutationVariables>;
 export const MeQueryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MeQuery"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"role"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}}]}}]} as unknown as DocumentNode<MeQueryQuery, MeQueryQueryVariables>;
