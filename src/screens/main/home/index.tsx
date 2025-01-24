@@ -1,12 +1,14 @@
 import { router } from 'expo-router';
 import { useAtom } from 'jotai/react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import MapView, { Details, LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
+import { Details, LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import type MapViewType from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useMapTripsQuery } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
-import { MapTrip, mapToMapTrip } from '$components/dumb/map-trip';
+import { getMapTrip, mapToMapTrip } from '$components/dumb/map-trip';
 import { TripCard, mapToTripCard } from '$components/dumb/trip-card';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { dropoffToLatlng, pickupToLatlng } from '$helpers/pickup-dropoff-to-latlng';
@@ -25,7 +27,7 @@ export type MainHomeScreenProps = {
 };
 
 export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef<MapViewType>(null);
   const insets = useSafeAreaInsets();
 
   const [focusedTripId, setFocusedTripId] = useState<IDUnion | undefined>();
@@ -90,14 +92,21 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
 
   const tripsMarkers = useMemo(
     () =>
-      trips?.map(trip => (
-        <MapTrip
-          key={trip.id}
-          {...mapToMapTrip(trip)}
-          onPickupMarkerClick={() => onMarkerClick(trip)}
-          onDropoffMarkerClick={() => onMarkerClick(trip)}
-        />
-      )),
+      trips?.reduce(
+        (acc, trip) => {
+          const mapTrip = getMapTrip({
+            ...mapToMapTrip(trip),
+            onPickupMarkerClick: () => onMarkerClick(trip),
+            onDropoffMarkerClick: () => onMarkerClick(trip),
+          });
+
+          acc.pickup.push(mapTrip.pickup);
+          acc.dropoff.push(mapTrip.dropoff);
+
+          return acc;
+        },
+        { pickup: [] as React.ReactNode[], dropoff: [] as React.ReactNode[] }
+      ),
     [onMarkerClick, trips]
   );
 
@@ -135,7 +144,8 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
         onRegionChangeComplete={handleRegionChangeComplete}
         rotateEnabled={false}
       >
-        {tripsMarkers}
+        {tripsMarkers?.pickup}
+        {tripsMarkers?.dropoff}
         {focusedTrip && focusedTripMapViewDirections}
       </MapView>
       {focusedTrip && (

@@ -12,7 +12,7 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useLeaveTripMutation, useSingleTripQuery } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
 import { LoadingSection } from '$components/dumb/loading-section';
-import { MapTrip, mapToMapTrip } from '$components/dumb/map-trip';
+import { getMapTrip, mapToMapTrip } from '$components/dumb/map-trip';
 import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
 import { MaterialCommunityIcon } from '$components/icons';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
@@ -82,10 +82,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
     fitMapToTrip();
   }, [fitMapToTrip]);
 
-  const mapTrip = useMemo(
-    () => trip && <MapTrip key={trip.id} {...mapToMapTrip(trip)} />,
-    [trip]
-  );
+  const mapTrip = useMemo(() => trip && getMapTrip(mapToMapTrip(trip)), [trip]);
 
   // TODO: use the internal component
   const mapViewDirections = useMemo(
@@ -122,7 +119,8 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
         style={commonStyles.flexFull}
         onRegionChangeComplete={handleRegionChangeComplete}
       >
-        {mapTrip}
+        {mapTrip?.pickup}
+        {mapTrip?.dropoff}
         {mapViewDirections}
       </MapView>
       <IconButton

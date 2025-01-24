@@ -270,7 +270,6 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       if (!pickupAddress?.addressLineOne && pickupLocation)
         Geocoder.from(pickupLocation)
           .then(response => {
-            console.log('Geocoder', 'pickup', response);
             const address = getAddress(response);
 
             setValue('pickupAddress', address, {
@@ -287,7 +286,6 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       if (!dropoffAddress?.addressLineOne && dropoffLocation)
         Geocoder.from(dropoffLocation)
           .then(response => {
-            console.log('Geocoder', 'dropoff', response);
             const address = getAddress(response);
 
             setValue('dropoffAddress', address, {
