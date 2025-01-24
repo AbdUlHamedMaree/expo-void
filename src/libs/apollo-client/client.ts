@@ -56,7 +56,7 @@ export const errorLink = onError(
     if (graphQLErrors) {
       for (const err of graphQLErrors) {
         console.error(operation.operationName, err);
-        if (err.extensions.code === 'UNAUTHENTICATED') {
+        if (err.extensions?.code === 'UNAUTHENTICATED') {
           if (operation.operationName === 'GetNewTokens') {
             return;
           }

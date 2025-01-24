@@ -31,7 +31,7 @@ export type MapTripProps = Trip & {
   onDropoffMarkerClick?: () => void;
 };
 
-export const MapTrip: React.FC<MapTripProps> = ({
+export const getMapTrip = ({
   pickupLatitude,
   pickupLongitude,
   dropoffLatitude,
@@ -39,7 +39,7 @@ export const MapTrip: React.FC<MapTripProps> = ({
 
   onPickupMarkerClick,
   onDropoffMarkerClick,
-}) => {
+}: MapTripProps) => {
   const locations = pickupDropoffToLatlng({
     pickupLatitude,
     pickupLongitude,
@@ -47,8 +47,8 @@ export const MapTrip: React.FC<MapTripProps> = ({
     dropoffLongitude,
   });
 
-  return (
-    <>
+  return {
+    pickup: (
       <Marker
         onPress={onPickupMarkerClick}
         coordinate={locations.pickup}
@@ -58,7 +58,8 @@ export const MapTrip: React.FC<MapTripProps> = ({
           <MaterialCommunityIcon name='car' size={18} />
         </TripMapMarkerCard>
       </Marker>
-
+    ),
+    dropoff: (
       <Marker
         onPress={onDropoffMarkerClick}
         coordinate={locations.dropoff}
@@ -68,6 +69,6 @@ export const MapTrip: React.FC<MapTripProps> = ({
           <MaterialCommunityIcon name='flag-checkered' size={18} />
         </TripMapMarkerCard>
       </Marker>
-    </>
-  );
+    ),
+  };
 };

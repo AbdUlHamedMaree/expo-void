@@ -11,8 +11,10 @@ import { object, string, coerce, date } from 'zod';
 
 import { TripsFiltersModel, tripsFiltersAtom } from '$atoms/trips-filters';
 import { DateTimeField } from '$components/fields/date-time';
+import { DropdownField } from '$components/fields/dropdown';
 import { TextField } from '$components/fields/text';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
+import { uaeCities } from '$constants/uae-cities';
 import { createKeyGetter } from '$libs/react-hook-form/create-key-getter';
 import { commonStyles } from '$styles/common';
 import { spacing } from '$theme/spacing';
@@ -99,16 +101,10 @@ export const TripsFiltersScreen: React.FC<TripsFiltersScreenProps> = () => {
             <Text variant='headlineMedium'>Pickup</Text>
 
             <View style={{ flexDirection: 'row', flex: 1, gap: spacing.md }}>
-              <TextField
-                name={key('pickup.country')}
-                label='Country'
-                viewContainerProps={{
-                  style: { flex: 1 },
-                }}
-              />
-              <TextField
+              <DropdownField
                 name={key('pickup.city')}
                 label='City'
+                items={uaeCities}
                 viewContainerProps={{
                   style: { flex: 1 },
                 }}
@@ -126,16 +122,10 @@ export const TripsFiltersScreen: React.FC<TripsFiltersScreenProps> = () => {
 
             <Text variant='headlineMedium'>Dropoff</Text>
             <View style={{ flexDirection: 'row', flex: 1, gap: spacing.md }}>
-              <TextField
-                name={key('dropoff.country')}
-                label='Country'
-                viewContainerProps={{
-                  style: { flex: 1 },
-                }}
-              />
-              <TextField
+              <DropdownField
                 name={key('dropoff.city')}
                 label='City'
+                items={uaeCities}
                 viewContainerProps={{
                   style: { flex: 1 },
                 }}
