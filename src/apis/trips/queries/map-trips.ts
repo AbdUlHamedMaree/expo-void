@@ -14,18 +14,20 @@ export const mapTripsDocument = gql(/* GraphQL */ `
         driverId
 
         pickupAddress {
-          addressLineOne
-          area
           city
+          area
+          street
         }
+        formattedPickupAddress
         pickupLatitude
         pickupLongitude
 
         dropoffAddress {
-          addressLineOne
-          area
           city
+          area
+          street
         }
+        formattedDropoffAddress
         dropoffLatitude
         dropoffLongitude
 

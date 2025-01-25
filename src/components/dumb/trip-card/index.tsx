@@ -1,7 +1,5 @@
 import { format } from 'date-fns';
-import flow from 'lodash/fp/flow';
 import pick from 'lodash/fp/pick';
-import update from 'lodash/fp/update';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card, CardProps, Divider, IconButton, Text } from 'react-native-paper';
@@ -20,15 +18,18 @@ const fragment = gql(/* GraphQL */ `
     capacity
     occupiedSeats
     plannedAt
+    formattedPickupAddress
     pickupAddress {
-      addressLineOne
       city
       area
+      street
     }
+
+    formattedDropoffAddress
     dropoffAddress {
-      addressLineOne
       city
       area
+      street
     }
   }
 `);
@@ -37,22 +38,18 @@ type Trip = FragmentModel<typeof fragment>;
 type TripAddress = Trip['pickupAddress'];
 
 export const mapToTripCardAddress = pick<TripAddress, keyof TripAddress>([
-  'addressLineOne',
-  'area',
   'city',
+  'area',
+  'street',
 ]);
 
-export const mapToTripCard = flow<Trip[], Trip, Trip, Trip>(
-  pick<Trip, keyof Trip>([
-    'capacity',
-    'occupiedSeats',
-    'plannedAt',
-    'pickupAddress',
-    'dropoffAddress',
-  ]),
-  update('pickupAddress', mapToTripCardAddress),
-  update('dropoffAddress', mapToTripCardAddress)
-);
+export const mapToTripCard = pick<Trip, keyof Trip>([
+  'capacity',
+  'occupiedSeats',
+  'plannedAt',
+  'formattedPickupAddress',
+  'formattedDropoffAddress',
+]);
 
 export type TripProps = Trip & {
   onJoin?: () => void;
@@ -64,8 +61,8 @@ export const TripCard = memo<TripProps>(function Trip({
   capacity,
   occupiedSeats,
   plannedAt,
-  pickupAddress,
-  dropoffAddress,
+  formattedPickupAddress,
+  formattedDropoffAddress,
 
   onJoin,
   onShowMap,
@@ -93,7 +90,7 @@ export const TripCard = memo<TripProps>(function Trip({
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <MaterialCommunityIcon name='car' size={24} color={theme.colors.primary} />
           <Text variant='titleMedium' style={{ marginLeft: spacing.md, flex: 1 }}>
-            {getCityAreaAddress(pickupAddress) ?? 'Unknown Start'}
+            {formattedPickupAddress ?? 'Unknown Start'}
           </Text>
         </View>
 
@@ -106,7 +103,7 @@ export const TripCard = memo<TripProps>(function Trip({
             color={theme.colors.primary}
           />
           <Text variant='titleMedium' style={{ marginLeft: spacing.md, flex: 1 }}>
-            {getCityAreaAddress(dropoffAddress) ?? 'Unknown Destination'}
+            {formattedDropoffAddress ?? 'Unknown Destination'}
           </Text>
         </View>
 
@@ -173,17 +170,15 @@ const styles = StyleSheet.create({
 });
 
 const getCityAreaAddress = ({
-  addressLineOne,
   area,
   city,
+  street,
 }: {
-  addressLineOne?: string | null | undefined;
-  area?: string | null | undefined;
   city?: string | null | undefined;
+  area?: string | null | undefined;
+  street?: string | null | undefined;
 }) => {
-  if (isStringFull(city) && isStringFull(area)) {
-    return `${area} - ${city}`;
+  if (isStringFull(city) && isStringFull(area) && isStringFull(street)) {
+    return `${area} - ${city} - ${street}`;
   }
-
-  if (isStringFull(addressLineOne)) return addressLineOne;
 };

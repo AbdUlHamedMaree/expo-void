@@ -88,16 +88,18 @@ export const tripsDocument = gql(/* GraphQL */ `
         }
 
         pickupAddress {
-          addressLineOne
-          area
           city
+          area
+          street
         }
+        formattedPickupAddress
 
         dropoffAddress {
-          addressLineOne
           area
           city
+          street
         }
+        formattedDropoffAddress
       }
       meta {
         limit

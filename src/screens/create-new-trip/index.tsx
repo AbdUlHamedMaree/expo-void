@@ -14,6 +14,7 @@ import MapView, {
 import { Button, IconButton, SegmentedButtons, Surface, Text } from 'react-native-paper';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { number, object, string, date, coerce } from 'zod';
+import * as z from 'zod';
 
 import { useCreateTripMutation } from '$apis/trips';
 import { mapRegionAtom } from '$atoms/map-region';
@@ -38,26 +39,27 @@ import { spacing } from '$theme/spacing';
 import { throwIfGqlErrors } from '$tools/throw-if-gql-errors';
 
 const addressValidation = object({
-  addressLineOne: string(),
-  addressLineTwo: string(),
-  area: string(),
   city: string(),
-  country: string(),
-  postCode: string(),
+  area: string(),
+  street: string(),
 });
 
 const validationSchema = object({
+  capacity: coerce.number(),
+  // category: union([literal('one_time'), literal('routine')]),
+
+  pickupAddress: addressValidation,
+  formattedPickupAddress: string(),
   pickupLatitude: number(),
   pickupLongitude: number(),
-  pickupAddress: addressValidation,
 
+  dropoffAddress: addressValidation,
+  formattedDropoffAddress: string(),
   dropoffLatitude: number(),
   dropoffLongitude: number(),
-  dropoffAddress: addressValidation,
 
-  capacity: coerce.number(),
   plannedAt: date().min(new Date()),
-  // type: union([literal('one-time'), literal('routine')]),
+  // type: union([literal('in_app'), literal('group')]),
 });
 
 type ValidationSchema = Zod.infer<typeof validationSchema>;
@@ -178,50 +180,6 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
 
   const snapPoints = useMemo(() => ['8%', '60%'], []);
 
-  // useEffect(() => {
-  //   const data = googleMapsDirectionsResponse.data?.data;
-  //   if (!data) return;
-  //   console.log('Directions', data);
-
-  //   const route = data.routes[0];
-
-  //   if (!route) return;
-
-  //   const leg = route.legs[0];
-
-  //   if (!leg) return;
-
-  //   setValue('pickupLatitude', leg.start_location.lat, {
-  //     shouldTouch: true,
-  //     shouldDirty: true,
-  //   });
-
-  //   setValue('pickupLongitude', leg.start_location.lng, {
-  //     shouldTouch: true,
-  //     shouldDirty: true,
-  //   });
-
-  //   // setValue('pickupAddress', leg.start_address, {
-  //   //   shouldTouch: true,
-  //   //   shouldDirty: true,
-  //   // });
-
-  //   setValue('pickupLatitude', leg.start_location.lat, {
-  //     shouldTouch: true,
-  //     shouldDirty: true,
-  //   });
-
-  //   setValue('pickupLongitude', leg.start_location.lng, {
-  //     shouldTouch: true,
-  //     shouldDirty: true,
-  //   });
-
-  //   // setValue('pickupAddress', leg.start_address, {
-  //   //   shouldTouch: true,
-  //   //   shouldDirty: true,
-  //   // });
-  // }, [googleMapsDirectionsResponse.data?.data]);
-
   const onMapPress = useCallback(
     ({ nativeEvent: { coordinate } }: MapPressEvent) => {
       if (activeButton === 'pickup') {
@@ -234,6 +192,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
           shouldDirty: true,
         });
         resetField('pickupAddress');
+        resetField('formattedPickupAddress');
       } else {
         setValue('dropoffLatitude', coordinate.latitude, {
           shouldTouch: true,
@@ -244,6 +203,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
           shouldDirty: true,
         });
         resetField('dropoffAddress');
+        resetField('formattedDropoffAddress');
         if (firstDrawRef.current) {
           setTimeout(() => bottomSheetRef.current?.snapToIndex(1), 200);
           setHelperText('');
@@ -264,10 +224,10 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
       // if not open, stop.
       if (index !== 1) return;
 
-      const pickupAddress = getValues('pickupAddress');
-      const dropoffAddress = getValues('dropoffAddress');
+      const formattedPickupAddress = getValues('formattedPickupAddress');
+      const formattedDropoffAddress = getValues('formattedDropoffAddress');
 
-      if (!pickupAddress?.addressLineOne && pickupLocation)
+      if (!formattedPickupAddress && pickupLocation)
         Geocoder.from(pickupLocation)
           .then(response => {
             const address = getAddress(response);
@@ -276,14 +236,18 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
               shouldDirty: true,
               shouldTouch: true,
             });
-            setValue('pickupAddress.addressLineTwo', address.addressLineTwo, {
-              shouldDirty: true,
-              shouldTouch: true,
-            });
+            setValue(
+              'formattedPickupAddress',
+              `${address.street} - ${address.area} - ${address.city}`,
+              {
+                shouldDirty: true,
+                shouldTouch: true,
+              }
+            );
           })
           .catch(err => console.error(err));
 
-      if (!dropoffAddress?.addressLineOne && dropoffLocation)
+      if (!formattedDropoffAddress && dropoffLocation)
         Geocoder.from(dropoffLocation)
           .then(response => {
             const address = getAddress(response);
@@ -292,10 +256,14 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
               shouldDirty: true,
               shouldTouch: true,
             });
-            setValue('dropoffAddress.addressLineTwo', address.addressLineTwo, {
-              shouldDirty: true,
-              shouldTouch: true,
-            });
+            setValue(
+              'formattedDropoffAddress',
+              `${address.street} - ${address.area} - ${address.city}`,
+              {
+                shouldDirty: true,
+                shouldTouch: true,
+              }
+            );
           })
           .catch(err => console.error(err));
     },
@@ -387,13 +355,13 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
           <FormProvider {...methods}>
             <TextField
               label='Pickup'
-              name={key('pickupAddress.addressLineTwo')}
+              name={key('formattedPickupAddress')}
               // disabled
             />
 
             <TextField
               label='Dropoff'
-              name={key('dropoffAddress.addressLineTwo')}
+              name={key('formattedDropoffAddress')}
               // disabled
             />
 
@@ -437,21 +405,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const getAddress = (response: Geocoder.GeocoderResponse) => ({
-  country: getAddressComponent(response, 'country', 'UNKNOWN'),
+const getAddress = (
+  response: Geocoder.GeocoderResponse
+): z.infer<typeof addressValidation> => ({
   city: getAddressComponent(response, 'locality', 'UNKNOWN'),
   area: getAddressComponent(
     response,
     'sublocality',
     getAddressComponent(response, 'neighborhood', 'UNKNOWN')
   ),
-  addressLineOne: response.results[0].formatted_address.replace(
-    ' - United Arab Emirates',
-    ''
+  street: getAddressComponent(
+    response,
+    'route',
+    getAddressComponent(response, 'street_number', 'UNKNOWN')
   ),
-  addressLineTwo: response.results[0].formatted_address.replace(
-    ' - United Arab Emirates',
-    ''
-  ),
-  postCode: 'UNKNOWN',
 });

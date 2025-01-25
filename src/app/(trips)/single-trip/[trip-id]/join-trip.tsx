@@ -116,7 +116,7 @@ const Page: React.FC<PageProps> = () => {
       <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: spacing.lg }}>
         <MaterialCommunityIcon name='car' size={24} color={theme.colors.primary} />
         <Text variant='titleMedium' style={{ marginLeft: spacing.md, flex: 1 }}>
-          {trip.pickupAddress.addressLineOne ?? 'Unknown Destination'}
+          {trip.formattedPickupAddress ?? 'Unknown Pickup point'}
         </Text>
       </View>
 
@@ -127,7 +127,7 @@ const Page: React.FC<PageProps> = () => {
           color={theme.colors.primary}
         />
         <Text variant='titleMedium' style={{ marginLeft: spacing.md, flex: 1 }}>
-          {trip.dropoffAddress.addressLineOne ?? 'Unknown Destination'}
+          {trip.formattedDropoffAddress ?? 'Unknown Dropoff point'}
         </Text>
       </View>
 

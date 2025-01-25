@@ -1,6 +1,12 @@
 export const getAddressComponent = <T extends string | undefined>(
   response: Geocoder.GeocoderResponse,
-  type: 'country' | 'locality' | 'sublocality' | 'neighborhood' | 'street_number',
+  type:
+    | 'country'
+    | 'locality'
+    | 'sublocality'
+    | 'neighborhood'
+    | 'street_number'
+    | 'route',
   defaultValue: T = undefined as T
 ): string | T => {
   for (const result of response.results)

@@ -13,15 +13,12 @@ export const singleTripDocument = gql(`
         id
       }
 
-      pickupAddress {
-        addressLineOne
-      }
+
+      formattedPickupAddress
       pickupLatitude
       pickupLongitude
 
-      dropoffAddress {
-        addressLineOne
-      }
+      formattedDropoffAddress
       dropoffLatitude
       dropoffLongitude
     }

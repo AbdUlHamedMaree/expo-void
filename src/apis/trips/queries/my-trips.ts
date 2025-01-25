@@ -16,15 +16,15 @@ export const myTripsDocument = gql(`
         }
 
         pickupAddress {
-          addressLineOne
-          area
           city
+          area
+          street
         }
 
         dropoffAddress {
-          addressLineOne
-          area
           city
+          area
+          street
         }
       }
       meta {
