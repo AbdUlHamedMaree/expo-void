@@ -19,6 +19,16 @@ export const commonStyles = StyleSheet.create({
   screenVerticalPadding: {
     paddingVertical: screenVerticalPadding,
   },
+  screenMargin: {
+    marginHorizontal: screenHorizontalPadding,
+    marginVertical: screenVerticalPadding,
+  },
+  screenHorizontalMargin: {
+    marginHorizontal: screenHorizontalPadding,
+  },
+  screenVerticalMargin: {
+    marginVertical: screenVerticalPadding,
+  },
   flexCenter: {
     alignItems: 'center',
     justifyContent: 'center',

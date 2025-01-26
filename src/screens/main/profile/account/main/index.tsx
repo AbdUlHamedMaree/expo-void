@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { ObjectTypeDefinitionNode } from 'graphql';
 import { useCallback, useMemo } from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Divider, IconButton, List, Text } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -66,51 +66,54 @@ export const MainProfileAccountMainScreen: React.FC<MainProfileAccountMainProps>
   if (!user) return null;
 
   return (
-    <SafeAreaView style={commonStyles.flexFull}>
-      <ScreenWrapper>
-        <IconButton
-          icon='account'
-          mode='contained'
-          onPress={() => {}}
-          size={128}
-          style={{ alignSelf: 'center' }}
-        />
-        <Text
-          variant='displaySmall'
-          style={{ textAlign: 'center', marginTop: spacing.lg }}
-        >
-          {user.name}
-        </Text>
-        <Text style={{ textAlign: 'center', marginTop: spacing.sm }}>{user.phone}</Text>
-
-        <View style={{ marginTop: spacing.xl, flex: 1 }}>
-          <Text variant='displaySmall'>Subscription: Free Trail</Text>
-          <Text style={{ marginTop: spacing.sm }}>
-            App and Service will be free until further notice
+    <ScrollView>
+      <SafeAreaView style={commonStyles.flexFull}>
+        <ScreenWrapper>
+          <IconButton
+            icon='account'
+            mode='contained'
+            onPress={() => {}}
+            size={128}
+            style={{ alignSelf: 'center' }}
+          />
+          <Text
+            variant='displaySmall'
+            style={{ textAlign: 'center', marginTop: spacing.lg }}
+          >
+            {user.name}
           </Text>
+          <Text style={{ textAlign: 'center', marginTop: spacing.sm }}>{user.phone}</Text>
 
-          <Divider style={{ marginBottom: spacing.md, marginTop: spacing.xl }} />
-          <List.Item
-            title='My Trips'
-            onPress={() => router.push('/(account)/my-trips')}
-          />
-          <Divider style={{ marginVertical: spacing.md }} />
-          <DropdownInput
-            mode='outlined'
-            label='Language'
-            items={languages}
-            selected={selectedItem}
-            onSelectFinish={selected =>
-              selected[0] && langStorage.set(selected[0].value as AvailableLanguagesUnion)
-            }
-          />
-          <Divider style={{ marginVertical: spacing.md }} />
-          <View style={{ flex: 1 }} />
-          <PaperButton onPress={handleLogout} style={{ marginTop: spacing.lg }}>
-            Logout
-          </PaperButton>
-        </View>
-      </ScreenWrapper>
-    </SafeAreaView>
+          <View style={{ marginTop: spacing.xl, flex: 1 }}>
+            <Text variant='displaySmall'>Subscription: Free Trail</Text>
+            <Text style={{ marginTop: spacing.sm }}>
+              App and Service will be free until further notice
+            </Text>
+
+            <Divider style={{ marginBottom: spacing.md, marginTop: spacing.xl }} />
+            <List.Item
+              title='My Trips'
+              onPress={() => router.push('/(account)/my-trips')}
+            />
+            <Divider style={{ marginVertical: spacing.md }} />
+            <DropdownInput
+              mode='outlined'
+              label='Language'
+              items={languages}
+              selected={selectedItem}
+              onSelectFinish={selected =>
+                selected[0] &&
+                langStorage.set(selected[0].value as AvailableLanguagesUnion)
+              }
+            />
+            <Divider style={{ marginVertical: spacing.md }} />
+            <View style={{ flex: 1 }} />
+            <PaperButton onPress={handleLogout} style={{ marginTop: spacing.lg }}>
+              Logout
+            </PaperButton>
+          </View>
+        </ScreenWrapper>
+      </SafeAreaView>
+    </ScrollView>
   );
 };

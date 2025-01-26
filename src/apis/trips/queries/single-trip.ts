@@ -13,6 +13,7 @@ export const singleTripDocument = gql(`
         id
       }
 
+      status
 
       formattedPickupAddress
       pickupLatitude

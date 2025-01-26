@@ -10,6 +10,7 @@ import type { FragmentModel } from '$types/fragment-model';
 
 const fragment = gql(/* GraphQL */ `
   fragment mapToMapTrip on TripOt {
+    id
     pickupLatitude
     pickupLongitude
     dropoffLatitude
@@ -20,6 +21,7 @@ const fragment = gql(/* GraphQL */ `
 type Trip = FragmentModel<typeof fragment>;
 
 export const mapToMapTrip = pick<Trip, keyof Trip>([
+  'id',
   'pickupLatitude',
   'pickupLongitude',
   'dropoffLatitude',
@@ -32,6 +34,7 @@ export type MapTripProps = Trip & {
 };
 
 export const getMapTrip = ({
+  id,
   pickupLatitude,
   pickupLongitude,
   dropoffLatitude,
@@ -50,6 +53,7 @@ export const getMapTrip = ({
   return {
     pickup: (
       <Marker
+        key={`${id}-pickup`}
         onPress={onPickupMarkerClick}
         coordinate={locations.pickup}
         tracksViewChanges={false}
@@ -61,6 +65,7 @@ export const getMapTrip = ({
     ),
     dropoff: (
       <Marker
+        key={`${id}-dropoff`}
         onPress={onDropoffMarkerClick}
         coordinate={locations.dropoff}
         tracksViewChanges={false}

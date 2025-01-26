@@ -6,10 +6,16 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import { Button, FAB, IconButton, Text } from 'react-native-paper';
+import { Button, FAB, IconButton, Text, type FABGroupProps } from 'react-native-paper';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useLeaveTripMutation, useSingleTripQuery } from '$apis/trips';
+import {
+  useEndTripMutation,
+  useLeaveTripMutation,
+  useSingleTripQuery,
+  useStartTripMutation,
+} from '$apis/trips';
+import { useMeQuery } from '$apis/user';
 import { mapRegionAtom } from '$atoms/map-region';
 import { LoadingSection } from '$components/dumb/loading-section';
 import { getMapTrip, mapToMapTrip } from '$components/dumb/map-trip';
@@ -21,8 +27,9 @@ import {
   pickupDropoffToLatlng,
   pickupToLatlng,
 } from '$helpers/pickup-dropoff-to-latlng';
-import { useIsUserPartOfTheTrip } from '$hooks/use-is-user-in-trip';
 import { useToggleState } from '$hooks/use-toggle-state';
+import { TripStatusEnum } from '$models/trip-status';
+import { isDefined } from '$modules/checks';
 import { commonStyles } from '$styles/common';
 import { useAppTheme } from '$theme/hook';
 import { spacing } from '$theme/spacing';
@@ -37,6 +44,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
   const insets = useSafeAreaInsets();
   const theme = useAppTheme();
   const router = useRouter();
+  const meQuery = useMeQuery();
 
   const { 'trip-id': tripId } = useLocalSearchParams();
 
@@ -50,7 +58,38 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
     },
   });
 
+  const [startTrip, startTripResult] = useStartTripMutation({
+    variables: {
+      startTripId: +(tripId as string),
+    },
+  });
+
+  const [endTrip, endTripResult] = useEndTripMutation({
+    variables: {
+      endTripId: +(tripId as string),
+    },
+  });
+
   const trip = singleTripQuery.data?.trip;
+  const user = meQuery.data?.me;
+
+  const isCurrentUserTripDriver = useMemo(
+    () => isDefined(trip?.driverId) && isDefined(user?.id) && trip.driverId === user.id,
+    [trip?.driverId, user?.id]
+  );
+
+  const isCurrentUserTripPassenger = useMemo(
+    () =>
+      isDefined(trip?.passengers) &&
+      isDefined(user?.id) &&
+      !!trip.passengers.find(passenger => passenger.id === user.id),
+    [trip?.passengers, user?.id]
+  );
+
+  const isUserInTrip = useMemo(
+    () => isCurrentUserTripDriver || isCurrentUserTripPassenger,
+    [isCurrentUserTripDriver, isCurrentUserTripPassenger]
+  );
 
   const [isMapFittedToTrip, setIsMapFittedToTrip] = useState(false);
 
@@ -59,8 +98,6 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
   const initialMapRegion = useAtomValue(mapRegionAtom);
 
   const mapRef = useRef<MapView>(null);
-
-  const isUserInTrip = useIsUserPartOfTheTrip(trip);
 
   const handleRegionChangeComplete = useCallback(
     (_region: Region, details: Details) =>
@@ -104,7 +141,43 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
     [trip?.plannedAt]
   );
 
-  if (singleTripQuery.loading) return <LoadingSection loading />;
+  const fabActions = useMemo(
+    () =>
+      compact<FABGroupProps['actions'][number]>([
+        isCurrentUserTripDriver &&
+          trip?.status === TripStatusEnum.created && {
+            icon: 'ray-start-arrow',
+            label: 'Start',
+            onPress: () => startTrip(),
+          },
+        isCurrentUserTripDriver &&
+          trip?.status === TripStatusEnum.started && {
+            icon: 'ray-end',
+            label: 'End',
+            onPress: () => endTrip(),
+          },
+        isUserInTrip && {
+          icon: 'chat-outline',
+          label: 'Chat',
+          onPress: () =>
+            router.push({
+              pathname: `/(trips)/single-trip/[trip-id]/chat`,
+              params: { 'trip-id': tripId },
+            }),
+        },
+      ]),
+    [
+      endTrip,
+      isCurrentUserTripDriver,
+      isUserInTrip,
+      router,
+      startTrip,
+      trip?.status,
+      tripId,
+    ]
+  );
+
+  if (singleTripQuery.loading || meQuery.loading) return <LoadingSection loading />;
   if (singleTripQuery.error || !trip) return <LoadingSection error />;
 
   const emptySeatsCount = (trip.capacity ?? 1) - (trip.occupiedSeats ?? 1);
@@ -138,25 +211,10 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
       />
 
       <FAB.Group
-        visible
+        visible={fabActions.length > 0}
         open={fabState.isOpen}
         icon={fabState.isOpen ? 'close' : 'plus'}
-        actions={compact([
-          {
-            icon: 'chat-outline',
-            label: 'Chat',
-            onPress: () =>
-              router.push({
-                pathname: `/(trips)/single-trip/[trip-id]/chat`,
-                params: { 'trip-id': tripId },
-              }),
-          },
-          isUserInTrip && {
-            icon: 'logout',
-            label: 'Leave Trip',
-            onPress: () => leaveTrip(),
-          },
-        ])}
+        actions={fabActions}
         onStateChange={({ open }) => fabState.set(open)}
         style={{
           bottom: BOTTOM_SHEET_CLOSED_SIZE,
@@ -167,7 +225,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <MaterialCommunityIcon name='car' size={24} color={theme.colors.primary} />
             <Text variant='titleMedium' style={{ marginLeft: spacing.md, flex: 1 }}>
-              {trip.pickupAddress.addressLineOne ?? 'Unknown Destination'}
+              {trip.formattedPickupAddress ?? 'Unknown Pickup point'}
             </Text>
           </View>
 
@@ -180,7 +238,7 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
               color={theme.colors.primary}
             />
             <Text variant='titleMedium' style={{ marginLeft: spacing.md, flex: 1 }}>
-              {trip.dropoffAddress.addressLineOne ?? 'Unknown Destination'}
+              {trip.formattedDropoffAddress ?? 'Unknown Dropoff point'}
             </Text>
           </View>
 
@@ -210,18 +268,40 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
             </Text>
           </View>
           <View style={{ flex: 1 }} />
-          <Button
-            mode='contained'
-            disabled={isUserInTrip}
-            onPress={() => {
-              router.push({
-                pathname: `/(trips)/single-trip/[trip-id]/join-trip`,
-                params: { 'trip-id': tripId },
-              });
-            }}
-          >
-            {isUserInTrip ? 'Joined' : 'Join'}
-          </Button>
+          {isUserInTrip ? (
+            <Button
+              mode='outlined'
+              loading={leaveTripResult.loading}
+              onPress={() => leaveTrip()}
+            >
+              Leave
+            </Button>
+          ) : (
+            <Button
+              mode='contained'
+              disabled={isUserInTrip}
+              onPress={() => {
+                if (!user)
+                  return router.push({
+                    pathname: `/profile/login`,
+                    params: {
+                      'trip-id': tripId,
+                      toast: JSON.stringify({
+                        message: 'You need to be logged in to be able to join trips!',
+                        type: 'warning',
+                      }),
+                    },
+                  });
+
+                router.push({
+                  pathname: `/(trips)/single-trip/[trip-id]/join-trip`,
+                  params: { 'trip-id': tripId },
+                });
+              }}
+            >
+              Join
+            </Button>
+          )}
         </SafeAreaView>
       </PaperBottomSheet>
     </ScreenWrapper>
