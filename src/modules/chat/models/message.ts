@@ -3,6 +3,7 @@ export type BaseMessageModel = {
   sender: string;
   senderPicture: string;
   sended: boolean;
+  isDriver: boolean;
 };
 
 export type TextMessageModel = BaseMessageModel & {

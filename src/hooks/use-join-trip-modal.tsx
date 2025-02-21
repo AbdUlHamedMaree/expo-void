@@ -25,7 +25,7 @@ export const useJoinTripModal = ({ trip, onJoin, onCancel }: UseJoinTripModalArg
 
   const open = useCallback(() => {
     if (!user) {
-      router.push({
+      router.replace({
         pathname: '/(home)/profile/login',
         params: {
           toast: JSON.stringify({

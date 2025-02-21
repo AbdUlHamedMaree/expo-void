@@ -7,6 +7,7 @@ import { useMeQuery } from '$apis/user';
 import { LoadingSection } from '$components/dumb/loading-section';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
 import { gql } from '$gql';
+import type { TripOt } from '$gql/graphql';
 import { ChatApp } from '$modules/chat';
 import { MessageModel } from '$modules/chat/models/message';
 
@@ -26,11 +27,11 @@ const MessageDocument = gql(`
 `);
 
 export type ChatSingleTripsMainScreenProps = {
-  tripId: number;
+  trip: Pick<TripOt, 'id' | 'driverId'>;
 };
 
 export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps> = ({
-  tripId,
+  trip,
 }) => {
   const idRef = useRef(1);
 
@@ -39,10 +40,13 @@ export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps>
   const meQuery = useMeQuery();
 
   useSubscription(MessageDocument, {
-    onData: data => {
-      if (!data.data.data?.messageReceivedOnAChat) return;
-
-      const newMessage = data.data.data.messageReceivedOnAChat;
+    onData: ({ data: { data, error } }) => {
+      const newMessage = data?.messageReceivedOnAChat;
+      if (!newMessage) {
+        console.warn('message listener fired with no message');
+        if (error) console.error(error);
+        return;
+      }
 
       setSubscriptionMessages(messages => [
         ...messages,
@@ -53,6 +57,7 @@ export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps>
           sender: newMessage.fromUser.name,
           senderPicture: `https://randomuser.me/api/portraits/lego/6.jpg`,
           sended: meQuery.data?.me.id === newMessage.fromUser.id,
+          isDriver: newMessage.fromUser.id === trip.driverId,
         },
       ]);
     },
@@ -63,7 +68,7 @@ export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps>
   const [sendMessage, sendMessageResult] = useSendMessageMutation();
 
   const chatQueryResult = useQuery(chatByTripIdDocument, {
-    variables: { chatTripId: tripId },
+    variables: { chatTripId: trip.id },
     fetchPolicy: 'no-cache',
   });
 
@@ -76,8 +81,9 @@ export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps>
         sender: message.user.name,
         senderPicture: `https://randomuser.me/api/portraits/lego/6.jpg`,
         sended: meQuery.data?.me.id === message.user.id,
+        isDriver: message.user.id === trip.driverId,
       })) ?? [],
-    [chatQueryResult.data?.chatByTripId?.messages, meQuery.data?.me.id]
+    [chatQueryResult.data?.chatByTripId?.messages, meQuery.data?.me.id, trip.driverId]
   );
 
   const allMessages = useMemo(
@@ -91,11 +97,11 @@ export const ChatSingleTripsMainScreen: React.FC<ChatSingleTripsMainScreenProps>
     <ScreenWrapper disablePadding>
       <ChatApp
         messages={allMessages}
-        onSend={async text => {
-          await sendMessage({
+        onSend={text =>
+          sendMessage({
             variables: { message: text, chatId: chatQueryResult.data!.chatByTripId!.id },
-          });
-        }}
+          })
+        }
       />
     </ScreenWrapper>
   );

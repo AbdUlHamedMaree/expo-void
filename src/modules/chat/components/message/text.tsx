@@ -44,7 +44,13 @@ export const TextMessage: React.FC<TextMessageProps> = ({ wrapperProps, ...messa
       ]}
     >
       {!hideProfilePicture && (
-        <Image source={{ uri: message.senderPicture }} style={styles.profilePicture} />
+        <Image
+          source={{ uri: message.senderPicture }}
+          style={[
+            styles.profilePicture,
+            { borderColor: theme.colors.primary, borderWidth: message.isDriver ? 2 : 0 },
+          ]}
+        />
       )}
       <View
         style={[

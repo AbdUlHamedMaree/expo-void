@@ -25,7 +25,6 @@ import { MaskedTextField } from '$components/fields/masked-text';
 import { TextField } from '$components/fields/text';
 import { MaterialCommunityIcon } from '$components/icons';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import { formateGeocodingResults } from '$libs/geocoding/formate-geocoding-results';
 import { getAddressComponent } from '$libs/geocoding/get-adress-component';
 import {
   useDirectionPolylinePoints,
@@ -65,8 +64,6 @@ const validationSchema = object({
 type ValidationSchema = Zod.infer<typeof validationSchema>;
 
 const key = createKeyGetter<ValidationSchema>();
-
-const formateGeocoder = formateGeocodingResults`${'route'} - ${'neighborhood'} - ${'sublocality'} - ${'locality'}`;
 
 export type CreateNewTripScreenProps = {
   children?: React.ReactNode;
@@ -167,7 +164,7 @@ export const CreateNewTripScreen: React.FC<CreateNewTripScreenProps> = () => {
         createTrip: { id: newTripId },
       } = throwIfGqlErrors(result);
 
-      router.push({
+      router.replace({
         pathname: '/(trips)/single-trip/[trip-id]/',
         params: { 'trip-id': newTripId },
       });
