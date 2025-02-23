@@ -8,6 +8,7 @@ import { Button, Card, Divider, Text } from 'react-native-paper';
 import { coerce, object } from 'zod';
 
 import { useJoinTripMutation, useSingleTripQuery } from '$apis/trips';
+import { useMeQuery } from '$apis/user';
 import { LoadingSection } from '$components/dumb/loading-section';
 import { CheckboxItemField } from '$components/fields/checkbox-item';
 import { TextField } from '$components/fields/text';
@@ -29,6 +30,9 @@ type PageProps = {
 const Page: React.FC<PageProps> = () => {
   const theme = useAppTheme();
   const router = useRouter();
+  const meQuery = useMeQuery();
+
+  const me = meQuery.data?.me;
 
   const { 'trip-id': tripId } = useLocalSearchParams();
 
@@ -49,11 +53,11 @@ const Page: React.FC<PageProps> = () => {
 
   const validationSchema = useMemo(() => {
     return object({
-      count: coerce
-        .number()
-        .min(1)
-        .max(emptySeatsCount ?? 7),
+      count: coerce.number().max(emptySeatsCount ?? 7),
       isDriver: coerce.boolean(),
+    }).refine(data => (data.isDriver ? data.count >= 0 : data.count > 0), {
+      message: "Count should be more that 0 (unless you're the driver)",
+      path: ['count'],
     });
   }, [emptySeatsCount]);
 
@@ -98,7 +102,7 @@ const Page: React.FC<PageProps> = () => {
     [joinTrip, methods, router, trip]
   );
 
-  if (singleTripQuery.loading) return <LoadingSection loading />;
+  if (singleTripQuery.loading || meQuery.loading) return <LoadingSection loading />;
 
   if (!trip) return null;
 
@@ -159,9 +163,17 @@ const Page: React.FC<PageProps> = () => {
           mode='outlined'
           style={{ marginTop: spacing.lg }}
         />
-        <View style={{ marginVertical: spacing.sm }} />
-        <CheckboxItemField name='isDriver' label='Joining as driver?' />
-        <View style={{ marginVertical: spacing.sm }} />
+        {me?.role === 'driver' && (
+          <>
+            <View style={{ marginVertical: spacing.sm }} />
+            <CheckboxItemField
+              name='isDriver'
+              label='Joining as driver?'
+              disabled={!!trip.driverId}
+            />
+          </>
+        )}
+        <View style={{ marginVertical: spacing.md }} />
       </FormProvider>
 
       <Button
