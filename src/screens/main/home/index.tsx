@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import { useAtom } from 'jotai/react';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MapView from 'react-native-map-clustering';
-import { Details, LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import { Details, LatLng, PROVIDER_GOOGLE, Polyline, Region } from 'react-native-maps';
 import type MapViewType from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -16,17 +16,19 @@ import { useAppColorSchema } from '$hooks/use-app-color-schema';
 import { useCheckIsUserInTrip } from '$hooks/use-check-is-user-in-trip';
 import {
   useGoogleMapsDirectionsQuery,
-  useDirectionPolyline,
+  useDirectionPolylinePoints,
 } from '$libs/google-maps-direction/hook';
 import { useRefreshOnFocus } from '$libs/react-query/use-refetch-on-screen-focus';
 import { IDUnion } from '$models/id';
 import { commonStyles } from '$styles/common';
+import { useAppTheme } from '$theme/hook';
 
 export type MainHomeScreenProps = {
   //
 };
 
 export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
+  const theme = useAppTheme();
   const mapRef = useRef<MapViewType>(null);
   const insets = useSafeAreaInsets();
 
@@ -59,8 +61,6 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
 
   const onMarkerClick = useCallback((trip: SingleTrip) => {
     setFocusedTripId(trip.id);
-
-    mapRef.current?.fitToCoordinates([pickupToLatlng(trip), dropoffToLatlng(trip)]);
   }, []);
 
   const calculateAndSetBoundaries = useCallback(async () => {
@@ -129,9 +129,21 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
     { enabled: !!focusedTrip }
   );
 
-  const focusedTripMapViewDirections = useDirectionPolyline({
+  const focusedTripDirectionsPoints = useDirectionPolylinePoints({
     response: focusedTripDirectionsQuery.data?.data,
   });
+
+  useEffect(() => {
+    if (focusedTripDirectionsPoints.length > 0)
+      mapRef.current?.fitToCoordinates(focusedTripDirectionsPoints, {
+        edgePadding: {
+          left: 10,
+          top: 300,
+          right: 10,
+          bottom: 10,
+        },
+      });
+  }, [focusedTripDirectionsPoints]);
 
   return (
     <ScreenWrapper disablePadding>
@@ -146,7 +158,13 @@ export const MainHomeScreen: React.FC<MainHomeScreenProps> = () => {
       >
         {tripsMarkers?.pickup}
         {tripsMarkers?.dropoff}
-        {focusedTrip && focusedTripMapViewDirections}
+        {focusedTrip && (
+          <Polyline
+            coordinates={focusedTripDirectionsPoints}
+            strokeWidth={4}
+            strokeColor={theme.colors.primaryContainer}
+          />
+        )}
       </MapView>
       {focusedTrip && (
         <TripCard

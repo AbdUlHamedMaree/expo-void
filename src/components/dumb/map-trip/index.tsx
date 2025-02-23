@@ -1,5 +1,5 @@
 import pick from 'lodash/fp/pick';
-import { Marker } from 'react-native-maps';
+import { Marker, type MarkerPressEvent } from 'react-native-maps';
 
 import { TripMapMarkerCard } from '../trip-map-marker-card';
 
@@ -29,8 +29,8 @@ export const mapToMapTrip = pick<Trip, keyof Trip>([
 ]);
 
 export type MapTripProps = Trip & {
-  onPickupMarkerClick?: () => void;
-  onDropoffMarkerClick?: () => void;
+  onPickupMarkerClick?: (event: MarkerPressEvent) => void;
+  onDropoffMarkerClick?: (event: MarkerPressEvent) => void;
 };
 
 export const getMapTrip = ({

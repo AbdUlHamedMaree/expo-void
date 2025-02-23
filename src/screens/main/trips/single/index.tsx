@@ -4,8 +4,7 @@ import { useAtomValue } from 'jotai';
 import { compact } from 'lodash';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import MapViewDirections from 'react-native-maps-directions';
+import MapView, { Details, PROVIDER_GOOGLE, Polyline, Region } from 'react-native-maps';
 import { Button, FAB, IconButton, Text, type FABGroupProps } from 'react-native-paper';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -22,12 +21,12 @@ import { getMapTrip, mapToMapTrip } from '$components/dumb/map-trip';
 import { PaperBottomSheet } from '$components/dumb/paper-bottom-sheet';
 import { MaterialCommunityIcon } from '$components/icons';
 import { ScreenWrapper } from '$components/smart/screen-wrapper';
-import {
-  dropoffToLatlng,
-  pickupDropoffToLatlng,
-  pickupToLatlng,
-} from '$helpers/pickup-dropoff-to-latlng';
+import { dropoffToLatlng, pickupToLatlng } from '$helpers/pickup-dropoff-to-latlng';
 import { useToggleState } from '$hooks/use-toggle-state';
+import {
+  useDirectionPolylinePoints,
+  useGoogleMapsDirectionsQuery,
+} from '$libs/google-maps-direction/hook';
 import { TripStatusEnum } from '$models/trip-status';
 import { isDefined } from '$modules/checks';
 import { commonStyles } from '$styles/common';
@@ -105,36 +104,39 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
     []
   );
 
+  const directionsQuery = useGoogleMapsDirectionsQuery(
+    useMemo(
+      () =>
+        trip
+          ? {
+              origin: pickupToLatlng(trip),
+              destination: dropoffToLatlng(trip),
+            }
+          : undefined,
+      [trip]
+    ),
+    { enabled: !!trip }
+  );
+
+  const points = useDirectionPolylinePoints({
+    response: directionsQuery.data?.data,
+  });
+
   const fitMapToTrip = useCallback(() => {
-    if (!mapRef.current || !trip) return;
+    if (!mapRef.current || !points) return;
 
-    const locations = pickupDropoffToLatlng(trip);
-
-    mapRef.current.fitToCoordinates([locations.pickup, locations.dropoff]);
+    mapRef.current.fitToCoordinates(points, {
+      edgePadding: { left: 10, top: 100, right: 10, bottom: 100 },
+    });
 
     setIsMapFittedToTrip(true);
-  }, [trip]);
+  }, [points]);
 
   const handleMapReady = useCallback(() => {
     fitMapToTrip();
   }, [fitMapToTrip]);
 
   const mapTrip = useMemo(() => trip && getMapTrip(mapToMapTrip(trip)), [trip]);
-
-  // TODO: use the internal component
-  const mapViewDirections = useMemo(
-    () =>
-      trip && (
-        <MapViewDirections
-          origin={pickupToLatlng(trip)}
-          destination={dropoffToLatlng(trip)}
-          apikey={process.env.EXPO_PUBLIC_GOOGLE_SERVICES_API_KEY}
-          strokeWidth={3}
-          strokeColor='#000'
-        />
-      ),
-    [trip]
-  );
 
   const formattedTime = useMemo(
     () => (trip?.plannedAt ? format(new Date(trip.plannedAt), 'PPPP') : 'Unknown Time'),
@@ -194,7 +196,11 @@ export const SingleTripsScreen: React.FC<SingleTripsScreenProps> = () => {
       >
         {mapTrip?.pickup}
         {mapTrip?.dropoff}
-        {mapViewDirections}
+        <Polyline
+          coordinates={points}
+          strokeWidth={4}
+          strokeColor={theme.colors.primaryContainer}
+        />
       </MapView>
       <IconButton
         icon='arrow-left'
